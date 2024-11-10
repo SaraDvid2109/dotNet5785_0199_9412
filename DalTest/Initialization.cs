@@ -1,6 +1,7 @@
 ﻿namespace DalTest;
 using DalApi;
 using DO;
+using Dal;
 using System;
 using System.Data;
 using System.Data.Common;
@@ -467,24 +468,46 @@ public static class Initialization
 
 
         int CallId;
-        int VolunteerId;
+        int VolunteerId = 0;
         DateTime? EnterTime;
         DateTime? EndTime;
         EndType? TypeEndOfTreatment;
+
+        
+        List<Call> CopyCalls = s_dalCall!.ReadAll();
+        List<Volunteer> CopyVolunteers = s_dalVolunteer!.ReadAll();
 
         DateTime start = new DateTime(s_dalConfig!.Clock.Year - 0, 1, 1); //stage 1
         int range = (s_dalConfig.Clock - start).Days; //stage 1
 
         for (int i = 0; i != 50; i++)
         {
-            CallId = DataSource.calls[i].Id;
+            CallId = CopyCalls[i].Id;
+            if (CopyVolunteers.Count > 0)
+            {
+                int randomIndex = s_rand.Next(CopyVolunteers.Count);
+                VolunteerId = CopyVolunteers[randomIndex].Id;
+            }
+       
+            DateTime maxTime = CopyCalls[i].MaxTime ?? DateTime.MaxValue;
+            TimeSpan timeSpan = maxTime - CopyCalls[i].OpenTime;
+            int randomMinutes = s_rand.Next(0, (int)timeSpan.TotalMinutes);
+            EnterTime = CopyCalls[i].OpenTime.AddMinutes(randomMinutes);
+            EndTime = EnterTime.Value.AddMinutes(s_rand.Next(0, 60));
 
-
+            if (EndTime <= maxTime)
+            {
+                TypeEndOfTreatment = (EndType)s_rand.Next(0, 2);
+            }
+            else
+            {
+                TypeEndOfTreatment = EndType.ExpiredCancellation;
+            }
 
 
             try
             {
-                s_dalCall!.Create(new(0, ));
+                s_dalAssignment!.Create(new(0, CallId, VolunteerId, EnterTime, EndTime, TypeEndOfTreatment));
             }
             catch (Exception ex)
             {
@@ -495,5 +518,19 @@ public static class Initialization
 
 
     }
+
+    public static void Do(IAssignment? dalAssignment, ICall? dalCall, IVolunteer? dalVolunteer, IConfig? dalConfig) //stage 1
+    {
+        s_dalVolunteer = dalVolunteer ?? throw new NullReferenceException("DAL object can not be null!"); 
+
+        Console.WriteLine("Reset Configuration values and List values...");
+        s_dalConfig.Reset(); //stage 1
+        s_dalVolunteer.DeleteAll(); //stage 1
+                                  //...
+        Console.WriteLine("Initializing Students list ...");
+        createVolunteers();
+        //...
+    }
+
 }
 
