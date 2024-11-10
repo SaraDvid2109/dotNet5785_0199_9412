@@ -20,7 +20,7 @@ public class AssignmentImplementation : IAssignment
         {
             DataSource.Assignments.Remove(found);
         }
-        throw new NotImplementedException($"Student with ID ={ id } does Not exist");
+        throw new NotImplementedException($"Assignment with ID ={ id } does Not exist");
     }
 
     public void DeleteAll()
@@ -48,7 +48,7 @@ public class AssignmentImplementation : IAssignment
             DataSource.Assignments.Remove(found);
             DataSource.Assignments.Add(item);
         }
-        throw new NotImplementedException($"Student with ID={item.Id} does Not exist");
+        throw new NotImplementedException($"Assignment with ID={item.Id} does Not exist");
     }
 }
 

@@ -14,7 +14,7 @@ public static class Initialization
     private static IConfig? s_dalConfig; //stage 1
     private static readonly Random s_rand = new();
 
-    public static object DataSource { get; private set; }
+    //public static object DataSource { get; private set; }
 
     private static void CreateVolunteers()
     {
@@ -477,7 +477,9 @@ public static class Initialization
 
         for (int i = 0; i != 50; i++)
         {
-            CallId = DataSource.
+            CallId = DataSource.calls[i].Id;
+
+
 
 
             try

@@ -9,7 +9,7 @@ internal class VolunteerImplementation : IVolunteer
     {
         if (DataSource.Volunteers.Contains(item))
         { 
-            throw new NotImplementedException($"Student with ID={item.Id} already exists");
+            throw new NotImplementedException($"Volunteer with ID={item.Id} already exists");
         }
 
         DataSource.Volunteers.Add(item);
@@ -22,7 +22,7 @@ internal class VolunteerImplementation : IVolunteer
         {
             DataSource.Volunteers.Remove(found);
         }
-        throw new NotImplementedException($"Student with ID={id} does Not exist");
+        throw new NotImplementedException($"Volunteer with ID={id} does Not exist");
     }
 
     public void DeleteAll()
@@ -50,7 +50,7 @@ internal class VolunteerImplementation : IVolunteer
             DataSource.Volunteers.Remove(found);
             DataSource.Volunteers.Add(item);
         }
-        throw new NotImplementedException($"Student with ID={item.Id} does Not exist");
+        throw new NotImplementedException($"Volunteer with ID={item.Id} does Not exist");
     }
 }
 
