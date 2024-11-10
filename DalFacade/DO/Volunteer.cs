@@ -1,8 +1,9 @@
-﻿using System;
+﻿using DalApi;
+using System;
+using System.Reflection.Metadata;
 
 namespace DO;
-public enum ROLE { management, volunteer };
-enum DistanceType { car, aerial };
+
 /// <summary>
 /// A volunteer entity represents a volunteer with all their details.
 /// </summary>
@@ -24,14 +25,21 @@ public record Volunteer
    string Mail,
    string? Password,
    string? Address,
-   double? Latitude,
-   double? Longitude,
+   double? Latitude, //?
+   double? Longitude, //?
    bool   Active,
-   double? MaximumDistance
-   
+   double? MaximumDistance,
+   Roles Role,
+   DistanceType Type
+   //int TotalCallsHandled,
+   //int TotalCallsCanceled,
+   //int TotalCallsChosenHandleExpired
+   //BO.CallInProgress? Progress
+
+
 )
 {
-    public Volunteer() : this(0, string.Empty, string.Empty, string.Empty, null,null,0,0,false,0) { }
+    public Volunteer() : this(0, string.Empty, string.Empty, string.Empty, null,null,null,null,false,null, 0, 0 ) { }
 
 }
 

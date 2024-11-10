@@ -1,6 +1,7 @@
 ﻿namespace Dal;
 using DalApi;
 using DO;
+using System.Collections;
 using System.Collections.Generic;
 
 public class AssignmentImplementation : IAssignment
@@ -8,10 +9,8 @@ public class AssignmentImplementation : IAssignment
     public void Create(Assignment item)
     {
         int temp = Config.NextAssignmentId;
-        Assignment copyItem = new() { Id = temp };
+        Assignment copyItem = item with { Id = temp };
         DataSource.Assignments.Add(copyItem);
-        Config.NextAssignmentId = temp;
-        /////////////TO DO
     }
 
     public void Delete(int id)
@@ -21,7 +20,7 @@ public class AssignmentImplementation : IAssignment
         {
             DataSource.Assignments.Remove(found);
         }
-        throw new NotImplementedException("An object of type Assignment with such ID already exists.");
+        throw new NotImplementedException($"Student with ID ={ id } does Not exist");
     }
 
     public void DeleteAll()
@@ -49,7 +48,7 @@ public class AssignmentImplementation : IAssignment
             DataSource.Assignments.Remove(found);
             DataSource.Assignments.Add(item);
         }
-        throw new NotImplementedException("An object of type Assignment with such ID already exists.");
+        throw new NotImplementedException($"Student with ID={item.Id} does Not exist");
     }
 }
 

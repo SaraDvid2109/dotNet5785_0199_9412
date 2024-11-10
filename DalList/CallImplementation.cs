@@ -9,10 +9,8 @@ public class CallImplementation : ICall
     public void Create(Call item)
     {
         int temp = Config.NextCallId;
-        Call copyItem =new() { Id = temp};
+        Call copyItem = item with { Id = temp};
         DataSource.Calls.Add(copyItem);
-        Config.NextCallId = temp;
-        /////////////TO DO
     }
 
     public void Delete(int id)
@@ -22,7 +20,7 @@ public class CallImplementation : ICall
         {
             DataSource.Calls.Remove(found);
         }
-        throw new NotImplementedException("An object of type Call with such ID already exists.");
+        throw new NotImplementedException($"Student with ID={ id } does Not exist");
     }
 
     public void DeleteAll()
@@ -50,7 +48,7 @@ public class CallImplementation : ICall
             DataSource.Calls.Remove(found);
             DataSource.Calls.Add(item);
         }
-        throw new NotImplementedException("An object of type Call with such ID already exists.");
+        throw new NotImplementedException($"Student with ID={item.Id} does Not exist");
     }
 }
 
