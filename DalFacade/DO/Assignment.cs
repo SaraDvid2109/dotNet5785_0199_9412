@@ -1,5 +1,5 @@
 ﻿namespace DO;
-enum EndType {ExpiredCancellation,SelfCancellation,AdminCancellation,Processed}
+
 /// <summary>
 /// 
 /// </summary>
@@ -14,9 +14,10 @@ public record Assignment
   int CallId,
   int VolunteerId,
   DateTime? EnterTime,
-  DateTime? EndTime
+  DateTime? EndTime,
+  EndType? TypeEndOfTreatment
 )
 {
-    public Assignment() : this(0, 0, 0, null, null) { }
+    public Assignment() : this(0, 0, 0, null, null, null) { }
 
 }

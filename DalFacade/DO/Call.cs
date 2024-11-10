@@ -1,5 +1,8 @@
-﻿namespace DO;
-enum callType { RegularVehicle ,Ambulance, IntensiveCareAmbulance };
+﻿using DalApi;
+using System.Collections.Generic;
+
+namespace DO;
+
 /// <summary>
 /// 
 /// </summary>
@@ -15,12 +18,17 @@ public record Call
     int Id,
     string? Description,
     string Address,
-    double Latitude,
-    double Longitude,
+    double? Latitude, //?
+    double? Longitude, //?
     DateTime OpenTime,
-    DateTime? MaxTime
+    DateTime? MaxTime,
+    CallType type
+    //CallStatus Status
+    //List<BO.CallAssignInList> ListAssignmentsForCalls
+
+
 )
 {
-public Call() : this(0, null, string.Empty, 0,0, DateTime.MinValue, null) { }
+public Call() : this(0, null, string.Empty, null, null, DateTime.MinValue, null, 0) { }
 }
 
