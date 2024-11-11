@@ -4,15 +4,16 @@ using System.Collections.Generic;
 namespace DO;
 
 /// <summary>
-/// 
+/// A Call entity represents a Call with all their details.
 /// </summary>
-/// <param name="Id"></param>
-/// <param name="Description"></param>
-/// <param name="Address"></param>
+/// <param name="Id"></param>A number that uniquely identifies the call.
+/// <param name="Description"></param> Description of the call.
+/// <param name="Address"></param>  address of the call.
 /// <param name="Latitude"></param>
 /// <param name="Longitude"></param>
-/// <param name="OpenTime"></param>
-/// <param name="MaxTime"></param>
+/// <param name="OpenTime"></param> Time (date and time) when the call was opened by the administrator.
+/// <param name="MaxTime"></param> Time (date and time) by which the call should close.
+/// <param name="type"></param> Types of calls.
 public record Call
 (
     int Id,
