@@ -177,31 +177,35 @@ internal class Program
         {
            Console.WriteLine("Displaying all data...");
           // הצגת כל הנתונים
-          foreach (Volunteer volunteer in s_dalVolunteer.ReadAll())
+          foreach (Volunteer volunteer in s_dalVolunteer?.ReadAll() ?? Enumerable.Empty<Volunteer>())
           {
             Console.WriteLine(volunteer);
           }
 
-          foreach (Assignment assignment in s_dalAssignment.ReadAll())
+          foreach (Assignment assignment in s_dalAssignment?.ReadAll() ?? Enumerable.Empty<Assignment>())
           {
             Console.WriteLine(assignment);
           }
 
-          foreach (Call call in s_dalCall.ReadAll())
+          foreach (Call call in s_dalCall?.ReadAll() ?? Enumerable.Empty<Call>())
           {
             Console.WriteLine(call);
           }
        
         }
 
-        private static void ResetDatabase()
+        private static void ResetDatabase() 
         {
             Console.WriteLine("Resetting database...");
-           // איפוס נתוני בסיס נתונים ונתוני תצורה
-           s_dalVolunteer.DeleteAll(); //stage 1
-           s_dalCall.DeleteAll();
-           s_dalAssignment.DeleteAll();
-           s_dalConfig.Reset(); //stage 1
+        // איפוס נתוני בסיס נתונים ונתוני תצורה
+        if (s_dalVolunteer != null)
+            s_dalVolunteer.DeleteAll(); //stage 1
+        if (s_dalCall != null)
+            s_dalCall.DeleteAll();
+        if (s_dalAssignment != null)
+            s_dalAssignment.DeleteAll();
+        if (s_dalConfig != null)
+            s_dalConfig.Reset(); //stage 1
 
         }
 
@@ -221,15 +225,15 @@ internal class Program
             {
                 case "Volunteer":
                     Volunteer volunteer=CreateVolunteer();
-                    s_dalVolunteer.Create(volunteer);
+                    s_dalVolunteer?.Create(volunteer) ;
                     break;
                 case "Call":
                     Call call = CreateCall();
-                    s_dalCall.Create(call);
+                    s_dalCall?.Create(call);
                     break;
                 case "Assignment":
                     Assignment assignment=CreateAssignment();
-                    s_dalAssignment.Create(assignment);
+                    s_dalAssignment?.Create(assignment);
                     break;
                 default:
                     Console.WriteLine("Invalid entity name");
@@ -326,15 +330,15 @@ internal class Program
             {
                 case "Volunteer":
                     Volunteer volunteer = CreateVolunteer();
-                    s_dalVolunteer.Update(volunteer);
+                    s_dalVolunteer?.Update(volunteer);
                     break;
                 case "Call":
                     Call call=CreateCall();
-                    s_dalCall.Update(call);
+                    s_dalCall?.Update(call);
                     break;
                 case "Assignment":
                     Assignment assignment=CreateAssignment();
-                    s_dalAssignment.Update(assignment);
+                    s_dalAssignment?.Update(assignment);
                     break;
                 default:
                     Console.WriteLine("Invalid entity name");
@@ -406,22 +410,25 @@ internal class Program
         private static void AdvanceClockMinute()
         {
             Console.WriteLine("Advancing clock by one minute...");
-           // קידום שעון בדקה
-           s_dalConfig.Clock = s_dalConfig.Clock.AddMinutes(1);
+        // קידום שעון בדקה
+        if (s_dalConfig != null)
+            s_dalConfig.Clock = s_dalConfig.Clock.AddMinutes(1);
         }
 
         private static void AdvanceClockHour()
         {
             Console.WriteLine("Advancing clock by one hour...");
-            // קידום שעון בשעה
-           s_dalConfig.Clock = s_dalConfig.Clock.AddHours(1);
+
+        // קידום שעון בשעה
+        if (s_dalConfig != null)
+            s_dalConfig.Clock = s_dalConfig.Clock.AddHours(1);
         }
 
         private static void DisplayCurrentClock()
         {
             Console.WriteLine("Displaying current clock value...");
           // הצגת ערך השעון
-          Console.WriteLine($"Current Clock Time: {s_dalConfig.Clock}");
+          Console.WriteLine($"Current Clock Time: {s_dalConfig?.Clock}");
         }
 
     private static void SetConfigValue()////////////////
@@ -435,12 +442,14 @@ internal class Program
             case 0:
                 Console.WriteLine("Enter new Clock value in the format 'dd/MM/yyyy HH:mm':");
                 DateTime clockValue = DateTime.Parse(Console.ReadLine() ?? "");
-                s_dalConfig.Clock = clockValue;
+                if (s_dalConfig != null)
+                    s_dalConfig.Clock = clockValue;
                 break;
             case 1:
                 Console.WriteLine("Enter new RiskRange value in the format 'hh:mm:ss':");
                 TimeSpan RiskRangeValue = TimeSpan.Parse(Console.ReadLine() ?? "");
-                s_dalConfig.RiskRange = RiskRangeValue;
+                if (s_dalConfig != null)
+                    s_dalConfig.RiskRange = RiskRangeValue;
                 break;
                
         }
@@ -458,10 +467,10 @@ internal class Program
         switch (choice)
         {
             case 0:
-               Console.WriteLine($"Clock: {s_dalConfig.Clock}");
+               Console.WriteLine($"Clock: {s_dalConfig?.Clock}");
                break;
             case 1:
-                Console.WriteLine($"RiskRange: {s_dalConfig.RiskRange}");
+                Console.WriteLine($"RiskRange: {s_dalConfig?.RiskRange}");
                 break;
         }
         
@@ -472,7 +481,7 @@ internal class Program
         {
             Console.WriteLine("Resetting configuration values...");
             // איפוס כל ערכי התצורה
-           s_dalConfig.Reset();//////////////////////////////////////////////////לבדוק
+           s_dalConfig?.Reset();//////////////////////////////////////////////////לבדוק
         }
 
     private static Volunteer CreateVolunteer()
