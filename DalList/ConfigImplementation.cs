@@ -2,7 +2,7 @@
 
 namespace Dal;
 
-internal class ConfigImplementation : IConfig
+public class ConfigImplementation : IConfig
 {
     public DateTime Clock
     {

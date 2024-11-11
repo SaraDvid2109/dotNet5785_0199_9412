@@ -473,7 +473,7 @@ public static class Initialization
         DateTime? EndTime;
         EndType? TypeEndOfTreatment;
 
-        
+
         List<Call> CopyCalls = s_dalCall!.ReadAll();
         List<Volunteer> CopyVolunteers = s_dalVolunteer!.ReadAll();
 
@@ -488,7 +488,7 @@ public static class Initialization
                 int randomIndex = s_rand.Next(CopyVolunteers.Count);
                 VolunteerId = CopyVolunteers[randomIndex].Id;
             }
-       
+
             DateTime maxTime = CopyCalls[i].MaxTime ?? DateTime.MaxValue;
             TimeSpan timeSpan = maxTime - CopyCalls[i].OpenTime;
             int randomMinutes = s_rand.Next(0, (int)timeSpan.TotalMinutes);
@@ -521,15 +521,30 @@ public static class Initialization
 
     public static void Do(IAssignment? dalAssignment, ICall? dalCall, IVolunteer? dalVolunteer, IConfig? dalConfig) //stage 1
     {
-        s_dalVolunteer = dalVolunteer ?? throw new NullReferenceException("DAL object can not be null!"); 
+        s_dalVolunteer = dalVolunteer ?? throw new NullReferenceException("DAL object can not be null!");
+
+        s_dalCall = dalCall ?? throw new NullReferenceException("DAL object can not be null!");
+        s_dalAssignment = dalAssignment ?? throw new NullReferenceException("DAL object can not be null!");
+        s_dalConfig = dalConfig ?? throw new NullReferenceException("DAL object can not be null!");// check if we need it
 
         Console.WriteLine("Reset Configuration values and List values...");
         s_dalConfig.Reset(); //stage 1
         s_dalVolunteer.DeleteAll(); //stage 1
-                                  //...
+        s_dalAssignment.DeleteAll();
+        s_dalCall.DeleteAll();
+
+
+
         Console.WriteLine("Initializing Students list ...");
-        createVolunteers();
-        //...
+        CreateVolunteers();
+
+        Console.WriteLine("Initializing Students list ...");
+        CreateCalls();
+
+        Console.WriteLine("Initializing Links list ...");
+        CreateAssignments();
+
+
     }
 
 }
