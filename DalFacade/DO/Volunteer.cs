@@ -9,14 +9,14 @@ namespace DO;
 /// </summary>
 /// <param name="Id"></param>Personal unique ID of the volunteer (as in national id card)
 /// <param name="Name"></param>Private Name of the volunteer
-/// <param name="Phone"></param>
-/// <param name="Mail"></param>
-/// <param name="Password"></param>
-/// <param name="Address"></param>
+/// <param name="Phone"></param> Volunteer's phone number
+/// <param name="Mail"></param> Volunteer's email address
+/// <param name="Password"></param> Volunteer's password
+/// <param name="Address"></param> Volunteer's address
 /// <param name="Latitude"></param>
 /// <param name="Longitude"></param>
-/// <param name="Active"></param>
-/// <param name="MaximumDistance"></param>
+/// <param name="Active"></param> whether the volunteer is active
+/// <param name="MaximumDistance"></param> The maximum distance to receive a call,the default is air distance.
 public record Volunteer
 (
    int Id,

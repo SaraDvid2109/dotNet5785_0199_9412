@@ -535,13 +535,13 @@ public static class Initialization
 
 
 
-        Console.WriteLine("Initializing Students list ...");
+        Console.WriteLine("Initializing Volunteers list ...");
         CreateVolunteers();
 
-        Console.WriteLine("Initializing Students list ...");
+        Console.WriteLine("Initializing Calls list ...");
         CreateCalls();
 
-        Console.WriteLine("Initializing Links list ...");
+        Console.WriteLine("Initializing Assignments list ...");
         CreateAssignments();
 
 

@@ -9,9 +9,9 @@ public enum EndType { Processed, AdminCancellation, SelfCancellation, ExpiredCan
 public enum MainMenuOptions
 {
     Exit,
-    Entity1Menu,
-    Entity2Menu,
-    Entity3Menu,
+    VolunteerMenu,
+    CallMenu,
+    AssignmentMenu,
     InitializeData,
     DisplayAllData,
     ConfigMenu,
