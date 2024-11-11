@@ -258,6 +258,6 @@ internal class Program
             Console.WriteLine("Resetting configuration values...");
             // איפוס כל ערכי התצורה
         }
-    }
+    }521
 
 

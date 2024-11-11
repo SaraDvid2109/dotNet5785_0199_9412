@@ -24,7 +24,7 @@ public record Volunteer
    string Phone,
    string Mail,
    string? Password,
-   string? Address,
+   string? Address, 
    double? Latitude, //?
    double? Longitude, //?
    bool   Active,
