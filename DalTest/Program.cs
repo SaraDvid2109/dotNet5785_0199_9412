@@ -271,17 +271,37 @@ internal class Program
         {
             case "Volunteer":
                 Volunteer? volunteer = s_dalVolunteer?.Read(idInput);
-                Console.WriteLine(volunteer);
+                Console.WriteLine($"volunteer {volunteer.Id}:\n" +
+                    $"name:{volunteer.Name}\n" +
+                    $"Password:{volunteer.Password}\n" +
+                    $"Phone:{volunteer.Phone}\n" +
+                    $"Address:{volunteer.Address}\n" +
+                    $"Maximum Distance:{volunteer.MaximumDistance}\n" +
+                    $"Active:{volunteer.Active}\n" +
+                    $"Latitude:{volunteer.Latitude}\n" +
+                    $"Longitude:{volunteer.Longitude}\n");
                 break;
 
             case "Call":
                 Call? call = s_dalCall?.Read(idInput);
-                Console.WriteLine(call);
+                Console.WriteLine($"call {call.Id}:\n"+
+                $"Description: {call.Description}\n" +
+                $"Address: {call.Address}\n" +
+                $"Latitude: {call.Latitude}\n" +
+                $"Longitude: {call.Longitude}\n" +
+                $"Open Time: {call.OpenTime}\n" +
+                $"Max Time: {call.MaxTime}\n" +
+                $"Type: {call.type}");
                 break;
 
             case "Assignment":
                 Assignment? assignment = s_dalAssignment?.Read(idInput);
-                Console.WriteLine(assignment);
+                Console.WriteLine($"assignment {assignment.Id}\n" + 
+                   $"Call ID: {assignment.CallId}\n" +
+                   $"Volunteer ID: {assignment.VolunteerId}\n" +
+                   $"Enter Time: {assignment.EnterTime}\n" +
+                   $"End Time: {assignment.EndTime}\n" +
+                   $"End Type of Treatment: {assignment.TypeEndOfTreatment}");
                 break;
 
             default:
