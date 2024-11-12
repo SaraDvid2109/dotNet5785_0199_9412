@@ -604,9 +604,9 @@ internal class Program
 
     private static Call CreateCall()
     {
-        Console.WriteLine("Enter Call ID: ");
-        int id = int.Parse(Console.ReadLine() ?? "0");
-
+        //Console.WriteLine("Enter Call ID: ");
+        //int id = int.Parse(Console.ReadLine() ?? "0");
+        //int.TryParse(Console.ReadLine(), out int id);
         Console.WriteLine("Enter Call Description:");
         string description = Console.ReadLine() ?? "";
 
@@ -627,10 +627,10 @@ internal class Program
 
         Console.WriteLine("Enter Call Type (0 = Regular Vehicle, 1 = Ambulance, 3=Intensive Care Ambulance): ");
         CallType type = (CallType)Enum.Parse(typeof(CallType), Console.ReadLine()??"");
-
+       
         // יצירת אובייקט Call עם הנתונים שנקלטו
         Call call = new Call(
-            Id: id,
+            Id:0,
             Description: description,
             Address: address,
             Latitude: latitude,
@@ -643,14 +643,11 @@ internal class Program
     }
     private static Assignment CreateAssignment()
     {
-        Console.WriteLine("Enter Assignment ID: ");
-        int id = Console.Read();
-
         Console.WriteLine("Enter Call ID: ");
-        int callId = Console.Read();
+        int.TryParse(Console.ReadLine(), out int callId);
 
         Console.WriteLine("Enter Volunteer ID: ");
-        int volunteerId = Console.Read();
+        int.TryParse(Console.ReadLine(), out int volunteerId);
 
         Console.WriteLine("Enter Enter Time (format: yyyy-MM-dd HH:mm:ss): ");
         DateTime? enterTime = DateTime.TryParse(Console.ReadLine(), out DateTime parsedEnterTime) ? parsedEnterTime : null;
@@ -658,14 +655,14 @@ internal class Program
         Console.WriteLine("Enter End Time (format: yyyy-MM-dd HH:mm:ss): ");
         DateTime? endTime = DateTime.TryParse(Console.ReadLine(), out DateTime parsedEndTime) ? parsedEndTime : null;
 
-        Console.WriteLine("Enter End Type (0 = Type1, 1 = Type2, etc.): ");
+        Console.WriteLine("Enter End Type (0 - Processed, 1 - Admin Cancellation, 3 - Self Cancellation,4 - Expired Cancellation): ");
         EndType? typeEndOfTreatment = Enum.TryParse(typeof(EndType), Console.ReadLine(), out var parsedEndType)
             ? (EndType)parsedEndType
             : null;
 
         // יצירת אובייקט Assignment עם הנתונים שנקלטו
         Assignment assignment = new Assignment(
-            Id: id,
+            Id:0,
             CallId: callId,
             VolunteerId: volunteerId,
             EnterTime: enterTime,
