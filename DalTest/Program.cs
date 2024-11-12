@@ -246,17 +246,7 @@ internal class Program
         }
     }
 
-    // פונקציות עזר לקליטת קלט מהמשתמש
-    //private static int GetIntInput(string prompt)
-    //{
-    //    Console.Write(prompt);
-    //    while (!int.TryParse(Console.ReadLine(), out int result))
-    //    {
-    //        Console.WriteLine("Invalid input, please enter a valid number.");
-    //        Console.Write(prompt);
-    //    }
-    //    return result;
-    //}
+    
 
     private static void ReadEntity(string entityName)
         {
@@ -271,37 +261,37 @@ internal class Program
         {
             case "Volunteer":
                 Volunteer? volunteer = s_dalVolunteer?.Read(idInput);
-                Console.WriteLine($"volunteer {volunteer.Id}:\n" +
-                    $"name:{volunteer.Name}\n" +
-                    $"Password:{volunteer.Password}\n" +
-                    $"Phone:{volunteer.Phone}\n" +
-                    $"Address:{volunteer.Address}\n" +
-                    $"Maximum Distance:{volunteer.MaximumDistance}\n" +
-                    $"Active:{volunteer.Active}\n" +
-                    $"Latitude:{volunteer.Latitude}\n" +
-                    $"Longitude:{volunteer.Longitude}\n");
+                Console.WriteLine($"volunteer {volunteer?.Id}:\n" +
+                    $"name:{volunteer?.Name}\n" +
+                    $"Password:{volunteer?.Password}\n" +
+                    $"Phone:{volunteer?.Phone}\n" +
+                    $"Address:{volunteer?.Address}\n" +
+                    $"Maximum Distance:{volunteer?.MaximumDistance}\n" +
+                    $"Active:{volunteer?.Active}\n" +
+                    $"Latitude:{volunteer?.Latitude}\n" +
+                    $"Longitude:{volunteer?.Longitude}\n");
                 break;
 
             case "Call":
                 Call? call = s_dalCall?.Read(idInput);
-                Console.WriteLine($"call {call.Id}:\n"+
-                $"Description: {call.Description}\n" +
-                $"Address: {call.Address}\n" +
-                $"Latitude: {call.Latitude}\n" +
-                $"Longitude: {call.Longitude}\n" +
-                $"Open Time: {call.OpenTime}\n" +
-                $"Max Time: {call.MaxTime}\n" +
-                $"Type: {call.type}");
+                Console.WriteLine($"call {call?.Id}:\n"+
+                $"Description: {call?.Description}\n" +
+                $"Address: {call?.Address}\n" +
+                $"Latitude: {call?.Latitude}\n" +
+                $"Longitude: {call?.Longitude}\n" +
+                $"Open Time: {call?.OpenTime}\n" +
+                $"Max Time: {call?.MaxTime}\n" +
+                $"Type: {call?.type}");
                 break;
 
             case "Assignment":
                 Assignment? assignment = s_dalAssignment?.Read(idInput);
-                Console.WriteLine($"assignment {assignment.Id}\n" + 
-                   $"Call ID: {assignment.CallId}\n" +
-                   $"Volunteer ID: {assignment.VolunteerId}\n" +
-                   $"Enter Time: {assignment.EnterTime}\n" +
-                   $"End Time: {assignment.EndTime}\n" +
-                   $"End Type of Treatment: {assignment.TypeEndOfTreatment}");
+                Console.WriteLine($"assignment {assignment?.Id}\n" + 
+                   $"Call ID: {assignment?.CallId}\n" +
+                   $"Volunteer ID: {assignment?.VolunteerId}\n" +
+                   $"Enter Time: {assignment?.EnterTime}\n" +
+                   $"End Time: {assignment?.EndTime}\n" +
+                   $"End Type of Treatment: {assignment?.TypeEndOfTreatment}");
                 break;
 
             default:
@@ -405,7 +395,7 @@ internal class Program
             string? input = Console.ReadLine();
         try
         {
-            int inputId = int.Parse(input);
+            int inputId = int.Parse(input!);
             //int.TryParse(input, out int choice);
             switch (entityName)
             {

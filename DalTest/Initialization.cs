@@ -298,7 +298,7 @@ public static class Initialization
         DateTime start = new DateTime(s_dalConfig!.Clock.Year - 0, 1, 1); //stage 1
         int range = (s_dalConfig.Clock - start).Days; //stage 1
 
-        for (int i = 0; i != 50; i++)
+        for (int i = 0; i != addresses.Length; i++)
         {
             Description = descriptionsArr[s_rand.Next(0, 59)];
             Address = addresses[i];
@@ -480,7 +480,7 @@ public static class Initialization
         DateTime start = new DateTime(s_dalConfig!.Clock.Year - 0, 1, 1); //stage 1
         int range = (s_dalConfig.Clock - start).Days; //stage 1
 
-        for (int i = 0; i != 50; i++)
+        for (int i = 0;  i < CopyCalls.Count && i < 50; i++)
         {
             CallId = CopyCalls[i].Id;
             if (CopyVolunteers.Count > 0)
