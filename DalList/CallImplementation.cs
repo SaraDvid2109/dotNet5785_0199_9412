@@ -20,7 +20,10 @@ public class CallImplementation : ICall
         {
             DataSource.Calls.Remove(found);
         }
-        throw new NotImplementedException($"Call with ID={ id } does Not exist");
+        else
+        {
+            throw new NotImplementedException($"Call with ID={id} does Not exist");
+        }
     }
 
     public void DeleteAll()
@@ -48,7 +51,10 @@ public class CallImplementation : ICall
             DataSource.Calls.Remove(found);
             DataSource.Calls.Add(item);
         }
-        throw new NotImplementedException($"Call with ID={item.Id} does Not exist");
+        else
+        {
+            throw new NotImplementedException($"Call with ID={item.Id} does Not exist");
+        }
     }
 }
 

@@ -17,12 +17,16 @@ public class VolunteerImplementation : IVolunteer
 
     public void Delete(int id)
     {
-        Volunteer? found = DataSource.Volunteers.FirstOrDefault(v => v.Id == id);
+        Volunteer? found = DataSource.Volunteers.Find(v => v.Id == id);/*FirstOrDefault(v => v.Id == id);*/
         if (found != null)
         {
             DataSource.Volunteers.Remove(found);
+            Console.WriteLine("Deleted");
         }
-        throw new NotImplementedException($"Volunteer with ID={id} does Not exist");
+        else
+        {
+            throw new NotImplementedException($"Volunteer with ID={id} does Not exist");
+        }
     }
 
     public void DeleteAll()
@@ -50,7 +54,10 @@ public class VolunteerImplementation : IVolunteer
             DataSource.Volunteers.Remove(found);
             DataSource.Volunteers.Add(item);
         }
-        throw new NotImplementedException($"Volunteer with ID={item.Id} does Not exist");
+        else
+        {
+            throw new NotImplementedException($"Volunteer with ID={item.Id} does Not exist");
+        }
     }
 }
 

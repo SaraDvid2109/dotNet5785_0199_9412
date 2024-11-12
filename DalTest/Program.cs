@@ -225,7 +225,7 @@ internal class Program
             {
                 case "Volunteer":
                     Volunteer volunteer=CreateVolunteer();
-                    s_dalVolunteer?.Create(volunteer) ;
+                    s_dalVolunteer?.Create(volunteer);
                     break;
                 case "Call":
                     Call call = CreateCall();
@@ -263,12 +263,8 @@ internal class Program
             Console.WriteLine($"Reading object for {entityName}...");
 
             Console.WriteLine("Please enter the ID of the object:");
-            int idInput = Console.Read();
-            //if (!int.TryParse(idInput, out int id))
-            //{
-            //    Console.WriteLine("Invalid ID. Please enter a numeric value.");
-            //    return;
-            //}
+            //int idInput = Console.Read();
+        if (!int.TryParse(Console.ReadLine(), out int idInput)) throw new FormatException("Invalid ID. Please enter a numeric value.");
 
         // בהתאם לשם הישות, מבצעים פעולה מתאימה
         switch (entityName)
@@ -301,18 +297,49 @@ internal class Program
         switch (entityName)
         {
             case "Volunteer":
-                List<Volunteer> ? volunteer = s_dalVolunteer?.ReadAll();
-                Console.WriteLine(volunteer);
+        
+                List<Volunteer>? volunteers = s_dalVolunteer?.ReadAll();
+                if (volunteers != null && volunteers.Count > 0)
+                {
+                    foreach (Volunteer volunteer in volunteers)
+                    {
+                        Console.WriteLine(volunteer);
+                    }
+                }
+                else
+                {
+                    Console.WriteLine("No volunteers");
+                }
                 break;
 
             case "Call":
-                List<Call> ? call = s_dalCall?.ReadAll();
-                Console.WriteLine(call);
+                List<Call> ? calls = s_dalCall?.ReadAll();
+                if (calls != null && calls.Count > 0)
+                {
+                    foreach (Call call in calls)
+                    {
+                        Console.WriteLine(call);
+                    }
+                }
+                else
+                {
+                    Console.WriteLine("No calls");
+                }
                 break;
 
             case "Assignment":
-                List<Assignment>? assignment = s_dalAssignment?.ReadAll();
-                Console.WriteLine(assignment);
+                List<Assignment>? assignments = s_dalAssignment?.ReadAll();
+                if (assignments != null && assignments.Count > 0)
+                {
+                    foreach (Assignment assignment in assignments)
+                    {
+                        Console.WriteLine(assignment);
+                    }
+                }
+                else
+                {
+                    Console.WriteLine("No assignments");
+                }
                 break;
 
             default:
@@ -354,10 +381,12 @@ internal class Program
         private static void DeleteEntity(string entityName)
         {
             Console.WriteLine($"Deleting object for {entityName}...");
-            Console.WriteLine("write {entityName} ID");
-            int inputId=Console.Read();
+            Console.WriteLine($"write {entityName} ID");
+            string? input = Console.ReadLine();
         try
         {
+            int inputId = int.Parse(input);
+            //int.TryParse(input, out int choice);
             switch (entityName)
             {
                 case "Volunteer":
@@ -426,17 +455,18 @@ internal class Program
 
         private static void DisplayCurrentClock()
         {
-            Console.WriteLine("Displaying current clock value...");
+          Console.WriteLine("Displaying current clock value...");
           // הצגת ערך השעון
           Console.WriteLine($"Current Clock Time: {s_dalConfig?.Clock}");
         }
 
     private static void SetConfigValue()////////////////
-        {
-            Console.WriteLine("Setting a configuration value...");
+    {
+         Console.WriteLine("Setting a configuration value...");
         // קביעת ערך חדש למשתנה תצורה
         Console.WriteLine("Select:\n 0 - Clock\n 1 - RiskRange");
-        int choice = Console.Read();
+        string? input = Console.ReadLine(); // קריאת קלט כטקסט
+        int.TryParse(input, out int choice);
         switch (choice)
         {
             case 0:
@@ -451,30 +481,31 @@ internal class Program
                 if (s_dalConfig != null)
                     s_dalConfig.RiskRange = RiskRangeValue;
                 break;
-               
+            default:
+                Console.WriteLine("Invalid choice. Please select 0 or 1.");
+                break;
+
         }
-
-
     }
 
     private static void DisplayConfigValue()
-        {
-            Console.WriteLine("Displaying a configuration value...");
-        // הצגת ערך משתנה תצורה
-
-        Console.WriteLine("Select:\n 0 - Clock\n 1 - RiskRange");
-        int choice = Console.Read();
+    {
+       Console.WriteLine("Displaying a configuration value...");
+       Console.WriteLine("Select:\n 0 - Clock\n 1 - RiskRange");
+       string? input = Console.ReadLine(); // קריאת קלט כטקסט
+       int.TryParse(input, out int choice);
         switch (choice)
         {
             case 0:
-               Console.WriteLine($"Clock: {s_dalConfig?.Clock}");
-               break;
+                Console.WriteLine($"Clock: {s_dalConfig?.Clock}");
+                break;
             case 1:
                 Console.WriteLine($"RiskRange: {s_dalConfig?.RiskRange}");
                 break;
+            default:
+                Console.WriteLine("Invalid choice. Please select 0 or 1.");
+                break;
         }
-        
-        
     }
 
         private static void ResetConfigValues()
@@ -554,10 +585,10 @@ internal class Program
     private static Call CreateCall()
     {
         Console.WriteLine("Enter Call ID: ");
-        int id = Console.Read();
+        int id = int.Parse(Console.ReadLine() ?? "0");
 
-        Console.WriteLine("Enter Call Description: ");
-        string? description = Console.ReadLine();
+        Console.WriteLine("Enter Call Description:");
+        string description = Console.ReadLine() ?? "";
 
         Console.WriteLine("Enter Call Address: ");
         string address = Console.ReadLine() ?? "";
@@ -569,12 +600,12 @@ internal class Program
         double? longitude = double.TryParse(Console.ReadLine(), out double parsedLongitude) ? parsedLongitude : null;
 
         Console.WriteLine("Enter Open Time (format: yyyy-MM-dd HH:mm:ss): ");
-        DateTime openTime = DateTime.Parse(Console.ReadLine()??"");
+        DateTime openTime = DateTime.Parse(Console.ReadLine()??"");//אם לא מכניסים שעה זה זורק שגיאה
 
         Console.WriteLine("Enter Max Time (format: yyyy-MM-dd HH:mm:ss): ");
         DateTime? maxTime = DateTime.TryParse(Console.ReadLine(), out DateTime parsedMaxTime) ? parsedMaxTime : null;
 
-        Console.WriteLine("Enter Call Type (0 = Type1, 1 = Type2, etc.): ");
+        Console.WriteLine("Enter Call Type (0 = Regular Vehicle, 1 = Ambulance, 3=Intensive Care Ambulance): ");
         CallType type = (CallType)Enum.Parse(typeof(CallType), Console.ReadLine()??"");
 
         // יצירת אובייקט Call עם הנתונים שנקלטו
