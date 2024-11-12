@@ -1,35 +1,34 @@
-﻿using DalApi;
+﻿namespace DO;
+using DalApi;
 using System.Collections.Generic;
-
-namespace DO;
 
 /// <summary>
 /// A Call entity represents a Call with all their details.
+/// <summary>
+/// Represents a call entity with all its details, including location, timing, and type.
 /// </summary>
-/// <param name="Id"></param>A number that uniquely identifies the call.
-/// <param name="Description"></param> Description of the call.
-/// <param name="Address"></param>  address of the call.
-/// <param name="Latitude"></param>
-/// <param name="Longitude"></param>
-/// <param name="OpenTime"></param> Time (date and time) when the call was opened by the administrator.
-/// <param name="MaxTime"></param> Time (date and time) by which the call should close.
-/// <param name="type"></param> Types of calls.
+/// <param name="Id">A number that uniquely identifies the call.</param>
+/// <param name="Description">A description of the call's nature or purpose.</param>
+/// <param name="Address">The address where the call originated or is directed to.</param>
+/// <param name="Latitude">The geographical latitude of the call's location.</param>
+/// <param name="Longitude">The geographical longitude of the call's location.</param>
+/// <param name="OpenTime">The time (date and time) when the call was opened by the administrator.</param>
+/// <param name="MaxTime">The time (date and time) by which the call should close.</param>
+/// <param name="CarTaypeToSend">The type of the call (e.g., emergency, routine).</param>
 public record Call
 (
     int Id,
     string? Description,
     string Address,
-    double? Latitude, //?
-    double? Longitude, //?
+    double? Latitude,
+    double? Longitude,
     DateTime OpenTime,
     DateTime? MaxTime,
-    CallType type
-    //CallStatus Status
-    //List<BO.CallAssignInList> ListAssignmentsForCalls
-
-
+    CallType CarTaypeToSend
+    //CallStatus Status //next stage
+    //List<BO.CallAssignInList> ListAssignmentsForCalls //next stag
 )
 {
-public Call() : this(0, null, string.Empty, null, null, DateTime.MinValue, null, 0) { }
+    public Call() : this(0, null, string.Empty, null, null, DateTime.MinValue, null, 0) { }
 }
 

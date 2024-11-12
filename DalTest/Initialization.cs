@@ -15,7 +15,7 @@ public static class Initialization
     private static IConfig? s_dalConfig; //stage 1
     private static readonly Random s_rand = new();
 
-    //public static object DataSource { get; private set; }
+    //public static object DataSource { get; private set; } // next stage
 
     private static void CreateVolunteers()
     {
@@ -114,7 +114,7 @@ public static class Initialization
             prefix = prefixes[s_rand.Next(prefixes.Length)];//
             phoneNumber = prefix;
 
-            for (int j = 0; j < 11; j++)
+            for (int j = 0; j < 7; j++)
             {
                 phoneNumber += s_rand.Next(0, 10);
             }// chat gpt
@@ -480,7 +480,7 @@ public static class Initialization
         DateTime start = new DateTime(s_dalConfig!.Clock.Year - 0, 1, 1); //stage 1
         int range = (s_dalConfig.Clock - start).Days; //stage 1
 
-        for (int i = 0;  i < CopyCalls.Count && i < 50; i++)
+        for (int i = 0; i < CopyCalls.Count && i < 50; i++)
         {
             CallId = CopyCalls[i].Id;
             if (CopyVolunteers.Count > 0)

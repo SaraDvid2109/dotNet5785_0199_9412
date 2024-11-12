@@ -281,7 +281,7 @@ internal class Program
                 $"Longitude: {call?.Longitude}\n" +
                 $"Open Time: {call?.OpenTime}\n" +
                 $"Max Time: {call?.MaxTime}\n" +
-                $"Type: {call?.type}");
+                $"Type: {call?.CarTaypeToSend}");
                 break;
 
             case "Assignment":
@@ -627,7 +627,7 @@ internal class Program
             Longitude: longitude,
             OpenTime: openTime,
             MaxTime: maxTime,
-            type: type
+            CarTaypeToSend: type
         );
         return call;
     }

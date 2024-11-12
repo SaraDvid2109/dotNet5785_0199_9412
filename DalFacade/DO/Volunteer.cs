@@ -1,22 +1,23 @@
-﻿using DalApi;
+﻿namespace DO; 
+using DalApi;
 using System;
 using System.Reflection.Metadata;
 
-namespace DO;
-
 /// <summary>
-/// A volunteer entity represents a volunteer with all their details.
+/// Represents a volunteer entity with all their details, including personal information, contact details, and activity status.
 /// </summary>
-/// <param name="Id"></param>Personal unique ID of the volunteer (as in national id card)
-/// <param name="Name"></param>Private Name of the volunteer
-/// <param name="Phone"></param> Volunteer's phone number
-/// <param name="Mail"></param> Volunteer's email address
-/// <param name="Password"></param> Volunteer's password
-/// <param name="Address"></param> Volunteer's address
-/// <param name="Latitude"></param>
-/// <param name="Longitude"></param>
-/// <param name="Active"></param> whether the volunteer is active
-/// <param name="MaximumDistance"></param> The maximum distance to receive a call,the default is air distance.
+/// <param name="Id">The personal unique ID of the volunteer (as in national ID card).</param>
+/// <param name="Name">The private name of the volunteer.</param>
+/// <param name="Phone">The volunteer's phone number.</param>
+/// <param name="Mail">The volunteer's email address.</param>
+/// <param name="Password">The volunteer's password for authentication purposes.</param>
+/// <param name="Address">The volunteer's physical address.</param>
+/// <param name="Latitude">The geographical latitude of the volunteer's address.</param>
+/// <param name="Longitude">The geographical longitude of the volunteer's address.</param>
+/// <param name="Active">Indicates whether the volunteer is currently active and available for calls.</param>
+/// <param name="MaximumDistance">The maximum distance (in kilometers) the volunteer is willing to travel to respond to a call. Defaults to air distance.</param>
+/// <param name="Role">The volunteer's role or permissions level.</param>
+/// <param name="Type">The type of distance calculation used (e.g., air distance or road distance).</param>
 public record Volunteer
 (
    int Id,
@@ -27,19 +28,16 @@ public record Volunteer
    string? Address, 
    double? Latitude, //?
    double? Longitude, //?
-   bool   Active,
+   bool Active,
    double? MaximumDistance,
    Roles Role,
    DistanceType Type
-   //int TotalCallsHandled,
-   //int TotalCallsCanceled,
-   //int TotalCallsChosenHandleExpired
-   //BO.CallInProgress? Progress
-
-
+   //int TotalCallsHandled, //next stage
+   //int TotalCallsCanceled, //next stage
+   //int TotalCallsChosenHandleExpired //next stage
+   //BO.CallInProgress? Progress //next stage
 )
 {
     public Volunteer() : this(0, string.Empty, string.Empty, string.Empty, null,null,null,null,false,null, 0, 0 ) { }
-
 }
 
