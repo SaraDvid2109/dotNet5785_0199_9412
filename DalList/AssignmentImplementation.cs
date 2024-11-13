@@ -44,7 +44,7 @@ public class AssignmentImplementation : IAssignment
     /// </summary>
     /// <param name="id">The ID of the Assignment to read.</param>
     /// <returns>The Assignment object if found; otherwise, null.</returns>
-    public Assignment? Read(int id) => DataSource.Assignments.FirstOrDefault(a => a.Id == id);
+    public Assignment? Read(int id) => DataSource.Assignments.Find(a => a.Id == id);
 
     /// <summary>
     /// Reads all Assignment entities from the data source.
@@ -59,7 +59,7 @@ public class AssignmentImplementation : IAssignment
     /// <exception cref="NotImplementedException">Thrown if the Assignment with the specified ID does not exist.</exception>
     public void Update(Assignment item)
     {
-        Assignment? found = DataSource.Assignments.FirstOrDefault(a => a.Id == item.Id);
+        Assignment? found = DataSource.Assignments.Find(a => a.Id == item.Id);
         if (found != null)
         {
             DataSource.Assignments.Remove(found);

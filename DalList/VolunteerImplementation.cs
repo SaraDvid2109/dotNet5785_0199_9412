@@ -49,7 +49,7 @@ public class VolunteerImplementation : IVolunteer
     /// </summary>
     /// <param name="id">The ID of the Volunteer to retrieve.</param>
     /// <returns>The Volunteer object, or null if not found.</returns>
-    public Volunteer? Read(int id) => DataSource.Volunteers.FirstOrDefault(v => v.Id == id);
+    public Volunteer? Read(int id) => DataSource.Volunteers.Find(v => v.Id == id);
 
     /// <summary>
     /// Retrieves all Volunteers from the data source.
@@ -64,7 +64,7 @@ public class VolunteerImplementation : IVolunteer
     /// <exception cref="NotImplementedException">Thrown if the Volunteer with the specified ID does not exist.</exception>
     public void Update(Volunteer item)
     {
-        Volunteer? found = DataSource.Volunteers.FirstOrDefault(v => v.Id == item.Id);
+        Volunteer? found = DataSource.Volunteers.Find(v => v.Id == item.Id);
         if (found != null)
         {
             DataSource.Volunteers.Remove(found);

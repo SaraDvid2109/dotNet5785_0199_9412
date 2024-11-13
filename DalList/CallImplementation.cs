@@ -45,7 +45,7 @@ public class CallImplementation : ICall
     /// </summary>
     /// <param name="id">The ID of the Call to read.</param>
     /// <returns>The Call object if found; otherwise, null.</returns>
-    public Call? Read(int id) => DataSource.Calls.FirstOrDefault(c => c.Id == id);
+    public Call? Read(int id) => DataSource.Calls.Find(c => c.Id == id);
 
     /// <summary>
     /// Reads all Call entities from the data source.
@@ -60,7 +60,7 @@ public class CallImplementation : ICall
     /// <exception cref="NotImplementedException">Thrown if the Call with the specified ID does not exist.</exception>
     public void Update(Call item)
     {
-        Call? found = DataSource.Calls.FirstOrDefault(c => c.Id == item.Id);
+        Call? found = DataSource.Calls.Find(c => c.Id == item.Id);
         if (found != null)
         {
             DataSource.Calls.Remove(found);
