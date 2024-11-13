@@ -50,7 +50,7 @@ internal class Program
             }
         }
 
-        private static void DisplayMainMenu()
+    private static void DisplayMainMenu()
         {
             Console.WriteLine("Main Menu:");
             Console.WriteLine("0. Exit");
@@ -63,7 +63,7 @@ internal class Program
             Console.WriteLine("7. Reset Database");
         }
 
-        private static void DisplayEntityMenu(string entityName)
+    private static void DisplayEntityMenu(string entityName)
         {
             bool exit = false;
             while (!exit)
@@ -113,7 +113,7 @@ internal class Program
             }
         }
 
-        private static void DisplayConfigMenu()
+    private static void DisplayConfigMenu()
         {
             bool exit = false;
             while (!exit)
@@ -135,11 +135,11 @@ internal class Program
                         exit = true;
                         break;
                     case ConfigMenuOptions.AdvanceClockMinute:
-                        AdvanceClockMinute();
-                        break;
+                           if (s_dalConfig != null) s_dalConfig.Clock = s_dalConfig.Clock.AddMinutes(1);
+                    break;
                     case ConfigMenuOptions.AdvanceClockHour:
-                        AdvanceClockHour();
-                        break;
+                            if (s_dalConfig != null) s_dalConfig.Clock = s_dalConfig.Clock.AddHours(1);
+                    break;
                     case ConfigMenuOptions.DisplayCurrentClock:
                         DisplayCurrentClock();
                         break;
@@ -156,7 +156,7 @@ internal class Program
             }
         }
 
-        private static int GetUserInput(Type enumType)
+    private static int GetUserInput(Type enumType)
         {
             int choice;
             while (!int.TryParse(Console.ReadLine(), out choice) || !Enum.IsDefined(enumType, choice))
@@ -166,14 +166,14 @@ internal class Program
             return choice;
         }
 
-        private static void InitializeData()
+    private static void InitializeData()
         {
             Console.WriteLine("Initializing data...");
             Initialization.Do(s_dalAssignment, s_dalCall,s_dalVolunteer,s_dalConfig); //stage 1)
 
     }
 
-        private static void DisplayAllData()///////////////לשאול
+    private static void DisplayAllData()///////////////לשאול
         {
            Console.WriteLine("Displaying all data...");
           // הצגת כל הנתונים
@@ -194,7 +194,7 @@ internal class Program
        
         }
 
-        private static void ResetDatabase() 
+    private static void ResetDatabase() 
         {
             Console.WriteLine("Resetting database...");
         // איפוס נתוני בסיס נתונים ונתוני תצורה
@@ -246,17 +246,14 @@ internal class Program
         }
     }
 
-    
-
     private static void ReadEntity(string entityName)
         {
             Console.WriteLine($"Reading object for {entityName}...");
 
             Console.WriteLine("Please enter the ID of the object:");
-            //int idInput = Console.Read();
-        if (!int.TryParse(Console.ReadLine(), out int idInput)) throw new FormatException("Invalid ID. Please enter a numeric value.");
+        if (!int.TryParse(Console.ReadLine(), out int idInput)) 
+            throw new FormatException("Invalid ID. Please enter a numeric value.");
 
-        // בהתאם לשם הישות, מבצעים פעולה מתאימה
         switch (entityName)
         {
             case "Volunteer":
@@ -301,7 +298,7 @@ internal class Program
     
 }
 
-        private static void ReadAllEntities(string entityName)
+     private static void ReadAllEntities(string entityName)
         {
          Console.WriteLine($"Reading all objects for {entityName}...");
         switch (entityName)
@@ -358,7 +355,7 @@ internal class Program
         }
     }
 
-    private static void UpdateEntity(string entityName)
+     private static void UpdateEntity(string entityName)
     {
         Console.WriteLine($"Updating object for {entityName}...");
         try
@@ -388,7 +385,7 @@ internal class Program
         }
     }
 
-        private static void DeleteEntity(string entityName)
+     private static void DeleteEntity(string entityName)
         {
             Console.WriteLine($"Deleting object for {entityName}...");
             Console.WriteLine($"write {entityName} ID");
@@ -419,7 +416,7 @@ internal class Program
         }
     }
 
-        private static void DeleteAllEntities(string entityName)
+     private static void DeleteAllEntities(string entityName)
         {
             Console.WriteLine($"Deleting all objects for {entityName}...");
         try
@@ -446,24 +443,24 @@ internal class Program
         }
     }
 
-        private static void AdvanceClockMinute()
-        {
-            Console.WriteLine("Advancing clock by one minute...");
-        // קידום שעון בדקה
-        if (s_dalConfig != null)
-            s_dalConfig.Clock = s_dalConfig.Clock.AddMinutes(1);
-        }
+     //private static void AdvanceClockMinute()
+     //   {
+     //    Console.WriteLine("Advancing clock by one minute...");
+     //   // קידום שעון בדקה
+     //   if (s_dalConfig != null)
+     //       s_dalConfig.Clock = s_dalConfig.Clock.AddMinutes(1);
+     //   }
 
-        private static void AdvanceClockHour()
-        {
-            Console.WriteLine("Advancing clock by one hour...");
+     //private static void AdvanceClockHour()
+     //   {
+     //       Console.WriteLine("Advancing clock by one hour...");
 
-        // קידום שעון בשעה
-        if (s_dalConfig != null)
-            s_dalConfig.Clock = s_dalConfig.Clock.AddHours(1);
-        }
+     //   // קידום שעון בשעה
+     //   if (s_dalConfig != null)
+     //       s_dalConfig.Clock = s_dalConfig.Clock.AddHours(1);
+     //   }
 
-        private static void DisplayCurrentClock()
+     private static void DisplayCurrentClock()
         {
           Console.WriteLine("Displaying current clock value...");
           // הצגת ערך השעון
@@ -472,11 +469,10 @@ internal class Program
 
     private static void SetConfigValue()////////////////
     {
-         Console.WriteLine("Setting a configuration value...");
-        // קביעת ערך חדש למשתנה תצורה
+        Console.WriteLine("Setting a configuration value...");
         Console.WriteLine("Select:\n 0 - Clock\n 1 - RiskRange");
-        string? input = Console.ReadLine(); // קריאת קלט כטקסט
-        int.TryParse(input, out int choice);
+        if(!int.TryParse(Console.ReadLine(),out int choice) )
+            throw new FormatException("invalid input!"); 
         switch (choice)
         {
             case 0:
@@ -502,8 +498,8 @@ internal class Program
     {
        Console.WriteLine("Displaying a configuration value...");
        Console.WriteLine("Select:\n 0 - Clock\n 1 - RiskRange");
-       string? input = Console.ReadLine(); // קריאת קלט כטקסט
-       int.TryParse(input, out int choice);
+        if (!int.TryParse(Console.ReadLine(), out int choice))
+            throw new FormatException("invalid input!");
         switch (choice)
         {
             case 0:
@@ -518,7 +514,7 @@ internal class Program
         }
     }
 
-        private static void ResetConfigValues()
+    private static void ResetConfigValues()
         {
             Console.WriteLine("Resetting configuration values...");
             // איפוס כל ערכי התצורה
@@ -526,55 +522,57 @@ internal class Program
         }
 
     private static Volunteer CreateVolunteer()
-{
-    int Id;
-    string Name;
-    string Phone;
-    string Mail;
+    {
+     int Id;
+     string Name;
+     string Phone;
+     string Mail;
     string? Password;
     string? Address;
-    double? Latitude;
-    double? Longitude;
+    double Latitude;
+    double Longitude;
     bool Active;
     double? MaximumDistance;
     Roles Role;
     DistanceType Type;
 
-    Console.WriteLine("Enter Volunteer ID: ");
-    int.TryParse(Console.ReadLine(), out Id);  // שגיאה אם לא ניתן להמיר את הקלט ל-int
-    Console.WriteLine("Enter Volunteer Name:");
-    Name = Console.ReadLine() ?? ""; 
+     Console.WriteLine("Enter Volunteer ID: ");
+     if(!int.TryParse(Console.ReadLine(), out Id))
+            throw new FormatException("ID is invalid!");  
+     Console.WriteLine("Enter Volunteer Name:");
+     Name = Console.ReadLine() ?? ""; 
 
-    Console.WriteLine("Enter Volunteer Phone: ");
-    Phone = Console.ReadLine() ?? "";
-    Console.WriteLine("Enter Volunteer Mail: ");
-    Mail = Console.ReadLine() ?? "";
-    Console.WriteLine("Enter Volunteer Password: ");
-    Password = Console.ReadLine();
-    Console.WriteLine("Enter Volunteer Address: ");
-    Address = Console.ReadLine();
+     Console.WriteLine("Enter Volunteer Phone: ");
+     Phone = Console.ReadLine() ?? "";
+     Console.WriteLine("Enter Volunteer Mail: ");
+     Mail = Console.ReadLine() ?? "";
+     Console.WriteLine("Enter Volunteer Password: ");
+     Password = Console.ReadLine();
+     Console.WriteLine("Enter Volunteer Address: ");
+     Address = Console.ReadLine();
     
-    Console.WriteLine("Enter Volunteer Latitude: ");
-    Latitude = double.TryParse(Console.ReadLine(), out double latitude) ? latitude : (double?)null;
+     Console.WriteLine("Enter Volunteer Latitude: ");
+     if(!double.TryParse(Console.ReadLine(), out Latitude))
+            throw new FormatException(" Latitude is invalid!");
 
-    Console.WriteLine("Enter Volunteer Longitude: ");
-    Longitude = double.TryParse(Console.ReadLine(), out double longitude) ? longitude : (double?)null;
+     Console.WriteLine("Enter Volunteer Longitude: ");
+     if(! double.TryParse(Console.ReadLine(), out Longitude) )
+            throw new FormatException(" Longitude is invalid!");
 
-    Console.WriteLine("Enter Volunteer Active (true/false): ");
-    Active = bool.TryParse(Console.ReadLine(), out bool active) && active;
+     Console.WriteLine("Enter Volunteer Active (true/false): ");
+      Active = bool.TryParse(Console.ReadLine(), out bool active) && active;
 
-    Console.WriteLine("Enter Volunteer MaximumDistance: ");
-    MaximumDistance = double.TryParse(Console.ReadLine(), out double maxDist) ? maxDist : (double?)null;
+     Console.WriteLine("Enter Volunteer MaximumDistance: ");
+     MaximumDistance = double.TryParse(Console.ReadLine(), out double maxDist) ? maxDist : (double?)null;
 
-    Console.WriteLine("Enter Volunteer Role: ");
-    string? roleInput = Console.ReadLine();
-    Role = Enum.TryParse(roleInput, out Roles parsedRole) ? parsedRole : 0;
+     Console.WriteLine("Enter Volunteer Role: ");
+     string? roleInput = Console.ReadLine();
+     Role = Enum.TryParse(roleInput, out Roles parsedRole) ? parsedRole : 0;
 
-    Console.WriteLine("Enter Volunteer Type: ");
-    string? typeInput = Console.ReadLine();
-    Type = Enum.TryParse(typeInput, out DistanceType parsedType) ? parsedType : 0;
+     Console.WriteLine("Enter Volunteer Type: ");
+     string? typeInput = Console.ReadLine();
+     Type = Enum.TryParse(typeInput, out DistanceType parsedType) ? parsedType : 0;
 
-    // יצירת האובייקט
     Volunteer volunteer = new Volunteer(
         Id: Id,
         Name: Name,
@@ -594,9 +592,6 @@ internal class Program
 
     private static Call CreateCall()
     {
-        //Console.WriteLine("Enter Call ID: ");
-        //int id = int.Parse(Console.ReadLine() ?? "0");
-        //int.TryParse(Console.ReadLine(), out int id);
         Console.WriteLine("Enter Call Description:");
         string description = Console.ReadLine() ?? "";
 
@@ -604,21 +599,24 @@ internal class Program
         string address = Console.ReadLine() ?? "";
 
         Console.WriteLine("Enter Latitude: ");
-        double? latitude = double.TryParse(Console.ReadLine(), out double parsedLatitude) ? parsedLatitude : null;
+        if(!double.TryParse(Console.ReadLine(), out double latitude))
+            throw new FormatException(" Latitude is invalid!");
 
         Console.WriteLine("Enter Longitude: ");
-        double? longitude = double.TryParse(Console.ReadLine(), out double parsedLongitude) ? parsedLongitude : null;
+        if(!double.TryParse(Console.ReadLine(), out double longitude) )
+            throw new FormatException(" Latitude is invalid!");
 
         Console.WriteLine("Enter Open Time (format: yyyy-MM-dd HH:mm:ss): ");
-        DateTime openTime = DateTime.Parse(Console.ReadLine()??"");//אם לא מכניסים שעה זה זורק שגיאה
+        if(!DateTime.TryParse(Console.ReadLine(),out DateTime openTime))
+            throw new FormatException(" Open Time is invalid!");
 
         Console.WriteLine("Enter Max Time (format: yyyy-MM-dd HH:mm:ss): ");
-        DateTime? maxTime = DateTime.TryParse(Console.ReadLine(), out DateTime parsedMaxTime) ? parsedMaxTime : null;
+        if(!DateTime.TryParse(Console.ReadLine(), out DateTime maxTime))
+            throw new FormatException(" Open Time is invalid!");
 
         Console.WriteLine("Enter Call Type (0 = Regular Vehicle, 1 = Ambulance, 3=Intensive Care Ambulance): ");
         CallType type = (CallType)Enum.Parse(typeof(CallType), Console.ReadLine()??"");
        
-        // יצירת אובייקט Call עם הנתונים שנקלטו
         Call call = new Call(
             Id:0,
             Description: description,
@@ -634,23 +632,24 @@ internal class Program
     private static Assignment CreateAssignment()
     {
         Console.WriteLine("Enter Call ID: ");
-        int.TryParse(Console.ReadLine(), out int callId);
+        if(!int.TryParse(Console.ReadLine(), out int callId)) throw new FormatException("Call ID is invalid!");
 
         Console.WriteLine("Enter Volunteer ID: ");
-        int.TryParse(Console.ReadLine(), out int volunteerId);
-
+        if(!int.TryParse(Console.ReadLine(), out int volunteerId)) 
+            throw new FormatException("Volunteer ID is invalid!");
         Console.WriteLine("Enter Enter Time (format: yyyy-MM-dd HH:mm:ss): ");
-        DateTime? enterTime = DateTime.TryParse(Console.ReadLine(), out DateTime parsedEnterTime) ? parsedEnterTime : null;
+        if(!DateTime.TryParse(Console.ReadLine(), out DateTime enterTime))
+           throw new FormatException(" Enter Time is invalid!");
 
         Console.WriteLine("Enter End Time (format: yyyy-MM-dd HH:mm:ss): ");
-        DateTime? endTime = DateTime.TryParse(Console.ReadLine(), out DateTime parsedEndTime) ? parsedEndTime : null;
+        if(!DateTime.TryParse(Console.ReadLine(), out DateTime endTime))
+            throw new FormatException(" End Time is invalid!");
 
         Console.WriteLine("Enter End Type (0 - Processed, 1 - Admin Cancellation, 3 - Self Cancellation,4 - Expired Cancellation): ");
         EndType? typeEndOfTreatment = Enum.TryParse(typeof(EndType), Console.ReadLine(), out var parsedEndType)
-            ? (EndType)parsedEndType
-            : null;
+            ? (EndType)parsedEndType: null;
 
-        // יצירת אובייקט Assignment עם הנתונים שנקלטו
+
         Assignment assignment = new Assignment(
             Id:0,
             CallId: callId,
