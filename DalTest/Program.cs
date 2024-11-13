@@ -650,7 +650,7 @@ internal class Program
             ? (EndType)parsedEndType
             : null;
 
-        // יצירת אובייקט Assignment עם הנתונים שנקלטו
+        // יצירת אובייקט Assignment עם הנתונים שנקלטו 
         Assignment assignment = new Assignment(
             Id:0,
             CallId: callId,
