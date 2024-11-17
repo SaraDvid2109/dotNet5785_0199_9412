@@ -6,7 +6,7 @@ using System.Collections.Generic;
 /// <summary>
 /// Implementation of the IAssignment interface for managing Assignment entities in the Data Access Layer (DAL).
 /// </summary>
-public class AssignmentImplementation : IAssignment
+internal class AssignmentImplementation : IAssignment
 {
     /// <summary>
     /// Creates a new Assignment entity and adds it to the data source.
@@ -44,20 +44,26 @@ public class AssignmentImplementation : IAssignment
     /// </summary>
     /// <param name="id">The ID of the Assignment to read.</param>
     /// <returns>The Assignment object if found; otherwise, null.</returns>
-    public Assignment? Read(int id) => DataSource.Assignments.Find(a => a.Id == id);
+    public Assignment? Read(int id) => DataSource.Assignments.FirstOrDefault(a => a.Id == id);
 
     /// <summary>
     /// Reads all Assignment entities from the data source.
     /// </summary>
     /// <returns>A list of all Assignment objects.</returns>
-    public List<Assignment> ReadAll() => new List<Assignment>(DataSource.Assignments);
+    public IEnumerable<Assignment> ReadAll(Func<Assignment, bool>? filter = null)
+     => filter != null
+            ? from item in DataSource.Assignments
+              where filter(item)
+              select item
+            : from item in DataSource.Assignments
+              select item;
 
-    /// <summary>
-    /// Updates an existing Assignment entity in the data source.
-    /// </summary>
-    /// <param name="item">The updated Assignment object.</param>
-    /// <exception cref="NotImplementedException">Thrown if the Assignment with the specified ID does not exist.</exception>
-    public void Update(Assignment item)
+/// <summary>
+/// Updates an existing Assignment entity in the data source.
+/// </summary>
+/// <param name="item">The updated Assignment object.</param>
+/// <exception cref="NotImplementedException">Thrown if the Assignment with the specified ID does not exist.</exception>
+public void Update(Assignment item)
     {
         Assignment? found = DataSource.Assignments.Find(a => a.Id == item.Id);
         if (found != null)

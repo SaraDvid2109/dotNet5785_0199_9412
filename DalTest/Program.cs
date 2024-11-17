@@ -1,18 +1,20 @@
 ﻿using Dal;
 using DalApi;
 using DO;
-
 namespace DalTest;
+
 /// <summary>
 /// Main program for manually testing the data layer functionality
 /// </summary>
 internal class Program
 {
-    private static IAssignment? s_dalAssignment = new AssignmentImplementation(); //stage 1
-    private static ICall? s_dalCall = new CallImplementation(); //stage 1
-    private static IVolunteer? s_dalVolunteer = new VolunteerImplementation(); //stage 1
-    private static IConfig? s_dalConfig = new ConfigImplementation(); //stage 1
-    
+
+    //private static IAssignment? s_dalAssignment = new AssignmentImplementation(); //stage 1
+    //private static ICall? s_dalCall = new CallImplementation(); //stage 1
+    //private static IVolunteer? s_dalVolunteer = new VolunteerImplementation(); //stage 1
+    //private static IConfig? s_dalConfig = new ConfigImplementation(); //stage 1
+    static readonly IDal s_dal = new DalList(); //stage 2
+
     static void Main(string[] args)
     {
 
@@ -146,13 +148,13 @@ internal class Program
                     exit = true;
                     break;
                 case ConfigMenuOptions.AdvanceClockMinute:
-                    if (s_dalConfig != null) s_dalConfig.Clock = s_dalConfig.Clock.AddMinutes(1);
+                    if (s_dal!= null) s_dal.Config.Clock = s_dal.Config.Clock.AddMinutes(1);
                     break;
                 case ConfigMenuOptions.AdvanceClockHour:
-                    if (s_dalConfig != null) s_dalConfig.Clock = s_dalConfig.Clock.AddHours(1);
+                    if (s_dal != null) s_dal.Config.Clock = s_dal.Config.Clock.AddHours(1);
                     break;
                 case ConfigMenuOptions.DisplayCurrentClock:
-                    Console.WriteLine($"Current Clock Time: {s_dalConfig?.Clock}");
+                    Console.WriteLine($"Current Clock Time: {s_dal!.Config.Clock}");
                     break;
                 case ConfigMenuOptions.SetConfigValue:
                     SetConfigValue();
@@ -182,11 +184,10 @@ internal class Program
         return choice;
     }
 
-    private static void InitializeData()
+    private static void InitializeData()//לשאול אם האיתחול אמור להיות בתחילת המיין
     {
         Console.WriteLine("Initializing data...");
-        Initialization.Do(s_dalAssignment, s_dalCall, s_dalVolunteer, s_dalConfig); //stage 1)
-
+        Initialization.Do(s_dal); //stage 2
     }
     /// <summary>
     /// Displaying all data in the database
@@ -195,17 +196,17 @@ internal class Program
     {
         Console.WriteLine("Displaying all data...");
         //ChatGPT-What to do if there is a null option warning?
-        foreach (Volunteer volunteer in s_dalVolunteer?.ReadAll() ?? Enumerable.Empty<Volunteer>())
+        foreach (Volunteer volunteer in s_dal.Volunteer?.ReadAll() ?? Enumerable.Empty<Volunteer>())
         {
             Console.WriteLine(volunteer);
         }
 
-        foreach (Assignment assignment in s_dalAssignment?.ReadAll() ?? Enumerable.Empty<Assignment>())
+        foreach (Assignment assignment in s_dal.Assignment?.ReadAll() ?? Enumerable.Empty<Assignment>())
         {
             Console.WriteLine(assignment);
         }
 
-        foreach (Call call in s_dalCall?.ReadAll() ?? Enumerable.Empty<Call>())
+        foreach (Call call in s_dal.Call?.ReadAll() ?? Enumerable.Empty<Call>())
         {
             Console.WriteLine(call);
         }
@@ -217,11 +218,11 @@ internal class Program
     private static void ResetDatabase()
     {
         Console.WriteLine("Resetting database...");
-        if (s_dalVolunteer != null) s_dalVolunteer.DeleteAll(); //stage 1
-        if (s_dalCall != null) s_dalCall.DeleteAll();
-        if (s_dalAssignment != null) s_dalAssignment.DeleteAll();
-        if (s_dalConfig != null) s_dalConfig.Reset(); //stage 1
-
+        //if (s_dalVolunteer != null) s_dalVolunteer.DeleteAll(); //stage 1
+        //if (s_dalCall != null) s_dalCall.DeleteAll();
+        //if (s_dalAssignment != null) s_dalAssignment.DeleteAll();
+        //if (s_dalConfig != null) s_dalConfig.Reset(); //stage 1
+        s_dal.ResetDB();
 
     }
     /// <summary>
@@ -237,15 +238,15 @@ internal class Program
             {
                 case "Volunteer":
                     Volunteer volunteer = CreateVolunteer();
-                    s_dalVolunteer?.Create(volunteer);
+                    s_dal.Volunteer?.Create(volunteer);
                     break;
                 case "Call":
                     Call call = CreateCall();
-                    s_dalCall?.Create(call);
+                    s_dal.Call?.Create(call);
                     break;
                 case "Assignment":
                     Assignment assignment = CreateAssignment();
-                    s_dalAssignment?.Create(assignment);
+                    s_dal.Assignment?.Create(assignment);
                     break;
                 default:
                     Console.WriteLine("Invalid entity name");
@@ -273,15 +274,15 @@ internal class Program
         switch (entityName)
         {
             case "Volunteer":
-                Volunteer? volunteer = s_dalVolunteer?.Read(idInput);
+                Volunteer? volunteer = s_dal.Volunteer?.Read(idInput);
                 Console.WriteLine(volunteer);
                 break;
             case "Call":
-                Call? call = s_dalCall?.Read(idInput);
+                Call? call = s_dal.Call?.Read(idInput);
                 Console.WriteLine(call);
                 break;
             case "Assignment":
-                Assignment? assignment = s_dalAssignment?.Read(idInput);
+                Assignment? assignment = s_dal.Assignment?.Read(idInput);
                 Console.WriteLine(assignment);
                 break;
             default:
@@ -301,8 +302,8 @@ internal class Program
         {
             case "Volunteer":
 
-                List<Volunteer>? volunteers = s_dalVolunteer?.ReadAll();
-                if (volunteers != null && volunteers.Count > 0)
+                IEnumerable<Volunteer>? volunteers = s_dal.Volunteer?.ReadAll();
+                if (volunteers != null)
                 {
                     foreach (Volunteer volunteer in volunteers)
                     {
@@ -316,8 +317,8 @@ internal class Program
                 break;
 
             case "Call":
-                List<Call>? calls = s_dalCall?.ReadAll();
-                if (calls != null && calls.Count > 0)
+                IEnumerable<Call>? calls = s_dal.Call?.ReadAll();
+                if (calls != null)
                 {
                     foreach (Call call in calls)
                     {
@@ -331,8 +332,8 @@ internal class Program
                 break;
 
             case "Assignment":
-                List<Assignment>? assignments = s_dalAssignment?.ReadAll();
-                if (assignments != null && assignments.Count > 0)
+                IEnumerable<Assignment>? assignments = s_dal.Assignment?.ReadAll();
+                if (assignments != null)
                 {
                     foreach (Assignment assignment in assignments)
                     {
@@ -363,15 +364,15 @@ internal class Program
             {
                 case "Volunteer":
                     Volunteer volunteer = CreateVolunteer();
-                    s_dalVolunteer?.Update(volunteer);
+                    s_dal.Volunteer?.Update(volunteer);
                     break;
                 case "Call":
                     Call call = CreateCall();
-                    s_dalCall?.Update(call);
+                    s_dal.Call?.Update(call);
                     break;
                 case "Assignment":
                     Assignment assignment = CreateAssignment();
-                    s_dalAssignment?.Update(assignment);
+                    s_dal.Assignment?.Update(assignment);
                     break;
                 default:
                     Console.WriteLine("Invalid entity name");
@@ -398,13 +399,13 @@ internal class Program
             switch (entityName)
             {
                 case "Volunteer":
-                    s_dalVolunteer!.Delete(inputId);
+                    s_dal!.Volunteer.Delete(inputId);
                     break;
                 case "Call":
-                    s_dalCall!.Delete(inputId);
+                    s_dal!.Call.Delete(inputId);
                     break;
                 case "Assignment":
-                    s_dalAssignment!.Delete(inputId);
+                    s_dal!.Assignment.Delete(inputId);
                     break;
                 default:
                     Console.WriteLine("Invalid entity name");
@@ -428,13 +429,13 @@ internal class Program
             switch (entityName)
             {
                 case "Volunteer":
-                    s_dalVolunteer!.DeleteAll();
+                    s_dal!.Volunteer.DeleteAll();
                     break;
                 case "Call":
-                    s_dalCall!.DeleteAll();
+                    s_dal!.Call.DeleteAll();
                     break;
                 case "Assignment":
-                    s_dalAssignment!.DeleteAll();
+                    s_dal!.Assignment.DeleteAll();
                     break;
                 default:
                     Console.WriteLine("Invalid entity name");
@@ -462,15 +463,15 @@ internal class Program
                 Console.WriteLine("Enter new Clock value in the format 'dd/MM/yyyy HH:mm':");
                 if (!DateTime.TryParse(Console.ReadLine(), out DateTime clockValue))
                     throw new FormatException(" clock Value is invalid!");
-                if (s_dalConfig != null)
-                    s_dalConfig.Clock = clockValue;
+                if (s_dal != null)
+                    s_dal.Config.Clock = clockValue;
                 break;
             case 1:
                 Console.WriteLine("Enter new RiskRange value in the format 'hh:mm:ss':");
                 if (!TimeSpan.TryParse(Console.ReadLine(), out TimeSpan RiskRangeValue))
                     throw new FormatException(" Risk Range Value is invalid!");
-                if (s_dalConfig != null)
-                    s_dalConfig.RiskRange = RiskRangeValue;
+                if (s_dal!= null)
+                    s_dal.Config.RiskRange = RiskRangeValue;
                 break;
             default:
                 Console.WriteLine("Invalid choice. Please select 0 or 1.");
@@ -491,10 +492,10 @@ internal class Program
         switch (choice)
         {
             case 0:
-                Console.WriteLine($"Clock: {s_dalConfig?.Clock}");
+                Console.WriteLine($"Clock: {s_dal.Config.Clock}");
                 break;
             case 1:
-                Console.WriteLine($"RiskRange: {s_dalConfig?.RiskRange}");
+                Console.WriteLine($"RiskRange: {s_dal.Config.RiskRange}");
                 break;
             default:
                 Console.WriteLine("Invalid choice. Please select 0 or 1.");
@@ -507,7 +508,7 @@ internal class Program
     private static void ResetConfigValues()
     {
         Console.WriteLine("Resetting configuration values...");
-        s_dalConfig?.Reset();
+        s_dal.Config.Reset();
     }
     /// <summary>
     /// Create a new volunteer with the user input 
