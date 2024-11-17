@@ -6,7 +6,7 @@ using System.Collections.Generic;
 /// <summary>
 /// Implementation of the IVolunteer interface, managing Volunteer entities in memory.
 /// </summary>
-public class VolunteerImplementation : IVolunteer
+internal class VolunteerImplementation : IVolunteer
 {
 
     /// <summary>
@@ -49,13 +49,17 @@ public class VolunteerImplementation : IVolunteer
     /// </summary>
     /// <param name="id">The ID of the Volunteer to retrieve.</param>
     /// <returns>The Volunteer object, or null if not found.</returns>
-    public Volunteer? Read(int id) => DataSource.Volunteers.Find(v => v.Id == id);
+    public Volunteer? Read(int id) => DataSource.Volunteers.FirstOrDefault(v => v.Id == id);
 
     /// <summary>
     /// Retrieves all Volunteers from the data source.
     /// </summary>
     /// <returns>A list of all Volunteer objects.</returns>
-    public List<Volunteer> ReadAll() => new List<Volunteer>(DataSource.Volunteers);
+    public IEnumerable<Volunteer> ReadAll(Func<Volunteer, bool>? filter = null)
+       => filter == null
+            ? DataSource.Volunteers.Select(item => item)
+            : DataSource.Volunteers.Where(filter);
+
 
     /// <summary>
     /// Updates an existing Volunteer in the data source.

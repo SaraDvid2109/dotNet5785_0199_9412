@@ -16,10 +16,11 @@ using System.Reflection;
 /// </remarks>
 public static class Initialization
 {
-    private static IAssignment? s_dalAssignment; // Data Access Layer (DAL) for assignments.
-    private static ICall? s_dalCall; // Data Access Layer (DAL) for calls.
-    private static IVolunteer? s_dalVolunteer; // Data Access Layer (DAL) for volunteers.
-    private static IConfig? s_dalConfig; // Data Access Layer (DAL) for configuration settings.
+    //private static IAssignment? s_dalAssignment; // Data Access Layer (DAL) for assignments.
+    //private static ICall? s_dalCall; // Data Access Layer (DAL) for calls.
+    //private static IVolunteer? s_dalVolunteer; // Data Access Layer (DAL) for volunteers.
+    //private static IConfig? s_dalConfig; // Data Access Layer (DAL) for configuration settings.
+    private static IDal? s_dal; //stage 2
     private static readonly Random s_rand = new(); // Random number generator for generating random data.
     //public static object DataSource { get; private set; } // next stage
 
@@ -103,7 +104,7 @@ public static class Initialization
 
             try
             {
-                s_dalVolunteer!.Create(new(id, volunteerName, phoneNumber, email, password, addresses[i],
+                s_dal!.Volunteer.Create(new(id, volunteerName, phoneNumber, email, password, addresses[i],
                           latitudes[i], longitudes[i], false, MaximumDistance, role, DistanceType.Aerial));
             }
             catch (Exception ex)
@@ -201,8 +202,8 @@ public static class Initialization
         DateTime? MaxTime;
         CallType type;
 
-        DateTime start = new DateTime(s_dalConfig!.Clock.Year - 0, 1, 1); //stage 1
-        int range = (s_dalConfig.Clock - start).Days; //stage 1
+        DateTime start = new DateTime(s_dal!.Config.Clock.Year - 0, 1, 1); //stage 1
+        int range = (s_dal!.Config.Clock - start).Days; //stage 1
 
         int i = 0;
         foreach (string address in addresses)
@@ -220,7 +221,7 @@ public static class Initialization
 
             try
             {
-                s_dalCall!.Create(new(0, Description, Address, Latitude, Longitude, OpenTime, MaxTime, type));
+                s_dal!.Call.Create(new(0, Description, Address, Latitude, Longitude, OpenTime, MaxTime, type));
             }
             catch (Exception ex)
             {
@@ -318,11 +319,11 @@ public static class Initialization
         DateTime? EndTime;
         EndType? TypeEndOfTreatment;
 
-        List<Call> CopyCalls = s_dalCall!.ReadAll();
-        List<Volunteer> CopyVolunteers = s_dalVolunteer!.ReadAll();
+        IEnumerable<Call> CopyCalls = s_dal!.Call.ReadAll();
+        IEnumerable<Volunteer> CopyVolunteers = s_dal!.Volunteer.ReadAll();
 
-        DateTime start = new DateTime(s_dalConfig!.Clock.Year - 0, 1, 1); //stage 1
-        int range = (s_dalConfig.Clock - start).Days; //stage 1
+        DateTime start = new DateTime(s_dal!.Config.Clock.Year - 0, 1, 1); //stage 1
+        int range = (s_dal!.Config.Clock - start).Days; //stage 1
 
         int i = 0;
         foreach (var call in CopyCalls)
@@ -330,12 +331,16 @@ public static class Initialization
             if (i > 50) break;
 
             CallId = call.Id;
-
-            if (CopyVolunteers.Count > 0)
+            if (CopyVolunteers.Any())
             {
-                int randomIndex = s_rand.Next(CopyVolunteers.Count);
-                VolunteerId = CopyVolunteers[randomIndex].Id;
+                int randomIndex = s_rand.Next(CopyVolunteers.Count());
+                VolunteerId = CopyVolunteers.ElementAt(randomIndex).Id;
             }
+            //if (CopyVolunteers.Count > 0)
+            //{
+            //    int randomIndex = s_rand.Next(CopyVolunteers.Count);
+            //    VolunteerId = CopyVolunteers[randomIndex].Id;
+            //}
 
             //We asked the GPT chat: how to calculate the TimeSpan between the opening time
             //of a call (OpenTime) and the maximum time (MaxTime) with treatment in the case that MaxTime is not defined
@@ -355,7 +360,7 @@ public static class Initialization
 
             try
             {
-                s_dalAssignment!.Create(new(0, CallId, VolunteerId, EnterTime, EndTime, TypeEndOfTreatment));
+                s_dal!.Assignment.Create(new(0, CallId, VolunteerId, EnterTime, EndTime, TypeEndOfTreatment));
             }
             catch (Exception ex)
             {
@@ -382,19 +387,22 @@ public static class Initialization
     /// and is designed to be the main setup function for creating the initial state of the system. 
     /// Some documentation was created using Chat GPT with manual adjustments & Some of the code too.
     /// </remarks>
-    public static void Do(IAssignment? dalAssignment, ICall? dalCall, IVolunteer? dalVolunteer, IConfig? dalConfig) //stage 1
+    public static void Do(IDal dal) //stage 1
     {
 
-        s_dalVolunteer = dalVolunteer ?? throw new NullReferenceException("DAL object can not be null!");
-        s_dalCall = dalCall ?? throw new NullReferenceException("DAL object can not be null!");
-        s_dalAssignment = dalAssignment ?? throw new NullReferenceException("DAL object can not be null!");
-        s_dalConfig = dalConfig ?? throw new NullReferenceException("DAL object can not be null!");// check if we need it
+        //s_dalVolunteer = dalVolunteer ?? throw new NullReferenceException("DAL object can not be null!");
+        //s_dalCall = dalCall ?? throw new NullReferenceException("DAL object can not be null!");
+        //s_dalAssignment = dalAssignment ?? throw new NullReferenceException("DAL object can not be null!");
+        //s_dalConfig = dalConfig ?? throw new NullReferenceException("DAL object can not be null!");// check if we need it
+        s_dal = dal ?? throw new NullReferenceException("DAL object can not be null!"); // stage 2
 
         Console.WriteLine("Reset Configuration values and List values.");
-        s_dalConfig.Reset(); //stage 1
-        s_dalVolunteer.DeleteAll(); //stage 1
-        s_dalAssignment.DeleteAll();
-        s_dalCall.DeleteAll();
+        //s_dalConfig.Reset(); //stage 1
+        //s_dalVolunteer.DeleteAll(); //stage 1
+        //s_dalAssignment.DeleteAll();
+        //s_dalCall.DeleteAll();
+        s_dal.ResetDB();//stage 2
+
 
         Console.WriteLine("Initializing Volunteers list.");
         CreateVolunteers();

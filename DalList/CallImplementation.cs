@@ -6,7 +6,7 @@ using System.Collections.Generic;
 /// <summary>
 /// Implementation of the ICall interface for managing Call entities in the Data Access Layer (DAL).
 /// </summary>
-public class CallImplementation : ICall
+internal class CallImplementation : ICall
 {
 
     /// <summary>
@@ -45,13 +45,19 @@ public class CallImplementation : ICall
     /// </summary>
     /// <param name="id">The ID of the Call to read.</param>
     /// <returns>The Call object if found; otherwise, null.</returns>
-    public Call? Read(int id) => DataSource.Calls.Find(c => c.Id == id);
+    public Call? Read(int id) => DataSource.Calls.FirstOrDefault(c => c.Id == id);
 
     /// <summary>
     /// Reads all Call entities from the data source.
     /// </summary>
     /// <returns>A list of all Call objects.</returns>
-    public List<Call> ReadAll() => new List<Call>(DataSource.Calls);
+    public IEnumerable<Call> ReadAll(Func<Call, bool>? filter = null)
+         => filter != null 
+           ? from item in DataSource.Calls
+             where filter(item)
+             select item
+           : from item in DataSource.Calls
+             select item;
 
     /// <summary>
     /// Updates an existing Call entity in the data source.
