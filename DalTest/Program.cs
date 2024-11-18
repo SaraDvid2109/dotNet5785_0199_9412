@@ -13,6 +13,7 @@ internal class Program
     //private static ICall? s_dalCall = new CallImplementation(); //stage 1
     //private static IVolunteer? s_dalVolunteer = new VolunteerImplementation(); //stage 1
     //private static IConfig? s_dalConfig = new ConfigImplementation(); //stage 1
+
     static readonly IDal s_dal = new DalList(); //stage 2
 
     static void Main(string[] args)
@@ -53,6 +54,7 @@ internal class Program
             }
         }
     }
+
     /// <summary>
     /// Show main menu
     /// </summary>
@@ -68,6 +70,7 @@ internal class Program
         Console.WriteLine("6. Display Configuration Menu");
         Console.WriteLine("7. Reset Database");
     }
+
     /// <summary>
     /// Show submenu for entity
     /// </summary>
@@ -123,6 +126,7 @@ internal class Program
 
         }
     }
+
     /// <summary>
     /// Show submenu for configuration entity
     /// </summary>
@@ -168,6 +172,7 @@ internal class Program
             }
         }
     }
+
     /// <summary>
     /// Receiving a number from the user and checking that it is a valid value in an Enum
     /// </summary>
@@ -177,24 +182,25 @@ internal class Program
     {
         //ChatGPT-How to check that the number the user entered is valid and also exists in the Enum
         int choice;
-        while (!int.TryParse(Console.ReadLine(), out choice) || !Enum.IsDefined(enumType, choice))
+        if (!int.TryParse(Console.ReadLine(), out choice) || !Enum.IsDefined(enumType, choice))
         {
-            Console.WriteLine("Invalid input, please try again.");
+            throw new DalFormatException("Invalid input, please try again.");
         }
         return choice;
     }
 
     private static void InitializeData()//לשאול אם האיתחול אמור להיות בתחילת המיין
     {
-        Console.WriteLine("Initializing data...");
+        Console.WriteLine("Initializing data.");
         Initialization.Do(s_dal); //stage 2
     }
+
     /// <summary>
     /// Displaying all data in the database
     /// </summary>
     private static void DisplayAllData()
     {
-        Console.WriteLine("Displaying all data...");
+        Console.WriteLine("Displaying all data.");
         //ChatGPT-What to do if there is a null option warning?
         foreach (Volunteer volunteer in s_dal.Volunteer?.ReadAll() ?? Enumerable.Empty<Volunteer>())
         {
@@ -212,19 +218,20 @@ internal class Program
         }
 
     }
+
     /// <summary>
     /// Database reset and configuration data reset
     /// </summary>
     private static void ResetDatabase()
     {
-        Console.WriteLine("Resetting database...");
+        Console.WriteLine("Resetting database.");
         //if (s_dalVolunteer != null) s_dalVolunteer.DeleteAll(); //stage 1
         //if (s_dalCall != null) s_dalCall.DeleteAll();
         //if (s_dalAssignment != null) s_dalAssignment.DeleteAll();
         //if (s_dalConfig != null) s_dalConfig.Reset(); //stage 1
         s_dal.ResetDB();
-
     }
+
     /// <summary>
     /// Adding a new object of the entity type to the list
     /// </summary>
@@ -258,6 +265,7 @@ internal class Program
             Console.WriteLine($"Error: {ex.Message}");
         }
     }
+
     /// <summary>
     /// Object display by ID
     /// </summary>
@@ -265,11 +273,11 @@ internal class Program
     /// <exception cref="FormatException">Throws if the ID number is invalid.</exception>
     private static void ReadEntity(string entityName)
     {
-        Console.WriteLine($"Reading object for {entityName}...");
+        Console.WriteLine($"Reading object for {entityName}.");
 
         Console.WriteLine("Please enter the ID of the object:");
         if (!int.TryParse(Console.ReadLine(), out int idInput))
-            throw new FormatException("Invalid ID. Please enter a numeric value.");
+            throw new DalFormatException("Invalid ID. Please enter a numeric value.");
 
         switch (entityName)
         {
@@ -291,13 +299,14 @@ internal class Program
         }
 
     }
+
     /// <summary>
     /// List view of all objects of the entity type
     /// </summary>
     /// <param name="entityName">The name of the entity</param>
     private static void ReadAllEntities(string entityName)
     {
-        Console.WriteLine($"Reading all objects for {entityName}...");
+        Console.WriteLine($"Reading all objects for {entityName}.");
         switch (entityName)
         {
             case "Volunteer":
@@ -312,12 +321,12 @@ internal class Program
                 }
                 else
                 {
-                    Console.WriteLine("No volunteers");
+                    throw new DalFormatException("No volunteers");
                 }
                 break;
 
             case "Call":
-                IEnumerable<Call>? calls = s_dal.Call?.ReadAll();
+                IEnumerable<Call>? calls = s_dal.Call?.ReadAll(); 
                 if (calls != null)
                 {
                     foreach (Call call in calls)
@@ -327,7 +336,7 @@ internal class Program
                 }
                 else
                 {
-                    Console.WriteLine("No calls");
+                    throw new DalFormatException("No calls");
                 }
                 break;
 
@@ -342,7 +351,7 @@ internal class Program
                 }
                 else
                 {
-                    Console.WriteLine("No assignments");
+                    throw new DalFormatException("No assignments");
                 }
                 break;
 
@@ -351,6 +360,7 @@ internal class Program
                 break;
         }
     }
+
     /// <summary>
     /// Updating existing object data
     /// </summary>
@@ -393,7 +403,7 @@ internal class Program
         Console.WriteLine($"Deleting object for {entityName}...");
         Console.WriteLine($"write {entityName} ID");
         if (!int.TryParse(Console.ReadLine(), out int inputId))
-            throw new FormatException("Invalid ID. Please enter a numeric value.");
+            throw new DalFormatException("Invalid ID. Please enter a numeric value.");
         try
         {
             switch (entityName)
@@ -417,13 +427,14 @@ internal class Program
             Console.WriteLine($"Error: {ex.Message}");
         }
     }
+
     /// <summary>
     /// Deletes all objects in a list of a specific entity
     /// </summary>
     /// <param name="entityName">The name of the entity</param>
     private static void DeleteAllEntities(string entityName)
     {
-        Console.WriteLine($"Deleting all objects for {entityName}...");
+        Console.WriteLine($"Deleting all objects for {entityName}.");
         try
         {
             switch (entityName)
@@ -447,29 +458,30 @@ internal class Program
             Console.WriteLine($"Error: {ex.Message}");
         }
     }
+
     /// <summary>
     /// Setting a configuration value
     /// </summary>
     /// <exception cref="FormatException">Thrown if the input is invalid</exception>
     private static void SetConfigValue()
     {
-        Console.WriteLine("Setting a configuration value...");
+        Console.WriteLine("Setting a configuration value.");
         Console.WriteLine("Select:\n 0 - Clock\n 1 - RiskRange");
         if (!int.TryParse(Console.ReadLine(), out int choice))
-            throw new FormatException("invalid input!");
+            throw new DalFormatException("invalid input!");
         switch (choice)
         {
             case 0:
                 Console.WriteLine("Enter new Clock value in the format 'dd/MM/yyyy HH:mm':");
                 if (!DateTime.TryParse(Console.ReadLine(), out DateTime clockValue))
-                    throw new FormatException(" clock Value is invalid!");
+                    throw new DalFormatException(" clock Value is invalid!");
                 if (s_dal != null)
                     s_dal.Config.Clock = clockValue;
                 break;
             case 1:
                 Console.WriteLine("Enter new RiskRange value in the format 'hh:mm:ss':");
                 if (!TimeSpan.TryParse(Console.ReadLine(), out TimeSpan RiskRangeValue))
-                    throw new FormatException(" Risk Range Value is invalid!");
+                    throw new DalFormatException(" Risk Range Value is invalid!");
                 if (s_dal!= null)
                     s_dal.Config.RiskRange = RiskRangeValue;
                 break;
@@ -479,6 +491,7 @@ internal class Program
 
         }
     }
+
     /// <summary>
     /// Displaying a configuration value
     /// </summary>
@@ -488,7 +501,7 @@ internal class Program
         Console.WriteLine("Displaying a configuration value...");
         Console.WriteLine("Select:\n 0 - Clock\n 1 - RiskRange");
         if (!int.TryParse(Console.ReadLine(), out int choice))
-            throw new FormatException("invalid input!");
+            throw new DalFormatException("invalid input!");
         switch (choice)
         {
             case 0:
@@ -507,7 +520,7 @@ internal class Program
     /// </summary>
     private static void ResetConfigValues()
     {
-        Console.WriteLine("Resetting configuration values...");
+        Console.WriteLine("Resetting configuration values.");
         s_dal.Config.Reset();
     }
     /// <summary>
@@ -520,11 +533,10 @@ internal class Program
 
         Console.WriteLine("Enter Volunteer ID: ");
         if (!int.TryParse(Console.ReadLine(), out int Id))
-            throw new FormatException("ID is invalid!");
+            throw new DalFormatException("ID is invalid!");
 
         Console.WriteLine("Enter Volunteer Name:");
         string Name = Console.ReadLine() ?? "";
-
         Console.WriteLine("Enter Volunteer Phone: ");
         string Phone = Console.ReadLine() ?? "";
         Console.WriteLine("Enter Volunteer Mail: ");
@@ -536,18 +548,18 @@ internal class Program
 
         Console.WriteLine("Enter Volunteer Latitude: ");
         if (!double.TryParse(Console.ReadLine(), out double Latitude))
-            throw new FormatException(" Latitude is invalid!");
+            throw new DalFormatException("Latitude is invalid!");
 
         Console.WriteLine("Enter Volunteer Longitude: ");
         if (!double.TryParse(Console.ReadLine(), out double Longitude))
-            throw new FormatException(" Longitude is invalid!");
+            throw new DalFormatException("Longitude is invalid!");
 
         Console.WriteLine("Enter Volunteer Active (true/false): ");
         bool Active = bool.TryParse(Console.ReadLine(), out bool active) && active;
 
         Console.WriteLine("Enter Volunteer MaximumDistance: ");
         if (!double.TryParse(Console.ReadLine(), out double MaximumDistance))
-            throw new FormatException(" Maximum Distance is invalid!");
+            throw new DalFormatException("Maximum Distance is invalid!");
 
         Console.WriteLine("Enter Volunteer Role: ");
         //ChatGPT- How to get enum type input from the user.
@@ -587,19 +599,19 @@ internal class Program
 
         Console.WriteLine("Enter Latitude: ");
         if (!double.TryParse(Console.ReadLine(), out double latitude))
-            throw new FormatException(" Latitude is invalid!");
+            throw new DalFormatException("Latitude is invalid!");
 
         Console.WriteLine("Enter Longitude: ");
         if (!double.TryParse(Console.ReadLine(), out double longitude))
-            throw new FormatException(" Latitude is invalid!");
+            throw new DalFormatException("Latitude is invalid!");
 
         Console.WriteLine("Enter Open Time (format: yyyy-MM-dd HH:mm:ss): ");
         if (!DateTime.TryParse(Console.ReadLine(), out DateTime openTime))
-            throw new FormatException(" Open Time is invalid!");
+            throw new DalFormatException("Open Time is invalid!");
 
         Console.WriteLine("Enter Max Time (format: yyyy-MM-dd HH:mm:ss): ");
         if (!DateTime.TryParse(Console.ReadLine(), out DateTime maxTime))
-            throw new FormatException(" Open Time is invalid!");
+            throw new DalFormatException("Open Time is invalid!");
 
         Console.WriteLine("Enter Call Type (0 = Regular Vehicle, 1 = Ambulance, 3=Intensive Care Ambulance): ");
         CallType type = (CallType)Enum.Parse(typeof(CallType), Console.ReadLine() ?? "");
@@ -625,19 +637,19 @@ internal class Program
     {
         Console.WriteLine("Enter Call ID: ");
         if (!int.TryParse(Console.ReadLine(), out int callId))
-            throw new FormatException("Call ID is invalid!");
+            throw new DalFormatException("Call ID is invalid!");
 
         Console.WriteLine("Enter Volunteer ID: ");
         if (!int.TryParse(Console.ReadLine(), out int volunteerId))
-            throw new FormatException("Volunteer ID is invalid!");
+            throw new DalFormatException("Volunteer ID is invalid!");
 
         Console.WriteLine("Enter Enter Time (format: yyyy-MM-dd HH:mm:ss): ");
         if (!DateTime.TryParse(Console.ReadLine(), out DateTime enterTime))
-            throw new FormatException(" Enter Time is invalid!");
+            throw new DalFormatException("Enter Time is invalid!");
 
         Console.WriteLine("Enter End Time (format: yyyy-MM-dd HH:mm:ss): ");
         if (!DateTime.TryParse(Console.ReadLine(), out DateTime endTime))
-            throw new FormatException(" End Time is invalid!");
+            throw new DalFormatException("End Time is invalid!");
 
         Console.WriteLine("Enter End Type (0 - Processed, 1 - Admin Cancellation, 3 - Self Cancellation,4 - Expired Cancellation): ");
 

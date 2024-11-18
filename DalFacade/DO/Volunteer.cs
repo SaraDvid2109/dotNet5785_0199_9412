@@ -26,8 +26,8 @@ public record Volunteer
    string Mail,
    string? Password,
    string? Address, 
-   double? Latitude, //?
-   double? Longitude, //?
+   double? Latitude, 
+   double? Longitude, 
    bool Active,
    double? MaximumDistance,
    Roles Role,

@@ -102,18 +102,11 @@ public static class Initialization
             double MaximumDistance = s_rand.Next(0, 10);
             role = (i == 0) ? Roles.Management : Roles.Volunteer;
 
-            try
-            {
-                s_dal!.Volunteer.Create(new(id, volunteerName, phoneNumber, email, password, addresses[i],
-                          latitudes[i], longitudes[i], false, MaximumDistance, role, DistanceType.Aerial));
-            }
-            catch (Exception ex)
-            {
-                Console.WriteLine($"An error occurred: {ex.Message}");
-            }
+            s_dal!.Volunteer.Create(new(id, volunteerName, phoneNumber, email, password, addresses[i],
+                        latitudes[i], longitudes[i], false, MaximumDistance, role, DistanceType.Aerial));
 
             i++;
-        }  
+        }
 
     }
 
@@ -216,18 +209,10 @@ public static class Initialization
             OpenTime = start.AddDays(s_rand.Next(range));
             MaxTime = OpenTime.AddMinutes(s_rand.Next(5, 30));
 
-            //
             type = (CallType)s_rand.Next(0, 2);
 
-            try
-            {
-                s_dal!.Call.Create(new(0, Description, Address, Latitude, Longitude, OpenTime, MaxTime, type));
-            }
-            catch (Exception ex)
-            {
-                Console.WriteLine($"An error occurred: {ex.Message}");
-            }
-            
+            s_dal!.Call.Create(new(0, Description, Address, Latitude, Longitude, OpenTime, MaxTime, type));
+
             i++;
         }
 
@@ -358,14 +343,7 @@ public static class Initialization
             else
                 TypeEndOfTreatment = EndType.ExpiredCancellation;
 
-            try
-            {
-                s_dal!.Assignment.Create(new(0, CallId, VolunteerId, EnterTime, EndTime, TypeEndOfTreatment));
-            }
-            catch (Exception ex)
-            {
-                Console.WriteLine($"An error occurred: {ex.Message}");
-            }
+            s_dal!.Assignment.Create(new(0, CallId, VolunteerId, EnterTime, EndTime, TypeEndOfTreatment));
 
             i++;
         }
@@ -394,7 +372,8 @@ public static class Initialization
         //s_dalCall = dalCall ?? throw new NullReferenceException("DAL object can not be null!");
         //s_dalAssignment = dalAssignment ?? throw new NullReferenceException("DAL object can not be null!");
         //s_dalConfig = dalConfig ?? throw new NullReferenceException("DAL object can not be null!");// check if we need it
-        s_dal = dal ?? throw new NullReferenceException("DAL object can not be null!"); // stage 2
+
+        s_dal = dal ?? throw new DalNullReferenceException("DAL object can not be null!"); // stage 2
 
         Console.WriteLine("Reset Configuration values and List values.");
         //s_dalConfig.Reset(); //stage 1
@@ -402,7 +381,6 @@ public static class Initialization
         //s_dalAssignment.DeleteAll();
         //s_dalCall.DeleteAll();
         s_dal.ResetDB();//stage 2
-
 
         Console.WriteLine("Initializing Volunteers list.");
         CreateVolunteers();

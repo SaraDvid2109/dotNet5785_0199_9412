@@ -32,7 +32,7 @@ internal class CallImplementation : ICall
         if (found != null)
             DataSource.Calls.Remove(found);
         else
-            throw new NotImplementedException($"Call with ID={id} does Not exist");
+            throw new DalDoesNotExistException($"Call with ID={id} does Not exist");
     }
 
     /// <summary>
@@ -46,6 +46,11 @@ internal class CallImplementation : ICall
     /// <param name="id">The ID of the Call to read.</param>
     /// <returns>The Call object if found; otherwise, null.</returns>
     public Call? Read(int id) => DataSource.Calls.FirstOrDefault(c => c.Id == id);
+
+    /// <summary>
+    /// Returns the first Call matching the filter, or null.
+    /// </summary>
+    public Call? Read(Func<Call, bool> filter) => DataSource.Calls?.FirstOrDefault(filter);
 
     /// <summary>
     /// Reads all Call entities from the data source.
@@ -73,7 +78,7 @@ internal class CallImplementation : ICall
             DataSource.Calls.Add(item);
         }
         else
-            throw new NotImplementedException($"Call with ID={item.Id} does Not exist");
+            throw new DalDoesNotExistException($"Call with ID={item.Id} does Not exist");
     }
 }
 

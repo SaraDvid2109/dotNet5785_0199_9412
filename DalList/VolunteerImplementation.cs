@@ -17,7 +17,7 @@ internal class VolunteerImplementation : IVolunteer
     public void Create(Volunteer item)
     {
         if (DataSource.Volunteers.Contains(item))
-            throw new NotImplementedException($"Volunteer with ID={item.Id} already exists");
+            throw new DalAlreadyExistException($"Student with ID={item.Id} already exists");
         else
             DataSource.Volunteers.Add(item);
     }
@@ -36,7 +36,7 @@ internal class VolunteerImplementation : IVolunteer
             Console.WriteLine("Deleted");
         }
         else
-            throw new NotImplementedException($"Volunteer with ID={id} does Not exist");
+            throw new DalDoesNotExistException($"Volunteer with ID={id} does Not exist");
     }
 
     /// <summary>
@@ -52,6 +52,11 @@ internal class VolunteerImplementation : IVolunteer
     public Volunteer? Read(int id) => DataSource.Volunteers.FirstOrDefault(v => v.Id == id);
 
     /// <summary>
+    /// Returns the first Volunteer matching the filter, or null.
+    /// </summary>
+    public Volunteer? Read(Func<Volunteer, bool> filter)=> DataSource.Volunteers?.FirstOrDefault(filter);
+
+    /// <summary>
     /// Retrieves all Volunteers from the data source.
     /// </summary>
     /// <returns>A list of all Volunteer objects.</returns>
@@ -59,7 +64,6 @@ internal class VolunteerImplementation : IVolunteer
        => filter == null
             ? DataSource.Volunteers.Select(item => item)
             : DataSource.Volunteers.Where(filter);
-
 
     /// <summary>
     /// Updates an existing Volunteer in the data source.
@@ -75,7 +79,7 @@ internal class VolunteerImplementation : IVolunteer
             DataSource.Volunteers.Add(item);
         }
         else
-            throw new NotImplementedException($"Volunteer with ID={item.Id} does Not exist");
+            throw new DalDoesNotExistException($"Volunteer with ID={item.Id} does Not exist");
     }
 }
 

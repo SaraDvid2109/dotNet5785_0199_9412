@@ -31,7 +31,7 @@ internal class AssignmentImplementation : IAssignment
         if (found != null)
             DataSource.Assignments.Remove(found);
         else
-            throw new NotImplementedException($"Assignment with ID ={id} does Not exist");
+            throw new DalDoesNotExistException($"Assignment with ID ={id} does Not exist");
     }
 
     /// <summary>
@@ -45,6 +45,11 @@ internal class AssignmentImplementation : IAssignment
     /// <param name="id">The ID of the Assignment to read.</param>
     /// <returns>The Assignment object if found; otherwise, null.</returns>
     public Assignment? Read(int id) => DataSource.Assignments.FirstOrDefault(a => a.Id == id);
+
+    /// <summary>
+    /// Returns the first Assignment matching the filter, or null.
+    /// </summary>
+    public Assignment? Read(Func<Assignment, bool> filter) => DataSource.Assignments?.FirstOrDefault(filter);
 
     /// <summary>
     /// Reads all Assignment entities from the data source.
@@ -72,7 +77,7 @@ public void Update(Assignment item)
             DataSource.Assignments.Add(item);
         }
         else
-            throw new NotImplementedException($"Assignment with ID={item.Id} does Not exist");
+            throw new DalDoesNotExistException($"Assignment with ID={item.Id} does Not exist");
     }
 }
 
