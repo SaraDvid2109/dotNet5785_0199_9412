@@ -13,7 +13,7 @@ internal class CallImplementation : ICall
         int temp = Config.NextCallId;
         Call copyItem = item with { Id = temp };
         calls.Add(copyItem);
-        XMLTools.SaveListToXMLSerializer(calls, Config.s_volunteers_xml); 
+        XMLTools.SaveListToXMLSerializer(calls, Config.s_calls_xml); 
     }
 
     public void Delete(int id)

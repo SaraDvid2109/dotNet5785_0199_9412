@@ -12,7 +12,8 @@ internal class AssignmentImplementation : IAssignment
         XElement? assignmentRoot = XMLTools.LoadListFromXMLElement(Config.s_assignments_xml);
         int temp = Config.NextAssignmentId;
         Assignment copyItem = item with { Id = temp };
-        assignmentRoot.Add(copyItem);
+        assignmentRoot.Add(createAssignmentElement(copyItem));
+        //assignmentRoot.Add(copyItem);
         XMLTools.SaveListToXMLElement(assignmentRoot, Config.s_assignments_xml);
     }
 
@@ -30,6 +31,7 @@ internal class AssignmentImplementation : IAssignment
     {
         XElement assignmentRootElem = XMLTools.LoadListFromXMLElement(Config.s_assignments_xml);
         assignmentRootElem.Elements().Remove();
+        XMLTools.SaveListToXMLElement(assignmentRootElem, Config.s_assignments_xml);
     }
 
     public Assignment? Read(int id)
