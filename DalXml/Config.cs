@@ -1,7 +1,7 @@
 ﻿namespace Dal;
 internal static class Config
 {
-    internal const string s_data_config_xml = "data-config.xml";//אמרו בלי סיומת ובדוגמה כתבו עם
+    internal const string s_data_config_xml = "data-config.xml";
   
     internal const string s_volunteers_xml = "volunteers.xml";
 
@@ -30,14 +30,16 @@ internal static class Config
     }
     internal static TimeSpan RiskRange
     {
-        get;
-        set;
+        get => XMLTools.GetConfigTimeSpanVal(s_data_config_xml, "RiskRange");
+        set => XMLTools.SetConfigTimeSpanVal(s_data_config_xml, "RiskRange", value);
     }
     internal static void Reset()
     {
         NextCallId = 0;
         NextAssignmentId = 0;
         Clock = DateTime.Now;
-       
+        RiskRange=
+
+
     }
 }
