@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ArrayOfCall xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+  <Call>
+    <Id>48</Id>
+    <Description>Dietitian consultation request</Description>
+    <Address>HaKibbutz HaMeuhad St 6, Kfar Yona</Address>
+    <Latitude>32.317325</Latitude>
+    <Longitude>34.919138</Longitude>
+    <OpenTime>2024-06-25T00:00:00</OpenTime>
+    <MaxTime>2024-06-25T00:11:00</MaxTime>
+    <CarTaypeToSend>Ambulance</CarTaypeToSend>
+  </Call>
+</ArrayOfCall>

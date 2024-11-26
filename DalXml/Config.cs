@@ -3,11 +3,11 @@ internal static class Config
 {
     internal const string s_data_config_xml = "data-config.xml";//אמרו בלי סיומת ובדוגמה כתבו עם
   
-    internal const string s_volunteer_xml = "volunteer.xml";
+    internal const string s_volunteers_xml = "volunteers.xml";
 
-    internal const string s_call_xml = "call.xml";
+    internal const string s_calls_xml = "calls.xml";
 
-    internal const string s_assignment_xml = "assignment.xml";
+    internal const string s_assignments_xml = "assignments.xml";
 
 
     internal static int NextCallId
