@@ -38,5 +38,6 @@ internal static class Config
         NextCallId = 0;
         NextAssignmentId = 0;
         Clock = DateTime.Now;
+        RiskRange = TimeSpan.Zero;
     }
 }
