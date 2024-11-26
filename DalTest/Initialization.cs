@@ -81,6 +81,7 @@ public static class Initialization
         string prefix;
         string phoneNumber;
         Roles role;
+        bool Active = true;
 
         int i = 0; 
         foreach (string volunteerName in VolunteerNames)
@@ -101,9 +102,11 @@ public static class Initialization
 
             double MaximumDistance = s_rand.Next(0, 10);
             role = (i == 0) ? Roles.Management : Roles.Volunteer;
+            if (i >= 10)
+                Active = false;
 
             s_dal!.Volunteer.Create(new(id, volunteerName, phoneNumber, email, password, addresses[i],
-                        latitudes[i], longitudes[i], false, MaximumDistance, role, DistanceType.Aerial));
+                        latitudes[i], longitudes[i], Active, MaximumDistance, role, DistanceType.Aerial));
 
             i++;
         }
