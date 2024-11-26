@@ -89,6 +89,7 @@ static class XMLTools
         XMLTools.SaveListToXMLElement(root, xmlFileName);
         return nextId;
     }
+
     public static int GetConfigIntVal(string xmlFileName, string elemName)
     {
         XElement root = XMLTools.LoadListFromXMLElement(xmlFileName);
@@ -99,13 +100,6 @@ static class XMLTools
     {
         XElement root = XMLTools.LoadListFromXMLElement(xmlFileName);
         DateTime dt = root.ToDateTimeNullable(elemName) ?? throw new FormatException($"can't convert:  {xmlFileName}, {elemName}");
-        return dt;
-    }
-    //Added function for the Timespan type
-    public static TimeSpan GetConfigTimeSpanVal(string xmlFileName, string elemName)
-    {
-        XElement root = XMLTools.LoadListFromXMLElement(xmlFileName);
-        TimeSpan dt = root.ToTimeSpanNullable(elemName) ?? throw new FormatException($"can't convert:  {xmlFileName}, {elemName}");
         return dt;
     }
     public static void SetConfigIntVal(string xmlFileName, string elemName, int elemVal)
@@ -120,12 +114,28 @@ static class XMLTools
         root.Element(elemName)?.SetValue((elemVal).ToString());
         XMLTools.SaveListToXMLElement(root, xmlFileName);
     }
-    public static void SetConfigDVal(string xmlFileName, string elemName, DateTime elemVal)
+
+    //////////////////////////////////////////
+    public static TimeSpan GetConfigRiskRange(string xmlFileName, string elemName)
+    {
+        XElement root = XMLTools.LoadListFromXMLElement(xmlFileName);
+        TimeSpan dt = root.ToTimeSpanNullable(elemName) ?? throw new FormatException($"can't convert:  {xmlFileName}, {elemName}");
+        return dt;
+    }
+    public static void SetConfigIntTimeSpan(string xmlFileName, string elemName, int elemVal)
     {
         XElement root = XMLTools.LoadListFromXMLElement(xmlFileName);
         root.Element(elemName)?.SetValue((elemVal).ToString());
         XMLTools.SaveListToXMLElement(root, xmlFileName);
     }
+    public static void SetConfigTimeSpan(string xmlFileName, string elemName, TimeSpan elemVal)
+    {
+        XElement root = XMLTools.LoadListFromXMLElement(xmlFileName);
+        root.Element(elemName)?.SetValue((elemVal).ToString());
+        XMLTools.SaveListToXMLElement(root, xmlFileName);
+    }
+    ///////////////////////////////////////////////////
+    
     #endregion
 
 
@@ -134,9 +144,6 @@ static class XMLTools
         Enum.TryParse<T>((string?)element.Element(name), out var result) ? (T?)result : null;
     public static DateTime? ToDateTimeNullable(this XElement element, string name) =>
         DateTime.TryParse((string?)element.Element(name), out var result) ? (DateTime?)result : null;
-    //Added function for the Timespan type
-    public static TimeSpan? ToTimeSpanNullable(this XElement element, string name) =>
-        TimeSpan.TryParse((string?)element.Element(name), out var result) ? (TimeSpan?)result : null;
     
     public static double? ToDoubleNullable(this XElement element, string name) =>
         double.TryParse((string?)element.Element(name), out var result) ? (double?)result : null;
@@ -144,4 +151,9 @@ static class XMLTools
         int.TryParse((string?)element.Element(name), out var result) ? (int?)result : null;
     #endregion
 
+
+    //////////////////////
+    public static TimeSpan? ToTimeSpanNullable(this XElement element, string name) =>
+        TimeSpan.TryParse((string?)element.Element(name), out var result) ? (TimeSpan?)result : null;
+    //////////////////////
 }
