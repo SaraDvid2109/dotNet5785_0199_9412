@@ -16,7 +16,7 @@ internal class VolunteerImplementation : IVolunteer
     /// <exception cref="NotImplementedException">Thrown if a Volunteer with the same ID already exists.</exception>
     public void Create(Volunteer item)
     {
-        if (DataSource.Volunteers.Contains(item))
+        if(DataSource.Volunteers.Any(v => v.Id == item.Id))
             throw new DalAlreadyExistException($"Student with ID={item.Id} already exists");
         else
             DataSource.Volunteers.Add(item);
