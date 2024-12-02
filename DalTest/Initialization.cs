@@ -368,7 +368,8 @@ public static class Initialization
     /// and is designed to be the main setup function for creating the initial state of the system. 
     /// Some documentation was created using Chat GPT with manual adjustments & Some of the code too.
     /// </remarks>
-    public static void Do(IDal dal) //stage 1
+    //public static void Do(IDal dal) //stage 1
+    public static void Do() //stage 4
     {
 
         //s_dalVolunteer = dalVolunteer ?? throw new NullReferenceException("DAL object can not be null!");
@@ -376,7 +377,8 @@ public static class Initialization
         //s_dalAssignment = dalAssignment ?? throw new NullReferenceException("DAL object can not be null!");
         //s_dalConfig = dalConfig ?? throw new NullReferenceException("DAL object can not be null!");// check if we need it
 
-        s_dal = dal ?? throw new DalNullReferenceException("DAL object can not be null!"); // stage 2
+        //s_dal = dal ?? throw new DalNullReferenceException("DAL object can not be null!"); // stage 2
+        s_dal = DalApi.Factory.Get; //stage 4
 
         Console.WriteLine("Reset Configuration values and List values.");
         //s_dalConfig.Reset(); //stage 1

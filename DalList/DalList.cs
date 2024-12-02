@@ -4,8 +4,12 @@ using DalApi;
 /// <summary>
 /// Resets the database by deleting all entities and resetting configurations.
 /// </summary>
-sealed public class DalList : IDal
+sealed internal class DalList : IDal
 {
+    private static readonly Lazy<IDal> lazyInstance = new Lazy<IDal>(() => new DalList());
+
+    public static IDal Instance => lazyInstance.Value;
+
     /// <summary>
     /// Provides access to CRUD operations for Volunteer entities.
     /// </summary>

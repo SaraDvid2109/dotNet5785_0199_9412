@@ -2,14 +2,19 @@
 using DO;
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
 namespace Dal;
 
-sealed public class DalXml : IDal
+sealed internal class DalXml : IDal
 {
+    private static readonly Lazy<IDal> lazyInstance = new Lazy<IDal>(() => new DalXml());
+
+    public static IDal Instance => lazyInstance.Value;
+
     /// <summary>
     /// Provides access to CRUD operations for Volunteer entities.
     /// </summary>

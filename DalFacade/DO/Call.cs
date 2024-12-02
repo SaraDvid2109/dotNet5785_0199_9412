@@ -25,8 +25,6 @@ public record Call
     DateTime OpenTime,
     DateTime? MaxTime,
     CallType CarTaypeToSend
-    //CallStatus Status //next stage
-    //List<BO.CallAssignInList> ListAssignmentsForCalls //next stag
 )
 {
     public Call() : this(0, null, string.Empty, null, null, DateTime.MinValue, null, 0) { }

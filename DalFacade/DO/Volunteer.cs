@@ -32,10 +32,6 @@ public record Volunteer
    double? MaximumDistance,
    Roles Role,
    DistanceType Type
-   //int TotalCallsHandled, //next stage
-   //int TotalCallsCanceled, //next stage
-   //int TotalCallsChosenHandleExpired //next stage
-   //BO.CallInProgress? Progress //next stage
 )
 {
     public Volunteer() : this(0, string.Empty, string.Empty, string.Empty, null,null,null,null,false,null, 0, 0 ) { }
