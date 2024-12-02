@@ -5,20 +5,11 @@
     <TargetFramework>net8.0</TargetFramework>
     <ImplicitUsings>enable</ImplicitUsings>
     <Nullable>enable</Nullable>
-	  <BaseOutputPath>$(SolutionDir)\bin\</BaseOutputPath>
+	<BaseOutputPath>$(SolutionDir)\bin\</BaseOutputPath>
     <OutputPath>$(SolutionDir)\bin\</OutputPath>
     <AppendTargetFrameworkToOutputPath>false</AppendTargetFrameworkToOutputPath>
     <AppendRuntimeIdentifierToOutputPath>false</AppendRuntimeIdentifierToOutputPath>
     <UseCommonOutputDirectory>true</UseCommonOutputDirectory>
-	  <BaseOutputPath>$(SolutionDir)\bin\</BaseOutputPath>
-	  <OutputPath>$(SolutionDir)\bin\</OutputPath>
-	  <AppendTargetFrameworkToOutputPath>false</AppendTargetFrameworkToOutputPath>
-	  <AppendRuntimeIdentifierToOutputPath>false</AppendRuntimeIdentifierToOutputPath>
-	  	<BaseOutputPath>$(SolutionDir)\bin\</BaseOutputPath>
-    <OutputPath>$(SolutionDir)\bin\</OutputPath>
-    <AppendTargetFrameworkToOutputPath>false</AppendTargetFrameworkToOutputPath>
-    <AppendRuntimeIdentifierToOutputPath>false</AppendRuntimeIdentifierToOutputPath>
-    
   </PropertyGroup>
 
   <ItemGroup>
