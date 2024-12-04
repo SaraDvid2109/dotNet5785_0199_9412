@@ -6,10 +6,12 @@ using DalApi;
 /// </summary>
 sealed internal class DalList : IDal
 {
-    private static readonly Lazy<IDal> lazyInstance = new Lazy<IDal>(() => new DalList());
-
-    public static IDal Instance => lazyInstance.Value;
-
+    private DalList() { }
+    public static DalList Instance => Nested.instance;
+    private static class Nested
+    {
+        internal static readonly DalList instance = new DalList();
+    }
     /// <summary>
     /// Provides access to CRUD operations for Volunteer entities.
     /// </summary>

@@ -11,10 +11,12 @@ namespace Dal;
 
 sealed internal class DalXml : IDal
 {
-    private static readonly Lazy<IDal> lazyInstance = new Lazy<IDal>(() => new DalXml());
-
-    public static IDal Instance => lazyInstance.Value;
-
+    private DalXml() { }
+    public static DalXml Instance => Nested.instance;
+    private static class Nested
+    {
+        internal static readonly DalXml instance = new DalXml();
+    }
     /// <summary>
     /// Provides access to CRUD operations for Volunteer entities.
     /// </summary>
