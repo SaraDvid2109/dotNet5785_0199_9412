@@ -1,5 +1,6 @@
 ﻿namespace BlImplementation;
 using BlApi;
+using BO;
 using Microsoft.VisualBasic;
 using System;
 using System.Collections;
@@ -23,7 +24,7 @@ internal class volunteerImplemention : IVolunteer
         bool hasSpecial = password.Any(ch => "!@#$%^&*(),.?\"{}|<>".Contains(ch)); //Special characters
         bool isStrongPassword = hasLower && hasUpper && hasDigit && hasSpecial;
 
-        if (!isStrongPassword )
+        if (!isStrongPassword)
             throw new ArgumentException("The password must include letters, numbers, and special characters.");
 
         var volunteer = _dal.Volunteer.ReadAll(v => v.Name == username && v.Password == password).FirstOrDefault();
@@ -38,7 +39,7 @@ internal class volunteerImplemention : IVolunteer
     public IEnumerable<BO.VolunteerInList> VolunteerList(bool? active, BO.VolunteerField? field)
     {
         IEnumerable<DO.Volunteer> volunteers;
-        IEnumerable<IGrouping<bool,DO.Volunteer>> groupedVolunteers;
+        IEnumerable<IGrouping<bool, DO.Volunteer>> groupedVolunteers;
         IEnumerable<DO.Volunteer> sotrtVolunteers;
         if (active == null)
             volunteers = _dal.Volunteer.ReadAll();
@@ -62,22 +63,23 @@ internal class volunteerImplemention : IVolunteer
                 BO.VolunteerField.MaximumDistance => volunteers.OrderBy(v => v.MaximumDistance),
                 BO.VolunteerField.Role => volunteers.OrderBy(v => v.Role),
                 BO.VolunteerField.Type => volunteers.OrderBy(v => v.Type),
-                _ => volunteers.OrderBy(v => v.Id) 
-            };   
+                _ => volunteers.OrderBy(v => v.Id)
+            };
         }
 
-       return  sotrtVolunteers.Select(volunteer => new BO.VolunteerInList {
+        return sotrtVolunteers.Select(volunteer => new BO.VolunteerInList
+        {
             Id = volunteer.Id,
             Name = volunteer.Name,
             Active = volunteer.Active,
             TotalCallsHandled = 0,
             TotalCallsCanceled = 0,
             TotalCallsChosenHandleExpired = 0,
-            CallHandledId =0
-            });
+            CallHandledId = 0
+        });
 
-        }
-   
+    }
+
     public BO.Volunteer GetVolunteerDetails(int id)
     {
         try
@@ -108,10 +110,11 @@ internal class volunteerImplemention : IVolunteer
         {
             throw new Exception("There is no volunteer with this ID.", ex);
         }
-        
+
     }
     public void UpdatingVolunteerDetails(int id, BO.Volunteer volunteer)
     {
+        IntegrityCheck(volunteer);
         try
         {
             // בדיקת הרשאות
@@ -120,59 +123,106 @@ internal class volunteerImplemention : IVolunteer
             {
                 throw new Exception("You are not authorized to update this volunteer.");
             }
-            // בדיקת פורמט הערכים
-            if (!volunteer.Mail.EndsWith("@gmail.com"))
-            {
-                throw new ArgumentException("Invalid email format.");
-            }
-
-            if (volunteer.Phone?.Length != 10 || !volunteer.Phone.All(char.IsDigit))
-            {
-                throw new ArgumentException("Invalid phone number format.");
-            }
-            string idString = volunteer.Id.ToString();
-            if (idString.Length!=9)
-            {
-                throw new ArgumentException("Invalid ID format.");
-            }
-
-            ////// בדיקת תקינות לוגית
-            //var coordinates = GetCoordinates(volunteer.Address ?? string.Empty);
-            //if (coordinates == null)
-            //{
-            //    throw new ArgumentException("Invalid address.");
-            //}
-            //volunteer.Latitude = coordinates.Latitude;
-            //volunteer.Longitude = coordinates.Longitude;
-
             var existingVolunteer = _dal.Volunteer.Read(volunteer.Id);
             if (existingVolunteer == null)
             {
                 throw new Exception($"Volunteer with ID {volunteer.Id} not found.");
             }
             // בדיקת אילו שדות השתנו
-            if (!requester.Role.Equals("Manager") &&!existingVolunteer.Role.Equals(volunteer.Role))
+            if (!requester.Role.Equals("Manager") && !existingVolunteer.Role.Equals(volunteer.Role))
             {
                 throw new UnauthorizedAccessException("Only managers can update the role.");
             }
+            DO.Volunteer volunteerToUpdate = new DO.Volunteer(
+                volunteer.Id,
+                volunteer.Name,
+                volunteer.Phone,
+                volunteer.Mail,
+                volunteer.Password,
+                volunteer.Address,
+                volunteer.Latitude,
+                volunteer.Longitude,
+                volunteer.Active,
+                volunteer.MaximumDistance,
+                (DO.Roles)volunteer.Role,
+                (DO.DistanceType)volunteer.Type);
+            _dal.Volunteer.Update(volunteerToUpdate);
         }
         catch (Exception ex)
         {
-            
+
             throw new Exception("Error updating volunteer details: " + ex.Message);
+        }
+    }
+    public void DeleteVolunteer(int id)
+    {
+        try
+        {
+            DO.Volunteer? volunteerToDelete = _dal.Volunteer.Read(id);
+            if (volunteerToDelete == null) throw new Exception("");
+            if (!volunteerToDelete.Active)
+                _dal.Volunteer.Delete(id);
+            else
+                throw new Exception("The volunteer cannot be deleted.");
+        }
+        catch (Exception ex)
+        {
+            throw new Exception("Error deleting volunteer:" + ex.Message);
         }
     }
     public void AddVolunteer(BO.Volunteer volunteer)
     {
-        
+        IntegrityCheck(volunteer);
+        try
+        {
+            DO.Volunteer volunteerToAdd = new DO.Volunteer(
+                volunteer.Id,
+                volunteer.Name,
+                volunteer.Phone,
+                volunteer.Mail,
+                volunteer.Password,
+                volunteer.Address,
+                volunteer.Latitude,
+                volunteer.Longitude,
+                volunteer.Active,
+                volunteer.MaximumDistance,
+                (DO.Roles)volunteer.Role,
+                (DO.DistanceType)volunteer.Type);
+
+            _dal.Volunteer.Create(volunteerToAdd);
+        }
+        catch (Exception ex) { throw new Exception(ex.Message); }
     }
 
-    public void DeleteVolunteer(int id)
+
+    public void IntegrityCheck(BO.Volunteer volunteer)
     {
-        throw new NotImplementedException();
+        // בדיקת פורמט הערכים
+        if (!volunteer.Mail.EndsWith("@gmail.com"))
+        {
+            throw new ArgumentException("Invalid email format.");
+        }
+
+        if (volunteer.Phone?.Length != 10 || !volunteer.Phone.All(char.IsDigit))
+        {
+            throw new ArgumentException("Invalid phone number format.");
+        }
+        string idString = volunteer.Id.ToString();
+        if (idString.Length != 9)
+        {
+            throw new ArgumentException("Invalid ID format.");
+        }
+
+        //// בדיקת תקינות לוגית
+        //var coordinates = GetCoordinates(volunteer.Address ?? string.Empty);
+        //if (coordinates == null)
+        //{
+        //    throw new ArgumentException("Invalid address.");
+        //}
+        //volunteer.Latitude = coordinates.Latitude;
+        //volunteer.Longitude = coordinates.Longitude;
+
     }
-
-   
-   
-
 }
+
+   
