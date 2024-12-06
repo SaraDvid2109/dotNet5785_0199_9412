@@ -1,14 +1,6 @@
 ﻿namespace BlImplementation;
 using BlApi;
-using BO;
-using Microsoft.VisualBasic;
-using System;
-using System.Collections;
-using System.Collections.Generic;
-using System.Diagnostics;
-using System.Net;
-using System.Numerics;
-using System.Text.RegularExpressions;
+using Helpers;
 
 internal class volunteerImplemention : IVolunteer
 {
@@ -85,6 +77,10 @@ internal class volunteerImplemention : IVolunteer
         try
         {
             DO.Volunteer? volunteer = _dal.Volunteer.Read(id);
+            if (volunteer == null)
+            {
+                throw new Exception("There is no volunteer with this ID.");
+            }
             return new BO.Volunteer
             {
                 Id = volunteer.Id,
@@ -114,7 +110,7 @@ internal class volunteerImplemention : IVolunteer
     }
     public void UpdatingVolunteerDetails(int id, BO.Volunteer volunteer)
     {
-        IntegrityCheck(volunteer);
+        Helpers.Tools.IntegrityCheck(volunteer);
         try
         {
             // בדיקת הרשאות
@@ -135,11 +131,11 @@ internal class volunteerImplemention : IVolunteer
             }
             DO.Volunteer volunteerToUpdate = new DO.Volunteer(
                 volunteer.Id,
-                volunteer.Name,
-                volunteer.Phone,
-                volunteer.Mail,
-                volunteer.Password,
-                volunteer.Address,
+                volunteer.Name ?? string.Empty,
+                volunteer.Phone ?? string.Empty,
+                volunteer.Mail ?? string.Empty,
+                volunteer.Password ?? string.Empty,
+                volunteer.Address ?? string.Empty,
                 volunteer.Latitude,
                 volunteer.Longitude,
                 volunteer.Active,
@@ -172,16 +168,16 @@ internal class volunteerImplemention : IVolunteer
     }
     public void AddVolunteer(BO.Volunteer volunteer)
     {
-        IntegrityCheck(volunteer);
+        Helpers.Tools.IntegrityCheck(volunteer);
         try
         {
             DO.Volunteer volunteerToAdd = new DO.Volunteer(
                 volunteer.Id,
-                volunteer.Name,
-                volunteer.Phone,
-                volunteer.Mail,
-                volunteer.Password,
-                volunteer.Address,
+                volunteer.Name ?? string.Empty,
+                volunteer.Phone ?? string.Empty,
+                volunteer.Mail ?? string.Empty,
+                volunteer.Password ?? string.Empty,
+                volunteer.Address ?? string.Empty,
                 volunteer.Latitude,
                 volunteer.Longitude,
                 volunteer.Active,
@@ -194,35 +190,6 @@ internal class volunteerImplemention : IVolunteer
         catch (Exception ex) { throw new Exception(ex.Message); }
     }
 
-
-    public void IntegrityCheck(BO.Volunteer volunteer)
-    {
-        // בדיקת פורמט הערכים
-        if (!volunteer.Mail.EndsWith("@gmail.com"))
-        {
-            throw new ArgumentException("Invalid email format.");
-        }
-
-        if (volunteer.Phone?.Length != 10 || !volunteer.Phone.All(char.IsDigit))
-        {
-            throw new ArgumentException("Invalid phone number format.");
-        }
-        string idString = volunteer.Id.ToString();
-        if (idString.Length != 9)
-        {
-            throw new ArgumentException("Invalid ID format.");
-        }
-
-        //// בדיקת תקינות לוגית
-        //var coordinates = GetCoordinates(volunteer.Address ?? string.Empty);
-        //if (coordinates == null)
-        //{
-        //    throw new ArgumentException("Invalid address.");
-        //}
-        //volunteer.Latitude = coordinates.Latitude;
-        //volunteer.Longitude = coordinates.Longitude;
-
-    }
 }
 
    

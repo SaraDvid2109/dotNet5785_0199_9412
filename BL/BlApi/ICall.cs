@@ -6,7 +6,7 @@ namespace BlApi;
 public interface ICall
 {
     public Array CallQuantities();
-    public IEnumerable<BO.CallInList> CallInLists(Enum? field, object? filter);
+    public IEnumerable<BO.CallInList> CallInLists(BO.CallField? sort, BO.CallField? filter, object? value);
     public BO.Call GetCallDetails(int id);
     public void UpdatingCallDetails(BO.Call call);
     public void DeleteCall(int id);

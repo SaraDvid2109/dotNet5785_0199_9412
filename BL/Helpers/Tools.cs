@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace Helpers;
 
-internal static class Class1 
+internal static class Tools 
 {
     public static string ToStringProperty<T>(this T t)
     {
@@ -36,4 +36,64 @@ internal static class Class1
 
         return sb.ToString();
     }
+
+    public static void IntegrityCheck(BO.Volunteer volunteer)
+    {
+        //// בדיקת פורמט הערכים
+        //if (!volunteer.Mail.EndsWith("@gmail.com"))
+        //{
+        //    throw new ArgumentException("Invalid email format.");
+        //}
+
+        //if (volunteer.Phone?.Length != 10 || !volunteer.Phone.All(char.IsDigit))
+        //{
+        //    throw new ArgumentException("Invalid phone number format.");
+        //}
+        //string idString = volunteer.Id.ToString();
+        //if (idString.Length != 9)
+        //{
+        //    throw new ArgumentException("Invalid ID format.");
+        //}
+
+        //// בדיקת תקינות לוגית
+        //var coordinates = GetCoordinates(volunteer.Address ?? string.Empty);
+        //if (coordinates == null)
+        //{
+        //    throw new ArgumentException("Invalid address.");
+        //}
+        //volunteer.Latitude = coordinates.Latitude;
+        //volunteer.Longitude = coordinates.Longitude;
+
+    }
+
+    public static void IntegrityCheck(BO.Call volunteer)
+    {
+        //// בדיקת פורמט הערכים
+        //if (!volunteer.Mail.EndsWith("@gmail.com"))
+        //{
+        //    throw new ArgumentException("Invalid email format.");
+        //}
+
+        //if (volunteer.Phone?.Length != 10 || !volunteer.Phone.All(char.IsDigit))
+        //{
+        //    throw new ArgumentException("Invalid phone number format.");
+        //}
+        //string idString = volunteer.Id.ToString();
+        //if (idString.Length != 9)
+        //{
+        //    throw new ArgumentException("Invalid ID format.");
+        //}
+
+        //// בדיקת תקינות לוגית
+        //var coordinates = GetCoordinates(volunteer.Address ?? string.Empty);
+        //if (coordinates == null)
+        //{
+        //    throw new ArgumentException("Invalid address.");
+        //}
+        //volunteer.Latitude = coordinates.Latitude;
+        //volunteer.Longitude = coordinates.Longitude;
+
+    }
+
+
 }
