@@ -6,8 +6,8 @@ public interface IAdmin
 {
     public DateTime GetClock();
     void ForwardClock(BO.TimeUnit unit);
-    int GetMaxRange();
-    void SetMaxRange(int maxRange);
+    TimeSpan GetMaxRange();
+    void SetMaxRange(TimeSpan range);
     void ResetDB();
     void InitializeDB();
 }

@@ -2,7 +2,7 @@
 using BlApi;
 using Helpers;
 
-internal class volunteerImplemention : IVolunteer
+internal class volunteerImplementation : IVolunteer
 {
     private readonly DalApi.IDal _dal = DalApi.Factory.Get;
     public DO.Roles Login(string username, string password)

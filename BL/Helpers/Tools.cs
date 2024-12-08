@@ -1,4 +1,6 @@
-﻿using System;
+﻿using BlApi;
+using DalApi;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -94,6 +96,4 @@ internal static class Tools
         //volunteer.Longitude = coordinates.Longitude;
 
     }
-
-
 }
