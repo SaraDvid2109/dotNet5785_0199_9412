@@ -111,7 +111,7 @@ internal class AssignmentImplementation : IAssignment
             VolunteerId = a.ToIntNullable("VolunteerId") ?? throw new FormatException("can't convert VolunteerId"),
             EnterTime = a.ToDateTimeNullable("EnterTime"),
             EndTime= a.ToDateTimeNullable("EndTime"),
-            TypeEndOfTreatment = a.ToEnumNullable<EndType>("TypeEndOfTreatment") ?? EndType.Processed,
+            TypeEndOfTreatment = a.ToEnumNullable<EndType>("TypeEndOfTreatment") ?? EndType.Treated,
 
         };
        

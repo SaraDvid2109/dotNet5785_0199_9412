@@ -110,7 +110,7 @@ internal class volunteerImplementation : IVolunteer
     }
     public void UpdatingVolunteerDetails(int id, BO.Volunteer volunteer)
     {
-        Helpers.Tools.IntegrityCheck(volunteer);
+        Helpers.VolunteerManager.IntegrityCheck(volunteer);
         try
         {
             // בדיקת הרשאות
@@ -168,7 +168,7 @@ internal class volunteerImplementation : IVolunteer
     }
     public void AddVolunteer(BO.Volunteer volunteer)
     {
-        Helpers.Tools.IntegrityCheck(volunteer);
+        Helpers.VolunteerManager.IntegrityCheck(volunteer);
         try
         {
             DO.Volunteer volunteerToAdd = new DO.Volunteer(

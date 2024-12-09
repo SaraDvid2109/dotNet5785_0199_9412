@@ -1,5 +1,6 @@
 ﻿using BlImplementation;
 using BO;
+using Helpers;
 
 namespace BL.Helpers
 {
@@ -39,7 +40,7 @@ namespace BL.Helpers
             //Go through all students to update properties that are affected by the clock update
             //(students becomes not active after 5 years etc.)
 
-            StudentManager.PeriodicStudentsUpdates(oldClock, newClock); //stage 4
+            VolunteerManager.PeriodicVolunteersUpdates(oldClock, newClock); //stage 4
             //etc ...
 
             //Calling all the observers of clock update
@@ -95,7 +96,7 @@ namespace BL.Helpers
                 //TO_DO:
                 //Add calls here to any logic simulation that was required in stage 7
                 //for example: course registration simulation
-                StudentManager.SimulateCourseRegistrationAndGrade(); //stage 7
+                //VolunteerManager.SimulateCourseRegistrationAndGrade(); //stage 7
 
                 //etc...
                 #endregion Stage 7

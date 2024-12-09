@@ -208,6 +208,7 @@ internal class Program
         //ChatGPT-What to do if there is a null option warning?
         foreach (Volunteer volunteer in s_dal.Volunteer?.ReadAll() ?? Enumerable.Empty<Volunteer>())
         {
+
             Console.WriteLine(volunteer);
         }
 
