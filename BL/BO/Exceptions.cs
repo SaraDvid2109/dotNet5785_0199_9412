@@ -59,13 +59,7 @@ public class UnauthorizedAccessException: Exception
 {
     public UnauthorizedAccessException(string? message) : base(message) { }
 }
-/// <summary>
-/// Exception for violation of a requirement
-/// </summary>
-public class RequirementNotMetException : Exception
-{
-    public RequirementNotMetException(string? message) : base(message) { }
-}
+
 /// <summary>
 /// Exception thrown when the operation is not allowed due to business rules or system constraints.
 /// </summary>
