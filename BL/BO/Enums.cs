@@ -1,7 +1,7 @@
 ﻿using Helpers;
 
 namespace BO;
-public enum Roles { Volunteer, Management };
+public enum Roles { Volunteer, Manager };
 public enum DistanceType { Aerial, Car, Walking };
 public enum CallType { RegularVehicle, Ambulance, IntensiveCareAmbulance, None };
 //public enum CallStatus { Treatment, TreatmentOfRisk };

@@ -1,5 +1,7 @@
 ﻿namespace BlImplementation;
 using BlApi;
+using BO;
+using DO;
 using Helpers;
 
 internal class volunteerImplementation : IVolunteer
@@ -17,13 +19,13 @@ internal class volunteerImplementation : IVolunteer
         bool isStrongPassword = hasLower && hasUpper && hasDigit && hasSpecial;
 
         if (!isStrongPassword)
-            throw new ArgumentException("The password must include letters, numbers, and special characters.");
+            throw new RequirementNotMetException("The password must include letters, numbers, and special characters.");
 
         var volunteer = _dal.Volunteer.ReadAll(v => v.Name == username && v.Password == password).FirstOrDefault();
 
         if (volunteer == null)
         {
-            throw new UnauthorizedAccessException("There is no volunteer with that name or password.");
+            throw new BlNullPropertyException("There is no volunteer with that name or password.");
         }
         return volunteer.Role;
     }
@@ -74,39 +76,30 @@ internal class volunteerImplementation : IVolunteer
 
     public BO.Volunteer GetVolunteerDetails(int id)
     {
-        try
+        DO.Volunteer? volunteer = _dal.Volunteer.Read(id);
+        if (volunteer == null)
         {
-            DO.Volunteer? volunteer = _dal.Volunteer.Read(id);
-            if (volunteer == null)
-            {
-                throw new Exception("There is no volunteer with this ID.");
-            }
-            return new BO.Volunteer
-            {
-                Id = volunteer.Id,
-                Name = volunteer.Name,
-                Phone = volunteer.Phone,
-                Mail = volunteer.Mail,
-                Password = volunteer.Password,
-                Address = volunteer.Address,
-                Latitude = volunteer.Latitude,
-                Longitude = volunteer.Longitude,
-                Role = (BO.Roles)volunteer.Role,
-                Active = volunteer.Active,
-                MaximumDistance = volunteer.MaximumDistance,
-                Type = (BO.DistanceType)volunteer.Type,
-                TotalCallsHandled = 0,
-                TotalCallsCanceled = 0,
-                TotalCallsChosenHandleExpired = 0,
-                Progress = new BO.CallInProgress(),
-            };
-
+            throw new BO.BlDoesNotExistException("There is no volunteer with this ID.");
         }
-        catch (Exception ex)
+        return new BO.Volunteer
         {
-            throw new Exception("There is no volunteer with this ID.", ex);
-        }
-
+            Id = volunteer.Id,
+            Name = volunteer.Name,
+            Phone = volunteer.Phone,
+            Mail = volunteer.Mail,
+            Password = volunteer.Password,
+            Address = volunteer.Address,
+            Latitude = volunteer.Latitude,
+            Longitude = volunteer.Longitude,
+            Role = (BO.Roles)volunteer.Role,
+            Active = volunteer.Active,
+            MaximumDistance = volunteer.MaximumDistance,
+            Type = (BO.DistanceType)volunteer.Type,
+            TotalCallsHandled = 0,
+            TotalCallsCanceled = 0,
+            TotalCallsChosenHandleExpired = 0,
+            Progress = new BO.CallInProgress(),
+        };
     }
     public void UpdatingVolunteerDetails(int id, BO.Volunteer volunteer)
     {
@@ -117,12 +110,12 @@ internal class volunteerImplementation : IVolunteer
             var requester = _dal.Volunteer.Read(id);
             if (requester == null || (!requester.Role.Equals("Manager")) || requester.Id != volunteer.Id)
             {
-                throw new Exception("You are not authorized to update this volunteer.");
+                throw new UnauthorizedAccessException("You are not authorized to update this volunteer.");
             }
             var existingVolunteer = _dal.Volunteer.Read(volunteer.Id);
             if (existingVolunteer == null)
             {
-                throw new Exception($"Volunteer with ID {volunteer.Id} not found.");
+                throw new BO.BlDoesNotExistException($"Volunteer with ID {volunteer.Id} not found.");
             }
             // בדיקת אילו שדות השתנו
             if (!requester.Role.Equals("Manager") && !existingVolunteer.Role.Equals(volunteer.Role))
@@ -144,10 +137,10 @@ internal class volunteerImplementation : IVolunteer
                 (DO.DistanceType)volunteer.Type);
             _dal.Volunteer.Update(volunteerToUpdate);
         }
-        catch (Exception ex)
+        catch (DalDoesNotExistException ex)
         {
 
-            throw new Exception("Error updating volunteer details: " + ex.Message);
+            throw new BlDoesNotExistException("Error updating volunteer details: " + ex.Message);
         }
     }
     public void DeleteVolunteer(int id)
@@ -159,11 +152,11 @@ internal class volunteerImplementation : IVolunteer
             if (!volunteerToDelete.Active)
                 _dal.Volunteer.Delete(id);
             else
-                throw new Exception("The volunteer cannot be deleted.");
+                throw new BO.OperationNotAllowedException("The volunteer cannot be deleted.");
         }
-        catch (Exception ex)
+        catch (DalDoesNotExistException ex)
         {
-            throw new Exception("Error deleting volunteer:" + ex.Message);
+            throw new BlDoesNotExistException("Error deleting volunteer:" + ex.Message);
         }
     }
     public void AddVolunteer(BO.Volunteer volunteer)
@@ -187,7 +180,7 @@ internal class volunteerImplementation : IVolunteer
 
             _dal.Volunteer.Create(volunteerToAdd);
         }
-        catch (Exception ex) { throw new Exception(ex.Message); }
+        catch (DalAlreadyExistException ex) { throw new BllAlreadyExistException(ex.Message); }
     }
 
 }

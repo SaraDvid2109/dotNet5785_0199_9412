@@ -1,7 +1,6 @@
 ﻿using BL.Helpers;
 using BlApi;
 using BO;
-using DO;
 using Helpers;
 using System;
 using System.Net;
@@ -65,9 +64,9 @@ internal class CallImplementation : ICall
 
     public BO.Call GetCallDetails(int id)
     {
-         var doCall = _dal.Call.Read(id);
+        var doCall = _dal.Call.Read(id);
         if (doCall == null)
-            throw new Exception("");
+            throw new BO.BlDoesNotExistException("There is no call with this ID.");
          var doAssignments = _dal.Assignment.ReadAll()
                 .Where(a => a.CallId == id);
 
@@ -115,9 +114,9 @@ internal class CallImplementation : ICall
         {
             _dal.Call.Update(DOcall);
         }
-        catch (Exception ex)
+        catch (DO.DalDoesNotExistException ex)
         {
-            throw new Exception("Error:" + ex);
+            throw new BO.BlDoesNotExistException("Error:" + ex);
         }
     }
 
@@ -127,7 +126,7 @@ internal class CallImplementation : ICall
         {
             // not sure about this --- I changed a little
             DO.Call? callToDelete = _dal.Call.Read(id);
-            if (callToDelete == null) throw new Exception("");
+            if (callToDelete == null) throw new BO.BlDoesNotExistException("There is no call with this ID.");
             var assignments = _dal.Assignment.ReadAll();
             if (assignments != null)
             {
@@ -138,11 +137,11 @@ internal class CallImplementation : ICall
                     _dal.Volunteer.Delete(id);
             }
             else
-                throw new Exception($"Cannot delete call with {id}");
+                throw new BO.BlNullPropertyException("no assignments");
         }
-        catch (Exception ex)
+        catch (DO.DalDoesNotExistException ex)
         {
-            throw new Exception("Error deleting volunteer:" + ex.Message);
+            throw new BO.BlDoesNotExistException("Error deleting volunteer:",ex);
         }
     }
 
@@ -163,14 +162,15 @@ internal class CallImplementation : ICall
 
             _dal.Call.Create(callToAdd);
         }
-        catch (Exception ex) { throw new Exception(ex.Message); }
+        catch (DO.DalAlreadyExistException ex) 
+        { throw new BO.BllAlreadyExistException("Error creating call",ex); }
     }
 
     public IEnumerable<BO.ClosedCallInList> closedCallsHandledByVolunteer(int VolunteerId, BO.CallType? filter, BO.ClosedCallInListField? sortBy)
     {
         DO.Volunteer? volunteer = _dal.Volunteer.Read(VolunteerId);
         if (volunteer == null)
-            throw new Exception($"Volunteer with {VolunteerId} not found");
+            throw new BO.BlDoesNotExistException($"Volunteer with {VolunteerId} not found");
 
         var assignment = _dal.Assignment.ReadAll();
         //All the ID of the calls the volunteer took
@@ -205,10 +205,10 @@ internal class CallImplementation : ICall
     {
         DO.Volunteer? volunteer = _dal.Volunteer.Read(id);
         if (volunteer == null)
-            throw new Exception($"Volunteer with {id} not found");
+            throw new BO.BlDoesNotExistException($"Volunteer with {id} not found");
         if (volunteer.Address == null)
         {
-            throw new ArgumentNullException(nameof(volunteer.Address), "Volunteer address cannot be null.");
+            throw new BlNullPropertyException("Volunteer address cannot be null.");
         }
 
         var calls = _dal.Call.ReadAll();
@@ -243,39 +243,39 @@ internal class CallImplementation : ICall
     {
         DO.Volunteer? volunteer = _dal.Volunteer.Read(volunteerId);
         if (volunteer == null)
-            throw new Exception($"Volunteer with {volunteerId} not found");
+            throw new BO.BlDoesNotExistException($"Volunteer with {volunteerId} not found");
         DO.Assignment? assignment = _dal.Assignment.Read(assignmentId);
         if (assignment == null)
-            throw new Exception($"Assignment with {assignmentId} not found");
+            throw new BO.BlDoesNotExistException($"Assignment with {assignmentId} not found");
 
         if (assignment.VolunteerId != volunteerId)
-            throw new Exception("You do not have access permission to update the assignment");
+            throw new BO.UnauthorizedAccessException("You do not have access permission to update the assignment");
         if (assignment.TypeEndOfTreatment != null || assignment.EndTime != null)
-            throw new Exception("You cannot update this assignment");
+            throw new BO.UnauthorizedAccessException("You cannot update this assignment");
 
         DO.Assignment assignmentToUpdate = assignment with { EndTime = ClockManager.Now, TypeEndOfTreatment = DO.EndType.Treated };
         try
         {
             _dal.Assignment.Update(assignmentToUpdate);
         }
-        catch (Exception ex)
+        catch (DO.DalDoesNotExistException ex)
         {
-            throw new Exception("Error attempting to update call handling completion:" + ex);
+            throw new BO.BlDoesNotExistException("Error attempting to update call handling completion:" + ex);
         }
     }
     public void CancelCallHandling(int volunteerId, int assignmentId)
     {
         DO.Volunteer? volunteer = _dal.Volunteer.Read(volunteerId);
         if (volunteer == null)
-            throw new Exception($"Volunteer with {volunteerId} not found");
+            throw new BO.BlDoesNotExistException($"Volunteer with {volunteerId} not found");
         DO.Assignment? assignment = _dal.Assignment.Read(assignmentId);
         if (assignment == null)
-            throw new Exception($"Assignment with {assignmentId} not found");
+            throw new BO.BlDoesNotExistException($"Assignment with {assignmentId} not found");
 
         if (volunteer.Role == DO.Roles.Volunteer && assignment.VolunteerId != volunteerId)
-            throw new Exception("Sorry! You do not have access permission to revoke the assignment");
+            throw new BO.UnauthorizedAccessException("Sorry! You do not have access permission to revoke the assignment");
         if (assignment.TypeEndOfTreatment != null || assignment.EndTime != null)
-            throw new Exception("You cannot cancel this assignment");
+            throw new BO.UnauthorizedAccessException("You cannot cancel this assignment");
 
         DO.Assignment assignmentToUpdate;
         if (assignment.VolunteerId == volunteerId)
@@ -286,9 +286,9 @@ internal class CallImplementation : ICall
         {
             _dal.Assignment.Update(assignmentToUpdate);
         }
-        catch (Exception ex)
+        catch (DO.DalDoesNotExistException ex)
         {
-            throw new Exception("Error trying to update call cancellation :" + ex);
+            throw new BO.BlDoesNotExistException("Error trying to update call cancellation :" + ex);
         }
     }
 
@@ -296,20 +296,20 @@ internal class CallImplementation : ICall
     {
         DO.Volunteer? volunteer = _dal.Volunteer.Read(volunteerId);
         if (volunteer == null)
-            throw new Exception($"Volunteer with {volunteerId} not found");
+            throw new BO.BlDoesNotExistException($"Volunteer with {volunteerId} not found");
         DO.Call? call = _dal.Call.Read(callId);
         if (call == null)
-            throw new Exception($"Call with {callId} not found");
+            throw new BO.BlDoesNotExistException($"Call with {callId} not found");
 
         var assignments = _dal.Assignment.ReadAll();
         if (assignments != null)
         {
             var assignmentVolunteer = assignments.FirstOrDefault(a => a.VolunteerId == volunteerId && a.TypeEndOfTreatment == null);
             if (assignmentVolunteer != null)
-                throw new Exception($"Volunteer with {volunteerId} is already treating a call");
+                throw new OperationNotAllowedException($"Volunteer with {volunteerId} is already treating a call");
         }
         if (CallManager.Status(callId) != BO.CallStatus.Open && CallManager.Status(callId) != BO.CallStatus.OpenAtRisk)
-            throw new Exception($"Volunteer with {volunteerId} is already treating a call");
+            throw new OperationNotAllowedException($"The call is already being handled by another volunteer.");
 
         DO.Assignment assignmentToAdd = new DO.Assignment(0, callId, volunteerId, ClockManager.Now, null, null);
         _dal.Assignment.Create(assignmentToAdd);

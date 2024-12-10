@@ -225,7 +225,7 @@ internal static class CallManager
         var last = assignments.MaxBy(a => a.EnterTime);
         if (last == null)
         {
-            throw new InvalidOperationException("No assignments found for the given call.");
+            throw new BO.BlNullPropertyException("No assignments found for the given call.");
         }
         var volunteer = s_dal.Volunteer.Read(last.VolunteerId) ?? throw new InvalidOperationException("No assignments found for the given call.");
         ;

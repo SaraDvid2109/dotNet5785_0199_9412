@@ -1,5 +1,5 @@
 ﻿namespace DO;
-public enum Roles { Volunteer, Management };
+public enum Roles { Volunteer, Manager };
 public enum DistanceType { Aerial, Car, Walking };
 public enum CallType { RegularVehicle, Ambulance, IntensiveCareAmbulance };
 public enum CallStatus { Open, Treatment, OpenAtRisk, TreatmentOfRisk, Expired, Close };
