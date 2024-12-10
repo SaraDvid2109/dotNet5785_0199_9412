@@ -8,12 +8,12 @@ internal static class VolunteerManager
     public static void IntegrityCheck(BO.Volunteer volunteer)
     {
         // בדיקת פורמט הערכים
-        if (string.IsNullOrEmpty(volunteer.Mail) || !volunteer.Mail.EndsWith("@gmail.com"))
+        if (!string.IsNullOrEmpty(volunteer.Mail) && !volunteer.Mail.EndsWith("@gmail.com"))
         {
             throw new ArgumentException("Invalid email format.");
         }
 
-        if (volunteer.Phone?.Length != 10 || !volunteer.Phone.All(char.IsDigit))
+        if (!IsValidIsraeliPhoneNumber (volunteer.Phone))
         {
             throw new ArgumentException("Invalid phone number format.");
         }
@@ -22,14 +22,80 @@ internal static class VolunteerManager
             throw new ArgumentException("Invalid ID format.");
         }
 
+        if (!string.IsNullOrEmpty(volunteer.Password))
+        {
+            if (volunteer.Password.Length < 8 || volunteer.Password.Length > 12)
+                throw new Exception("The password must be 8–12 characters long.");
+            //chat GPT-How to check if a password contains all the required characters
+            bool hasLower = volunteer.Password.Any(char.IsLower); //Lowercase letters
+            bool hasUpper = volunteer.Password.Any(char.IsUpper); //Uppercase letters
+            bool hasDigit = volunteer.Password.Any(char.IsDigit); //Numbers
+            bool hasSpecial = volunteer.Password.Any(ch => "!@#$%^&*(),.?\"{}|<>".Contains(ch)); //Special characters
+            bool isStrongPassword = hasLower && hasUpper && hasDigit && hasSpecial;
+            if (!isStrongPassword)
+                throw new ArgumentException("The password must include letters, numbers, and special characters.");
+        }
+        if (volunteer.MaximumDistance < 0 || volunteer.MaximumDistance > 10)
+                throw new Exception("The MaximumDistance must be 0–10 kilometer.");
+
+
         // בדיקת תקינות לוגית
         var coordinates = Tools.CheckAddressVolunteer;
         if (coordinates == null)
         {
             throw new ArgumentException("Invalid address.");
         }
+        if (!string.IsNullOrEmpty(volunteer.Address))
+        {
+            var coordinate = Helpers.Tools.GetAddressCoordinates(volunteer.Address);
+            if (volunteer.Latitude != coordinate.Latitude)
+            {
+                throw new ArgumentException("Invalid Latitude.");
+            }
+            if (volunteer.Longitude != coordinate.Longitude)
+            {
+                throw new ArgumentException("Invalid Longitude.");
+            }
+        }
+        
 
     }
+
+    public static bool IsValidIsraeliPhoneNumber(string? phoneNumber)
+    {
+        // אם מספר הטלפון הוא null, הוא אינו תקין
+        if (string.IsNullOrEmpty(phoneNumber))
+        {
+            return true;
+        }
+
+        // הסרה של רווחים ולוכסן 
+        phoneNumber = phoneNumber.Trim().Replace(" ", "").Replace("-", "");
+
+        // בדיקת אורך: מספר טלפון ישראלי הוא 10 ספרות
+        if (phoneNumber.Length != 10)
+        {
+            return false;
+        }
+
+        // בדיקה שהמספר מכיל רק ספרות
+        if (!phoneNumber.All(char.IsDigit))
+        {
+            return false;
+        }
+
+        // בדיקת קידומות חוקיות
+        string[] validPrefixes = { "050", "051", "052", "053", "054", "055", "056", "057", "058", "059" };
+        string prefix = phoneNumber.Substring(0, 3);
+
+        if (!validPrefixes.Contains(prefix))
+        {
+            return false;
+        }
+
+        return true; // מספר הטלפון תקין
+    }
+
 
     public static bool IsValidIsraeliID(string id)
     {
@@ -58,20 +124,5 @@ internal static class VolunteerManager
 
     }
 
-    /// <summary>
-    /// Method to perform periodic updates on students based on the clock update.
-    /// </summary>
-    /// <param name="oldClock">The previous clock value.</param>
-    /// <param name="newClock">The updated clock value.</param>
-    internal static void PeriodicVolunteersUpdates(DateTime oldClock, DateTime newClock)
-    {
-        // Implement the logic for periodic updates on students.
-        // For example, update properties that are affected by the clock update.
-        // (students become not active after 5 years, etc.)
-
-        // Example implementation:
-        Console.WriteLine($"Updating students from {oldClock} to {newClock}");
-        // Add your logic here...
-    }
     // כל המתודות במחלקה יהיו internal static
 }
