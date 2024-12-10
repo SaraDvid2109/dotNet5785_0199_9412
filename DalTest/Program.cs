@@ -84,12 +84,12 @@ internal class Program
         {
             Console.WriteLine($"{entityName} Menu:");
             Console.WriteLine("0. Exit");
-            Console.WriteLine("1. Add New Object");
-            Console.WriteLine("2. View Object by ID");
-            Console.WriteLine("3. View All Objects");
-            Console.WriteLine("4. Update Object");
-            Console.WriteLine("5. Delete Object");
-            Console.WriteLine("6. Delete All Objects");
+            Console.WriteLine($"1. Add New {entityName}");
+            Console.WriteLine($"2. View {entityName} by ID");
+            Console.WriteLine($"3. View All {entityName}s");
+            Console.WriteLine($"4. Update {entityName}");
+            Console.WriteLine($"5. Delete {entityName}");
+            Console.WriteLine($"6. Delete All {entityName}s");
             //ChatGPT- How to get enum type input from the user.
             EntityMenuOptions choice = (EntityMenuOptions)GetUserInput(typeof(EntityMenuOptions));
             try
@@ -205,22 +205,38 @@ internal class Program
     private static void DisplayAllData()
     {
         Console.WriteLine("Displaying all data.");
-        //ChatGPT-What to do if there is a null option warning?
-        foreach (Volunteer volunteer in s_dal.Volunteer?.ReadAll() ?? Enumerable.Empty<Volunteer>())
+        try
         {
+            if (s_dal.Volunteer.ReadAll() == null || !s_dal.Volunteer.ReadAll().Any() || s_dal.Assignment.ReadAll() == null || !s_dal.Assignment.ReadAll().Any()
+                || s_dal.Call.ReadAll() == null || !s_dal.Call.ReadAll().Any())
+                throw new DalNullReferenceException("Volunteer/ Assignment/ Call service is null");
 
-            Console.WriteLine(volunteer);
+            foreach (Volunteer volunteer in s_dal.Volunteer.ReadAll())
+            {
+                if (volunteer == null)
+                    throw new DalNullReferenceException("Volunteer is null");
+                Console.WriteLine(volunteer);
+            }
+
+            foreach (Assignment assignment in s_dal.Assignment.ReadAll())
+            {
+                if (assignment == null)
+                    throw new DalNullReferenceException("Assignment is null");
+                Console.WriteLine(assignment);
+            }
+
+            foreach (Call call in s_dal.Call.ReadAll())
+            {
+                if (call == null)
+                    throw new DalNullReferenceException("Call is null");
+                Console.WriteLine(call);
+            }
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"Error: {ex.Message}");
         }
 
-        foreach (Assignment assignment in s_dal.Assignment?.ReadAll() ?? Enumerable.Empty<Assignment>())
-        {
-            Console.WriteLine(assignment);
-        }
-
-        foreach (Call call in s_dal.Call?.ReadAll() ?? Enumerable.Empty<Call>())
-        {
-            Console.WriteLine(call);
-        }
 
     }
 
@@ -280,7 +296,7 @@ internal class Program
     {
         Console.WriteLine($"Reading object for {entityName}.");
 
-        Console.WriteLine("Please enter the ID of the object:");
+        Console.WriteLine($"Please enter the ID of the {entityName}:");
         if (!int.TryParse(Console.ReadLine(), out int idInput))
             throw new DalFormatException("Invalid ID. Please enter a numeric value.");
 
@@ -288,14 +304,20 @@ internal class Program
         {
             case "Volunteer":
                 Volunteer? volunteer = s_dal.Volunteer?.Read(idInput);
+                if (volunteer == null)
+                    throw new DalFormatException("Volunteer not found.");
                 Console.WriteLine(volunteer);
                 break;
             case "Call":
                 Call? call = s_dal.Call?.Read(idInput);
+                if (call == null)
+                    throw new DalFormatException("Call not found.");
                 Console.WriteLine(call);
                 break;
             case "Assignment":
                 Assignment? assignment = s_dal.Assignment?.Read(idInput);
+                if (assignment == null)
+                    throw new DalFormatException("Assignment not found.");
                 Console.WriteLine(assignment);
                 break;
             default:
@@ -312,58 +334,66 @@ internal class Program
     private static void ReadAllEntities(string entityName)
     {
         Console.WriteLine($"Reading all objects for {entityName}.");
-        switch (entityName)
+        try
         {
-            case "Volunteer":
+            switch (entityName)
+            {
+                case "Volunteer":
 
-                IEnumerable<Volunteer>? volunteers = s_dal.Volunteer?.ReadAll();
-                if (volunteers != null)
-                {
-                    foreach (Volunteer volunteer in volunteers)
+                    IEnumerable<Volunteer>? volunteers = s_dal.Volunteer?.ReadAll();
+                    if (volunteers != null && volunteers.Any())
                     {
-                        Console.WriteLine(volunteer);
+                        foreach (Volunteer volunteer in volunteers)
+                        {
+                            Console.WriteLine(volunteer);
+                        }
                     }
-                }
-                else
-                {
-                    throw new DalFormatException("No volunteers");
-                }
-                break;
-
-            case "Call":
-                IEnumerable<Call>? calls = s_dal.Call?.ReadAll(); 
-                if (calls != null)
-                {
-                    foreach (Call call in calls)
+                    else
                     {
-                        Console.WriteLine(call);
+                        throw new DalFormatException("No volunteers");
                     }
-                }
-                else
-                {
-                    throw new DalFormatException("No calls");
-                }
-                break;
+                    break;
 
-            case "Assignment":
-                IEnumerable<Assignment>? assignments = s_dal.Assignment?.ReadAll();
-                if (assignments != null)
-                {
-                    foreach (Assignment assignment in assignments)
+                case "Call":
+                    IEnumerable<Call>? calls = s_dal.Call?.ReadAll();
+                    if (calls != null && calls.Any())
                     {
-                        Console.WriteLine(assignment);
+                        foreach (Call call in calls)
+                        {
+                            Console.WriteLine(call);
+                        }
                     }
-                }
-                else
-                {
-                    throw new DalFormatException("No assignments");
-                }
-                break;
+                    else
+                    {
+                        throw new DalFormatException("No calls");
+                    }
+                    break;
 
-            default:
-                Console.WriteLine("Unknown entity type.");
-                break;
+                case "Assignment":
+                    IEnumerable<Assignment>? assignments = s_dal.Assignment?.ReadAll();
+                    if (assignments != null && assignments.Any())
+                    {
+                        foreach (Assignment assignment in assignments)
+                        {
+                            Console.WriteLine(assignment);
+                        }
+                    }
+                    else
+                    {
+                        throw new DalFormatException("No assignments");
+                    }
+                    break;
+
+                default:
+                    Console.WriteLine("Unknown entity type.");
+                    break;
+            }
         }
+        catch (DalFormatException ex)
+        {
+            Console.WriteLine($"Error: {ex.Message}");
+        }
+
     }
 
     /// <summary>
@@ -399,6 +429,7 @@ internal class Program
             Console.WriteLine($"Error: {ex.Message}");
         }
     }
+
     /// <summary>
     /// Deleting an existing object from the list
     /// </summary>
@@ -520,6 +551,7 @@ internal class Program
                 break;
         }
     }
+
     /// <summary>
     /// Reset all configuration values
     /// </summary>
@@ -528,6 +560,7 @@ internal class Program
         Console.WriteLine("Resetting configuration values.");
         s_dal.Config.Reset();
     }
+
     /// <summary>
     /// Create a new volunteer with the user input 
     /// </summary>
@@ -589,11 +622,13 @@ internal class Program
         );
         return volunteer;
     }
+
     /// <summary>
     /// Create a new call with the user input 
     /// </summary>
     /// <returns>New call</returns>
     /// <exception cref="FormatException">Thrown if the input is invalid</exception>
+    /// 
     private static Call CreateCall()
     {
         Console.WriteLine("Enter Call Description:");
@@ -633,6 +668,7 @@ internal class Program
         );
         return call;
     }
+
     /// <summary>
     /// Create a new assignment with the user input 
     /// </summary>

@@ -101,7 +101,7 @@ public static class Initialization
             password = passwordBuilder.ToString();
 
             double MaximumDistance = s_rand.Next(0, 10);
-            role = (i == 0) ? Roles.Management : Roles.Volunteer;
+            role = (i == 0) ? Roles.Manager : Roles.Volunteer;
             if (i >= 10)
                 Active = false;
 
