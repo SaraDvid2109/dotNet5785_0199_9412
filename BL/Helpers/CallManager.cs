@@ -48,11 +48,11 @@ internal static class CallManager
             throw new ArgumentException("Invalid address.");
         }
         var coordinates = Helpers.Tools.GetAddressCoordinates(call.Address);
-        if (call.Latitude == coordinates.Latitude)
+        if (call.Latitude != coordinates.Latitude)
         {
             throw new ArgumentException("Invalid Latitude.");
         }
-        if (call.Longitude == coordinates.Longitude)
+        if (call.Longitude != coordinates.Longitude)
         {
             throw new ArgumentException("Invalid Longitude.");
         }
@@ -236,6 +236,47 @@ internal static class CallManager
         return volunteer.Name;
     }
 
+    /// <summary>
+    /// Method to perform periodic updates on students based on the clock update.
+    /// </summary>
+    /// <param name="oldClock">The previous clock value.</param>
+    /// <param name="newClock">The updated clock value.</param>
+    internal static void PeriodicCallsUpdates(DateTime oldClock, DateTime newClock)
+    {
+        var openCalls = s_dal.Call.ReadAll()
+        .Where(call => call.MaxTime.HasValue && call.MaxTime.Value < DateTime.Now && ( CallManager.Status(call.Id) != BO.CallStatus.Expired && CallManager.Status(call.Id) != BO.CallStatus.Close) )
+       .ToList();
 
+
+
+
+        // 2. מעבר על כל הקריאות שזמן הסיום שלהן עבר
+        foreach (var call in openCalls)
+        {
+            // שלב א': קריאות ללא הקצאה
+            var assignment = s_dal.Assignment.Read(call.Id);
+            if (assignment == null)
+            {
+                // יצירת הקצאה חדשה
+                s_dal.Assignment.Create(new Assignment
+                {
+                    CallId = call.Id,
+                    EndTime = DateTime.Now,
+                    TypeEndOfTreatment = DO.EndType.ExpiredCancellation
+                });
+                s_dal.Call.Update(call);
+            }
+            // שלב ב': קריאות עם הקצאה ללא זמן סיום
+            else if (assignment.EndTime == null)
+            {
+                // עדכון ההקצאה
+                //assignment.EndTime = DateTime.Now;
+                //assignment.TypeEndOfTreatment = DO.EndType.ExpiredCancellation;
+                s_dal.Assignment.Update(assignment);
+            }
+
+        }
+
+    }
     // כל המתודות במחלקה יהיו internal static
 }
