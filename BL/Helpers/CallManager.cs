@@ -243,40 +243,37 @@ internal static class CallManager
     /// <param name="newClock">The updated clock value.</param>
     internal static void PeriodicCallsUpdates(DateTime oldClock, DateTime newClock)
     {
-        var openCalls = s_dal.Call.ReadAll()
-        .Where(call => call.MaxTime.HasValue && call.MaxTime.Value < DateTime.Now && ( CallManager.Status(call.Id) != BO.CallStatus.Expired && CallManager.Status(call.Id) != BO.CallStatus.Close) )
-       .ToList();
+        var Calls = s_dal.Call.ReadAll();
+        var noAssignments = from Call in Calls
+                            let assignments = GetAssignmentCall(Call.Id)
+                            where ClockManager.Now >= Call.MaxTime && assignments == null
+                            select Call;
+        var haveAssignments = from Call in Calls
+                              let assignments = GetAssignmentCall(Call.Id)
+                              where ClockManager.Now >= Call.MaxTime && assignments != null
+                              let lastAssignment = GetLastAssignment(assignments)
+                              where lastAssignment.EndTime == null
+                              select Call;
 
-
-
-
-        // 2. מעבר על כל הקריאות שזמן הסיום שלהן עבר
-        foreach (var call in openCalls)
+        foreach (var Call in noAssignments)
         {
-            // שלב א': קריאות ללא הקצאה
-            var assignment = s_dal.Assignment.Read(call.Id);
-            if (assignment == null)
+            s_dal.Assignment.Create(new Assignment
             {
-                // יצירת הקצאה חדשה
-                s_dal.Assignment.Create(new Assignment
-                {
-                    CallId = call.Id,
-                    EndTime = DateTime.Now,
-                    TypeEndOfTreatment = DO.EndType.ExpiredCancellation
-                });
-                s_dal.Call.Update(call);
-            }
-            // שלב ב': קריאות עם הקצאה ללא זמן סיום
-            else if (assignment.EndTime == null)
-            {
-                // עדכון ההקצאה
-                //assignment.EndTime = DateTime.Now;
-                //assignment.TypeEndOfTreatment = DO.EndType.ExpiredCancellation;
-                s_dal.Assignment.Update(assignment);
-            }
-
+                CallId = Call.Id,
+                EnterTime = DateTime.Now,
+                EndTime = DateTime.Now,
+                TypeEndOfTreatment = DO.EndType.ExpiredCancellation
+            });
         }
 
+        var convertHaveAssignments = haveAssignments.Select(c => GetLastAssignment(GetAssignmentCall(c.Id)!)!);
+        var updatedHaveAssignments = convertHaveAssignments.Select(a => a = a with { EndTime = ClockManager.Now, TypeEndOfTreatment = DO.EndType.ExpiredCancellation });
+        foreach (var assignment in updatedHaveAssignments)
+        {
+            s_dal.Assignment.Update(assignment);
+        }
     }
+
+
     // כל המתודות במחלקה יהיו internal static
 }

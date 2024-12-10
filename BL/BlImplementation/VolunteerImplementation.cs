@@ -9,18 +9,6 @@ internal class volunteerImplementation : IVolunteer
     private readonly DalApi.IDal _dal = DalApi.Factory.Get;
     public DO.Roles Login(string username, string password)
     {
-        if (password.Length < 8 || password.Length > 12)
-            throw new Exception("The password must be 8–12 characters long.");
-        //chat GPT-How to check if a password contains all the required characters
-        bool hasLower = password.Any(char.IsLower); //Lowercase letters
-        bool hasUpper = password.Any(char.IsUpper); //Uppercase letters
-        bool hasDigit = password.Any(char.IsDigit); //Numbers
-        bool hasSpecial = password.Any(ch => "!@#$%^&*(),.?\"{}|<>".Contains(ch)); //Special characters
-        bool isStrongPassword = hasLower && hasUpper && hasDigit && hasSpecial;
-
-        if (!isStrongPassword)
-            throw new RequirementNotMetException("The password must include letters, numbers, and special characters.");
-
         var volunteer = _dal.Volunteer.ReadAll(v => v.Name == username && v.Password == password).FirstOrDefault();
 
         if (volunteer == null)
@@ -39,7 +27,7 @@ internal class volunteerImplementation : IVolunteer
             volunteers = _dal.Volunteer.ReadAll();
         else
         {
-            groupedVolunteers = _dal.Volunteer.ReadAll().GroupBy(v => v.Active);
+            groupedVolunteers = _dal.Volunteer.ReadAll().GroupBy(v => v.Active == true);
             volunteers = groupedVolunteers.FirstOrDefault(g => g.Key == active.Value) ?? Enumerable.Empty<DO.Volunteer>();
         }
         if (field == null)
