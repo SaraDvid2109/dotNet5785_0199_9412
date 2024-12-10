@@ -15,12 +15,12 @@ internal static class CallManager
         // בדיקת פורמט הערכים
         if (!Enum.IsDefined(typeof(BO.CallType), call.CarTaypeToSend))
         {
-            throw new ArgumentException("Invalid CallType format.");
+            throw new BO.BlFormatException("Invalid CallType format.");
         }
 
         if (call.OpenTime > DateTime.Now)
         {
-            throw new ArgumentException("Invalid OpenTime format.");
+            throw new BO.BlFormatException("Invalid OpenTime format.");
         }
 
         if (call.MaxTime.HasValue)
@@ -28,33 +28,33 @@ internal static class CallManager
             TimeSpan timeDifference = call.MaxTime.Value - call.OpenTime;
             if (timeDifference.TotalMinutes < 5 || timeDifference.TotalMinutes > 30)
             {
-                throw new ArgumentException("Invalid MaxTime format.");
+                throw new BO.BlFormatException("Invalid MaxTime format.");
             }
         }
         else
         {
-            throw new ArgumentException("MaxTime cannot be null.");
+            throw new BO.BlFormatException("MaxTime cannot be null.");
         }
 
         if (!Enum.IsDefined(typeof(BO.CallStatus), call.Status))
         {
-            throw new ArgumentException("Invalid CallStatus format.");
+            throw new BO.BlFormatException("Invalid CallStatus format.");
         }
 
         // בדיקת תקינות לוגית
         var coordinate = Tools.CheckAddressCall;
         if (coordinate == null || call.Address == null)
         {
-            throw new ArgumentException("Invalid address.");
+            throw new BO.BlFormatException("Invalid address.");
         }
         var coordinates = Helpers.Tools.GetAddressCoordinates(call.Address);
         if (call.Latitude != coordinates.Latitude)
         {
-            throw new ArgumentException("Invalid Latitude.");
+            throw new BO.BlFormatException("Invalid Latitude.");
         }
         if (call.Longitude != coordinates.Longitude)
         {
-            throw new ArgumentException("Invalid Longitude.");
+            throw new BO.BlFormatException("Invalid Longitude.");
         }
     }
 
@@ -62,7 +62,7 @@ internal static class CallManager
     {
         var call = s_dal.Call.Read(callId);
         if (call == null)
-            throw new ArgumentException($"Call with id {callId} does not exist");
+            throw new BO.BlDoesNotExistException($"Call with id {callId} does not exist");
 
         var assignments = GetAssignmentCall(callId);
         if (assignments == null)
@@ -149,7 +149,7 @@ internal static class CallManager
 
         if (assignment == null)
         {
-            throw new InvalidOperationException("No assignment found for the given call.");
+            throw new BO.BlNullPropertyException("No assignment found for the given call.");
         }
 
         return new BO.ClosedCallInList
@@ -158,7 +158,7 @@ internal static class CallManager
             CallType = (BO.CallType)call.CarTaypeToSend,
             Address = call.Address,
             OpenTime = call.OpenTime,
-            EnterTime = assignment.EnterTime ?? throw new InvalidOperationException("EnterTime is null."),
+            EnterTime = assignment.EnterTime ?? throw new BO.BlNullPropertyException("EnterTime is null."),
             EndTime = assignment.EndTime,
             TypeEndOfTreatment = (BO.EndType?)assignment.TypeEndOfTreatment
         };
@@ -188,12 +188,12 @@ internal static class CallManager
     {
         if (call.Address == null)
         {
-            throw new ArgumentNullException(nameof(call.Address), "Call address cannot be null.");
+            throw new BO.BlNullPropertyException("Call address cannot be null.");
         }
 
         if (volunteer.Address == null)
         {
-            throw new ArgumentNullException(nameof(volunteer.Address), "Volunteer address cannot be null.");
+            throw new BO.BlNullPropertyException("Volunteer address cannot be null.");
         }
         return new BO.OpenCallInList
         {
@@ -227,12 +227,12 @@ internal static class CallManager
         {
             throw new BO.BlNullPropertyException("No assignments found for the given call.");
         }
-        var volunteer = s_dal.Volunteer.Read(last.VolunteerId) ?? throw new InvalidOperationException("No assignments found for the given call.");
-        ;
-        if (volunteer == null)
-        {
-            throw new InvalidOperationException("No assignments found for the given call.");
-        }
+        var volunteer = s_dal.Volunteer.Read(last.VolunteerId) ?? throw new BO.BlNullPropertyException("No assignments found for the given call.");
+        
+        //if (volunteer == null)
+        //{
+        //    throw new BO.BlNullPropertyException("No assignments found for the given call.");
+        //}
         return volunteer.Name;
     }
 

@@ -1,4 +1,5 @@
-﻿using DalApi;
+﻿using BO;
+using DalApi;
 namespace Helpers;
 
 internal static class VolunteerManager
@@ -10,22 +11,22 @@ internal static class VolunteerManager
         // בדיקת פורמט הערכים
         if (!string.IsNullOrEmpty(volunteer.Mail) && !volunteer.Mail.EndsWith("@gmail.com"))
         {
-            throw new ArgumentException("Invalid email format.");
+            throw new BO.BlFormatException("Invalid email format.");
         }
 
         if (!IsValidIsraeliPhoneNumber (volunteer.Phone))
         {
-            throw new ArgumentException("Invalid phone number format.");
+            throw new BO.BlFormatException("Invalid phone number format.");
         }
         if (!IsValidIsraeliID(volunteer.Id.ToString()))
         {
-            throw new ArgumentException("Invalid ID format.");
+            throw new BO.BlFormatException("Invalid ID format.");
         }
 
         if (!string.IsNullOrEmpty(volunteer.Password))
         {
             if (volunteer.Password.Length < 8 || volunteer.Password.Length > 12)
-                throw new Exception("The password must be 8–12 characters long.");
+                throw new BO.BlFormatException("The password must be 8–12 characters long.");
             //chat GPT-How to check if a password contains all the required characters
             bool hasLower = volunteer.Password.Any(char.IsLower); //Lowercase letters
             bool hasUpper = volunteer.Password.Any(char.IsUpper); //Uppercase letters
@@ -33,28 +34,28 @@ internal static class VolunteerManager
             bool hasSpecial = volunteer.Password.Any(ch => "!@#$%^&*(),.?\"{}|<>".Contains(ch)); //Special characters
             bool isStrongPassword = hasLower && hasUpper && hasDigit && hasSpecial;
             if (!isStrongPassword)
-                throw new ArgumentException("The password must include letters, numbers, and special characters.");
+                throw new BO.BlFormatException("The password must include letters, numbers, and special characters.");
         }
         if (volunteer.MaximumDistance < 0 || volunteer.MaximumDistance > 10)
-                throw new Exception("The MaximumDistance must be 0–10 kilometer.");
+                throw new BO.BlFormatException("The MaximumDistance must be 0–10 kilometer.");
 
 
         // בדיקת תקינות לוגית
         var coordinates = Tools.CheckAddressVolunteer;
         if (coordinates == null)
         {
-            throw new ArgumentException("Invalid address.");
+            throw new BO.BlFormatException("Invalid address.");
         }
         if (!string.IsNullOrEmpty(volunteer.Address))
         {
             var coordinate = Helpers.Tools.GetAddressCoordinates(volunteer.Address);
             if (volunteer.Latitude != coordinate.Latitude)
             {
-                throw new ArgumentException("Invalid Latitude.");
+                throw new BO.BlFormatException("Invalid Latitude.");
             }
             if (volunteer.Longitude != coordinate.Longitude)
             {
-                throw new ArgumentException("Invalid Longitude.");
+                throw new BO.BlFormatException("Invalid Longitude.");
             }
         }
         
