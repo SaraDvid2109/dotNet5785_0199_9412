@@ -1,4 +1,5 @@
 ﻿namespace BlApi;
+
 /// <summary>
 /// Logical Service Entity
 /// </summary>

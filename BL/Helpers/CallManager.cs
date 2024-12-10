@@ -12,7 +12,6 @@ internal static class CallManager
 
     public static void IntegrityCheck(BO.Call call)
     {
-        // בדיקת פורמט הערכים
         if (!Enum.IsDefined(typeof(BO.CallType), call.CarTaypeToSend))
         {
             throw new BO.BlFormatException("Invalid CallType format.");
@@ -41,12 +40,12 @@ internal static class CallManager
             throw new BO.BlFormatException("Invalid CallStatus format.");
         }
 
-        // בדיקת תקינות לוגית
         var coordinate = Tools.CheckAddressCall;
         if (coordinate == null || call.Address == null)
         {
             throw new BO.BlFormatException("Invalid address.");
         }
+
         var coordinates = Helpers.Tools.GetAddressCoordinates(call.Address);
         if (call.Latitude != coordinates.Latitude)
         {
@@ -109,6 +108,18 @@ internal static class CallManager
         return assignments.OrderByDescending(a => a.TypeEndOfTreatment).FirstOrDefault();
     }
 
+    public static string getLastVolunteer(DO.Call call)
+    {
+        var assignments = AssignmentManager.findAssignment(call.Id);
+        var last = assignments.MaxBy(a => a.EnterTime);
+        if (last == null)
+        {
+            throw new BO.BlNullPropertyException("No assignments found for the given call.");
+        }
+        var volunteer = s_dal.Volunteer.Read(last.VolunteerId) ?? throw new BO.BlNullPropertyException("No assignments found for the given call.");
+        return volunteer.Name;
+    }
+
     public static IEnumerable<DO.Call> Filter(IEnumerable<DO.Call> toFilter, BO.CallType? type)
     {
         if (type != null)
@@ -120,27 +131,6 @@ internal static class CallManager
         return toFilter;
     }
 
-    //public static IEnumerable<DO.Call> SortClosedCall(IEnumerable<DO.Call> toSort, BO.ClosedCallInListField? sortBy)
-    //{
-    //if (sortBy != null)
-    //{
-    //    toFilter = from call in toFilter
-    //               orderby sortBy
-    //               select call;
-    //}
-    //else
-    //{
-    //    toFilter = from call in toFilter
-    //               orderby call.Id
-    //               select call;
-    //}
-    //return toFilter;
-    //}
-    //public static List<Assignment> GetAssignments(int callId)
-    //{
-    //    return s_dal.Assignment.ReadAll(a => a.CallId == callId ).Select(callId);
-
-    //}
     public static BO.ClosedCallInList ToBOClosedCall(DO.Call call)
     {
         var assignments = s_dal.Assignment.ReadAll();
@@ -164,26 +154,6 @@ internal static class CallManager
         };
     }
 
-    //public static BO.ClosedCallInList ToBOClosedCall(DO.Call call)
-    //{
-    //    var assignments = s_dal.Assignment.ReadAll();
-    //    //need to read assignment of call and volunteer
-    //    return new BO.ClosedCallInList
-    //    {
-    //        Id = call.Id,
-    //        CallType = (BO.CallType)call.CarTaypeToSend,
-    //        Address = call.Address,
-    //        OpenTime = call.OpenTime,
-    //        EnterTime = s_dal.Assignment.Read(a => a.CallId == call.Id && (assignments.MaxBy(a => a.Id)).Id == a.Id).EnterTime,
-    //        EndTime
-    //        TypeEndOfTreatment
-
-    //        EntryTimeForTreatment = assignment.EnterTime,
-    //        EndTimeOfTreatment = assignment.EndTime,
-    //        EndOfTreatmentType = (BO.EndType)assignment.EndOfTreatmentType
-    //    };
-    //}
-
     public static BO.OpenCallInList ToBOOpenCall(DO.Call call, DO.Volunteer volunteer)
     {
         if (call.Address == null)
@@ -206,6 +176,7 @@ internal static class CallManager
             Distance= Tools.DistanceCalculator.CalculateDistance(call.Address, volunteer.Address, volunteer.Type)
         };
     }
+
     public static DO.Call ToDOCall(BO.Call call)
     {
         return  new DO.Call(
@@ -219,28 +190,56 @@ internal static class CallManager
                 (DO.CallType)call.CarTaypeToSend);
     }
 
-    public static string getLastVolunteer(DO.Call call)
-    {
-        var assignments = AssignmentManager.findAssignment(call.Id);
-        var last = assignments.MaxBy(a => a.EnterTime);
-        if (last == null)
-        {
-            throw new BO.BlNullPropertyException("No assignments found for the given call.");
-        }
-        var volunteer = s_dal.Volunteer.Read(last.VolunteerId) ?? throw new BO.BlNullPropertyException("No assignments found for the given call.");
-        
-        //if (volunteer == null)
-        //{
-        //    throw new BO.BlNullPropertyException("No assignments found for the given call.");
-        //}
-        return volunteer.Name;
-    }
+    //public static BO.ClosedCallInList ToBOClosedCall(DO.Call call)
+    //{
+    //    var assignments = s_dal.Assignment.ReadAll();
+    //    //need to read assignment of call and volunteer
+    //    return new BO.ClosedCallInList
+    //    {
+    //        Id = call.Id,
+    //        CallType = (BO.CallType)call.CarTaypeToSend,
+    //        Address = call.Address,
+    //        OpenTime = call.OpenTime,
+    //        EnterTime = s_dal.Assignment.Read(a => a.CallId == call.Id && (assignments.MaxBy(a => a.Id)).Id == a.Id).EnterTime,
+    //        EndTime
+    //        TypeEndOfTreatment
+
+    //        EntryTimeForTreatment = assignment.EnterTime,
+    //        EndTimeOfTreatment = assignment.EndTime,
+    //        EndOfTreatmentType = (BO.EndType)assignment.EndOfTreatmentType
+    //    };
+    //}
+
+    
+
+    //public static IEnumerable<DO.Call> SortClosedCall(IEnumerable<DO.Call> toSort, BO.ClosedCallInListField? sortBy)
+    //{
+    //if (sortBy != null)
+    //{
+    //    toFilter = from call in toFilter
+    //               orderby sortBy
+    //               select call;
+    //}
+    //else
+    //{
+    //    toFilter = from call in toFilter
+    //               orderby call.Id
+    //               select call;
+    //}
+    //return toFilter;
+    //}
+    //public static List<Assignment> GetAssignments(int callId)
+    //{
+    //    return s_dal.Assignment.ReadAll(a => a.CallId == callId ).Select(callId);
+
+    //}
 
     /// <summary>
     /// Method to perform periodic updates on students based on the clock update.
     /// </summary>
     /// <param name="oldClock">The previous clock value.</param>
     /// <param name="newClock">The updated clock value.</param>
+    /// 
     internal static void PeriodicCallsUpdates(DateTime oldClock, DateTime newClock)
     {
         var Calls = s_dal.Call.ReadAll();
@@ -273,7 +272,6 @@ internal static class CallManager
             s_dal.Assignment.Update(assignment);
         }
     }
-
 
     // כל המתודות במחלקה יהיו internal static
 }

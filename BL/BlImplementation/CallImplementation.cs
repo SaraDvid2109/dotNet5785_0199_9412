@@ -26,7 +26,7 @@ internal class CallImplementation : ICall
         IEnumerable<DO.Call> sotrtCalls;
         calls = _dal.Call.ReadAll();
         if (filter == null)
-            sotrtCalls = _dal.Call.ReadAll();
+            calls = _dal.Call.ReadAll();
         else
         {
             groupedCalls = filter switch
@@ -57,8 +57,7 @@ internal class CallImplementation : ICall
             CallType = (BO.CallType)call.CarTaypeToSend,
             OpenTime = call.OpenTime,
             LastVolunteer = CallManager.getLastVolunteer(call),
-            Status = CallManager.Status(call.Id)
-            
+            Status = CallManager.Status(call.Id)  
         });
     }
 
@@ -101,7 +100,9 @@ internal class CallImplementation : ICall
     {
         CallManager.IntegrityCheck(call);
 
-        DO.Call DOcall = new DO.Call(
+        try
+        {
+            DO.Call DOcall = new DO.Call(
            call.Id,
            call.Description,
            call.Address ?? string.Empty,
@@ -110,8 +111,7 @@ internal class CallImplementation : ICall
            call.OpenTime,
            call.MaxTime,
            (DO.CallType)call.CarTaypeToSend);
-        try
-        {
+        
             _dal.Call.Update(DOcall);
         }
         catch (DO.DalDoesNotExistException ex)
@@ -263,6 +263,7 @@ internal class CallImplementation : ICall
             throw new BO.BlDoesNotExistException("Error attempting to update call handling completion:" + ex);
         }
     }
+
     public void CancelCallHandling(int volunteerId, int assignmentId)
     {
         DO.Volunteer? volunteer = _dal.Volunteer.Read(volunteerId);
@@ -314,5 +315,5 @@ internal class CallImplementation : ICall
         DO.Assignment assignmentToAdd = new DO.Assignment(0, callId, volunteerId, ClockManager.Now, null, null);
         _dal.Assignment.Create(assignmentToAdd);
     }
-                  
+
 }

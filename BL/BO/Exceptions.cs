@@ -14,6 +14,7 @@ public class BllAlreadyExistException : Exception
     public BllAlreadyExistException(string message, Exception innerException)
                 : base(message, innerException) { }
 }
+
 public class BllDeletionImpossible : Exception
 {
     public BllDeletionImpossible(string? message) : base(message) { }
@@ -52,6 +53,7 @@ public class BlNullPropertyException : Exception
 {
     public BlNullPropertyException(string? message) : base(message) { }
 }
+
 /// <summary>
 /// Exception to the problem with unauthorized access.
 /// </summary>

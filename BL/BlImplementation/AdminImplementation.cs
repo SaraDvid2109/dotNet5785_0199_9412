@@ -1,5 +1,4 @@
-﻿
-using BL.Helpers;
+﻿using BL.Helpers;
 using BlApi;
 using BO;
 
@@ -13,6 +12,7 @@ internal class AdminImplementation : IAdmin
     {
         return ClockManager.Now;
     }
+
     public void ForwardClock(TimeUnit unit)
     {
         ClockManager.UpdateClock(unit switch
@@ -26,6 +26,7 @@ internal class AdminImplementation : IAdmin
         });
 
     }
+
     public TimeSpan GetMaxRange()
     {
         return _dal.Config.RiskRange;
@@ -42,11 +43,11 @@ internal class AdminImplementation : IAdmin
         ClockManager.UpdateClock(ClockManager.Now);
 
     }
+
     public void InitializeDB()
     {
         DalTest.Initialization.Do();
         ClockManager.UpdateClock(ClockManager.Now);
 
     }
-
 }

@@ -3,6 +3,7 @@ using DalApi;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Reflection;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -12,32 +13,16 @@ internal static class Tools
 {
     public static string ToStringProperty<T>(this T t)
     {
-        if (t == null)
-            return string.Empty;
-
-        var properties = typeof(T).GetProperties();
-        var sb = new StringBuilder();
-
+        string result = "";
+        PropertyInfo[] properties = t!.GetType().GetProperties();
         foreach (var prop in properties)
         {
-            var value = prop.GetValue(t, null);
-            if (value is System.Collections.IEnumerable enumerable && !(value is string))
-            {
-                sb.AppendLine($"{prop.Name}: [");
-                foreach (var item in enumerable)
-                {
-                    sb.AppendLine(item.ToStringProperty());
-                }
-                sb.AppendLine("]");
-            }
-            else
-            {
-                sb.AppendLine($"{prop.Name}: {value}");
-            }
+            result += $"{prop.Name}: {prop.GetValue(null) ?? "null"}\n";
         }
-
-        return sb.ToString();
+        return result;
     }
+
+    #region Adress & Latitude & Longitude calculation
 
     public static (double Latitude, double Longitude) GetAddressCoordinates(string address)
     {
@@ -357,5 +342,6 @@ internal static class Tools
         }
     }
 
+    #endregion Adress & Latitude & Longitude calculation
 
 }

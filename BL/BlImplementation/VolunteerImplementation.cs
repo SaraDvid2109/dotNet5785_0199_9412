@@ -1,6 +1,5 @@
 ﻿namespace BlImplementation;
 using BlApi;
-
 using Helpers;
 
 internal class volunteerImplementation : IVolunteer
@@ -88,6 +87,7 @@ internal class volunteerImplementation : IVolunteer
             Progress = new BO.CallInProgress(),
         };
     }
+
     public void UpdatingVolunteerDetails(int id, BO.Volunteer volunteer)
     {
         Helpers.VolunteerManager.IntegrityCheck(volunteer);
@@ -130,6 +130,7 @@ internal class volunteerImplementation : IVolunteer
             throw new BO.BlDoesNotExistException("Error updating volunteer details: " + ex.Message);
         }
     }
+
     public void DeleteVolunteer(int id)
     {
         try
@@ -146,6 +147,7 @@ internal class volunteerImplementation : IVolunteer
             throw new BO.BlDoesNotExistException("Error deleting volunteer:" + ex.Message);
         }
     }
+
     public void AddVolunteer(BO.Volunteer volunteer)
     {
         Helpers.VolunteerManager.IntegrityCheck(volunteer);

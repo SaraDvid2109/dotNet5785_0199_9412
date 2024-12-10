@@ -1,5 +1,6 @@
 ﻿using BO;
 using DalApi;
+using DO;
 namespace Helpers;
 
 internal static class VolunteerManager
@@ -8,16 +9,31 @@ internal static class VolunteerManager
 
     public static void IntegrityCheck(BO.Volunteer volunteer)
     {
-        // בדיקת פורמט הערכים
+        if (!Enum.IsDefined(typeof(BO.Roles), volunteer.Role))
+        {
+            throw new BO.BlFormatException("Invalid Role format.");
+        }
+
+        if (!Enum.IsDefined(typeof(BO.DistanceType), volunteer.Type))
+        {
+            throw new BO.BlFormatException("Invalid DistanceType format.");
+        }
+
         if (!string.IsNullOrEmpty(volunteer.Mail) && !volunteer.Mail.EndsWith("@gmail.com"))
         {
             throw new BO.BlFormatException("Invalid email format.");
+        }
+
+        if (volunteer.TotalCallsCanceled < 0 || volunteer.TotalCallsChosenHandleExpired < 0 || volunteer.TotalCallsHandled < 0 )
+        {
+            throw new BO.BlFormatException("Total calls values cannot be negative.");
         }
 
         if (!IsValidIsraeliPhoneNumber (volunteer.Phone))
         {
             throw new BO.BlFormatException("Invalid phone number format.");
         }
+
         if (!IsValidIsraeliID(volunteer.Id.ToString()))
         {
             throw new BO.BlFormatException("Invalid ID format.");
@@ -36,16 +52,18 @@ internal static class VolunteerManager
             if (!isStrongPassword)
                 throw new BO.BlFormatException("The password must include letters, numbers, and special characters.");
         }
+
         if (volunteer.MaximumDistance < 0 || volunteer.MaximumDistance > 10)
-                throw new BO.BlFormatException("The MaximumDistance must be 0–10 kilometer.");
+        { 
+            throw new BO.BlFormatException("The MaximumDistance must be 0–10 kilometer."); 
+        }
 
-
-        // בדיקת תקינות לוגית
         var coordinates = Tools.CheckAddressVolunteer;
         if (coordinates == null)
         {
             throw new BO.BlFormatException("Invalid address.");
         }
+
         if (!string.IsNullOrEmpty(volunteer.Address))
         {
             var coordinate = Helpers.Tools.GetAddressCoordinates(volunteer.Address);
@@ -58,8 +76,6 @@ internal static class VolunteerManager
                 throw new BO.BlFormatException("Invalid Longitude.");
             }
         }
-        
-
     }
 
     public static bool IsValidIsraeliPhoneNumber(string? phoneNumber)
@@ -97,7 +113,6 @@ internal static class VolunteerManager
         return true; // מספר הטלפון תקין
     }
 
-
     public static bool IsValidIsraeliID(string id)
     {
         // בדיקה ראשונית: האם הקלט מורכב מספרות בלבד ובעל אורך חוקי
@@ -122,7 +137,6 @@ internal static class VolunteerManager
             sum += value;
         }
         return sum % 10 == 0;
-
     }
 
     // כל המתודות במחלקה יהיו internal static
