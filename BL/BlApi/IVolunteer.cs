@@ -5,7 +5,7 @@
 /// </summary>
 public interface IVolunteer
 {
-    public DO.Roles Login(string username, string password);
+    public BO.Roles Login(string username, string password);
     public IEnumerable<BO.VolunteerInList> VolunteerList(bool? active, BO.VolunteerField? field);
     public BO.Volunteer GetVolunteerDetails(int id);
     public void UpdatingVolunteerDetails(int id, BO.Volunteer volunteer);

@@ -1,11 +1,12 @@
 ﻿namespace BlImplementation;
 using BlApi;
+using BO;
 using Helpers;
 
 internal class volunteerImplementation : IVolunteer
 {
     private readonly DalApi.IDal _dal = DalApi.Factory.Get;
-    public DO.Roles Login(string username, string password)
+    public BO.Roles Login(string username, string password)
     {
         var volunteer = _dal.Volunteer.ReadAll(v => v.Name == username && v.Password == password).FirstOrDefault();
 
@@ -13,7 +14,26 @@ internal class volunteerImplementation : IVolunteer
         {
             throw new BO.BlNullPropertyException("There is no volunteer with that name or password.");
         }
-        return volunteer.Role;
+        var bovolunteer= new BO.Volunteer
+        {
+            Id = volunteer.Id,
+            Name = volunteer.Name,
+            Phone = volunteer.Phone,
+            Mail = volunteer.Mail,
+            Password = volunteer.Password,
+            Address = volunteer.Address,
+            Latitude = volunteer.Latitude,
+            Longitude = volunteer.Longitude,
+            Role = (BO.Roles)volunteer.Role,
+            Active = volunteer.Active,
+            MaximumDistance = volunteer.MaximumDistance,
+            Type = (BO.DistanceType)volunteer.Type,
+            TotalCallsHandled = 0,
+            TotalCallsCanceled = 0,
+            TotalCallsChosenHandleExpired = 0,
+            Progress = new BO.CallInProgress(),
+        };
+        return bovolunteer.Role;
     }
 
     public IEnumerable<BO.VolunteerInList> VolunteerList(bool? active, BO.VolunteerField? field)
@@ -26,12 +46,19 @@ internal class volunteerImplementation : IVolunteer
         else
         {
             groupedVolunteers = _dal.Volunteer.ReadAll().GroupBy(v => v.Active == true);
+            if (groupedVolunteers == null || !groupedVolunteers.Any())
+                throw new BlNullPropertyException("Volunteer data source is empty or null.");
+
             volunteers = groupedVolunteers.FirstOrDefault(g => g.Key == active.Value) ?? Enumerable.Empty<DO.Volunteer>();
+
         }
-        if (field == null)
-            sotrtVolunteers = volunteers.OrderBy(v => v.Id);
+        if (!volunteers.Any())
+            return Enumerable.Empty<BO.VolunteerInList>();
+        //if (field == null)
+        //    sotrtVolunteers = volunteers.OrderBy(v => v.Id);
         else
         {
+
             sotrtVolunteers = field switch
             {
                 BO.VolunteerField.Id => volunteers.OrderBy(v => v.Id),

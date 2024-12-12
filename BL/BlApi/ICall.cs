@@ -11,9 +11,7 @@ public interface ICall
     public void UpdatingCallDetails(BO.Call call);
     public void DeleteCall(int id);
     public void AddCall(BO.Call call);
-    //לא בטוחה לגבי הפרמטרים
     public IEnumerable<BO.ClosedCallInList> closedCallsHandledByVolunteer(int id , BO.CallType? filter, BO.ClosedCallInListField? sortBy);
-    //לא בטוחה לגבי הפרמטרים
     public IEnumerable<BO.OpenCallInList> openCallsForSelectionByVolunteer(int id, BO.CallType? filter, BO.OpenCallInListField? sortBy);
     public void UpdateEndOfTreatmentCall(int volunteerId,int assignmentId);
     public void CancelCallHandling(int volunteerId, int assignmentId);
