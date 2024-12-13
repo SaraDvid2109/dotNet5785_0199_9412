@@ -1,6 +1,6 @@
 ﻿namespace BlImplementation;
 using BlApi;
-using BO;
+using DO;
 using Helpers;
 
 internal class volunteerImplementation : IVolunteer
@@ -14,7 +14,7 @@ internal class volunteerImplementation : IVolunteer
         {
             throw new BO.BlNullPropertyException("There is no volunteer with that name or password.");
         }
-        var bovolunteer= new BO.Volunteer
+        var boVolunteer= new BO.Volunteer
         {
             Id = volunteer.Id,
             Name = volunteer.Name,
@@ -33,21 +33,21 @@ internal class volunteerImplementation : IVolunteer
             TotalCallsChosenHandleExpired = 0,
             Progress = new BO.CallInProgress(),
         };
-        return bovolunteer.Role;
+        return boVolunteer.Role;
     }
 
     public IEnumerable<BO.VolunteerInList> VolunteerList(bool? active, BO.VolunteerField? field)
     {
         IEnumerable<DO.Volunteer> volunteers;
         IEnumerable<IGrouping<bool, DO.Volunteer>> groupedVolunteers;
-        IEnumerable<DO.Volunteer> sotrtVolunteers;
+        IEnumerable<DO.Volunteer> sortVolunteers;
         if (active == null)
             volunteers = _dal.Volunteer.ReadAll();
         else
         {
             groupedVolunteers = _dal.Volunteer.ReadAll().GroupBy(v => v.Active == true);
             if (groupedVolunteers == null || !groupedVolunteers.Any())
-                throw new BlNullPropertyException("Volunteer data source is empty or null.");
+                throw new BO.BlNullPropertyException("Volunteer data source is empty or null.");
 
             volunteers = groupedVolunteers.FirstOrDefault(g => g.Key == active.Value) ?? Enumerable.Empty<DO.Volunteer>();
 
@@ -55,11 +55,11 @@ internal class volunteerImplementation : IVolunteer
         if (!volunteers.Any())
             return Enumerable.Empty<BO.VolunteerInList>();
         //if (field == null)
-        //    sotrtVolunteers = volunteers.OrderBy(v => v.Id);
+        //    sortVolunteers = volunteers.OrderBy(v => v.Id);
         else
         {
 
-            sotrtVolunteers = field switch
+            sortVolunteers = field switch
             {
                 BO.VolunteerField.Id => volunteers.OrderBy(v => v.Id),
                 BO.VolunteerField.Name => volunteers.OrderBy(v => v.Name),
@@ -74,7 +74,7 @@ internal class volunteerImplementation : IVolunteer
             };
         }
 
-        return sotrtVolunteers.Select(volunteer => new BO.VolunteerInList
+        return sortVolunteers.Select(volunteer => new BO.VolunteerInList
         {
             Id = volunteer.Id,
             Name = volunteer.Name,

@@ -1,2 +1,17 @@
 <?xml version="1.0" encoding="utf-8"?>
-<ArrayOfVolunteer xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" />
+<ArrayOfVolunteer xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+  <Volunteer>
+    <Id>329210199</Id>
+    <Name>sara</Name>
+    <Phone>0504117273</Phone>
+    <Mail>d@gmail.com</Mail>
+    <Password>123!@#Sa</Password>
+    <Address />
+    <Latitude>0</Latitude>
+    <Longitude>0</Longitude>
+    <Active>true</Active>
+    <MaximumDistance>6</MaximumDistance>
+    <Role>Volunteer</Role>
+    <Type>Aerial</Type>
+  </Volunteer>
+</ArrayOfVolunteer>

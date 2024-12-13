@@ -129,7 +129,7 @@ namespace BlTest
                             }
                             catch (Exception ex)
                             {
-                                Console.WriteLine($"Error in VolunterList: {ex.Message}");
+                                Console.WriteLine($"Error in VolunteerList: {ex.Message}");
                             }
                             break;
 
@@ -559,17 +559,17 @@ namespace BlTest
             if (!Enum.TryParse(Console.ReadLine(), true, out BO.DistanceType type))
                 throw new BO.BlFormatException("Type is invalid!");
 
-            Console.Write("Enter Total Calls Handled: ");
-            if (!int.TryParse(Console.ReadLine(), out int totalCallsHandled))
-                throw new BO.BlFormatException("Total calls handled is invalid!");
+            //Console.Write("Enter Total Calls Handled: ");
+            //if (!int.TryParse(Console.ReadLine(), out int totalCallsHandled))
+            //    throw new BO.BlFormatException("Total calls handled is invalid!");
 
-            Console.Write("Enter Total Calls Canceled: ");
-            if (!int.TryParse(Console.ReadLine(), out int totalCallsCanceled))
-                throw new BO.BlFormatException("Total calls canceled is invalid!");
+            //Console.Write("Enter Total Calls Canceled: ");
+            //if (!int.TryParse(Console.ReadLine(), out int totalCallsCanceled))
+            //    throw new BO.BlFormatException("Total calls canceled is invalid!");
 
-            Console.Write("Enter Total Expired Calls: ");
-            if (!int.TryParse(Console.ReadLine(), out int totalCallsExpired))
-                throw new BO.BlFormatException("Total expired calls is invalid!");
+            //Console.Write("Enter Total Expired Calls: ");
+            //if (!int.TryParse(Console.ReadLine(), out int totalCallsExpired))
+            //    throw new BO.BlFormatException("Total expired calls is invalid!");
 
             BO.Volunteer volunteer = new BO.Volunteer
             {
@@ -584,10 +584,10 @@ namespace BlTest
                 Type = type,
                 Role = role,
                 Active = active,
-                MaximumDistance = maxDistance,
-                TotalCallsHandled = totalCallsHandled,
-                TotalCallsCanceled = totalCallsCanceled,
-                TotalCallsChosenHandleExpired = totalCallsExpired
+                MaximumDistance = maxDistance
+                //TotalCallsHandled = totalCallsHandled,
+                //TotalCallsCanceled = totalCallsCanceled,
+                //TotalCallsChosenHandleExpired = totalCallsExpired
             };
 
             return volunteer;
