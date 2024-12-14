@@ -1,11 +1,12 @@
-﻿using BO;
+﻿using BlApi;
+using BO;
 using DalApi;
 using DO;
 namespace Helpers;
 
 internal static class VolunteerManager
 {
-    private static IDal s_dal = Factory.Get; //stage 4
+    private static IDal s_dal = DalApi.Factory.Get; //stage 4
 
     public static void IntegrityCheck(BO.Volunteer volunteer)
     {
@@ -146,6 +147,49 @@ internal static class VolunteerManager
                           select item;
        return assignments;
     }
+
+    public static DO.Volunteer ToBOVolunteer(BO.Volunteer volunteer)
+    {
+        return new DO.Volunteer(
+                volunteer.Id,
+                volunteer.Name ?? string.Empty,
+                volunteer.Phone ?? string.Empty,
+                volunteer.Mail ?? string.Empty,
+                volunteer.Password ?? string.Empty,
+                volunteer.Address ?? string.Empty,
+                volunteer.Latitude ?? 0,
+                volunteer.Longitude ?? 0,
+                volunteer.Active,
+                volunteer.MaximumDistance,
+                (DO.Roles)volunteer.Role,
+                (DO.DistanceType)volunteer.Type);
+
+    }
+
+    //internal static BO.Volunteer ToDOVolunteer(DO.Volunteer? volunteer)
+    //{
+    //    return new BO.Volunteer
+    //    {
+    //        Id = volunteer.Id,
+    //        Name = volunteer.Name,
+    //        Phone = volunteer.Phone,
+    //        Mail = volunteer.Mail,
+    //        Password = volunteer.Password,
+    //        Address = volunteer.Address,
+    //        Latitude = volunteer.Latitude,
+    //        Longitude = volunteer.Longitude,
+    //        Role = (BO.Roles)volunteer.Role,
+    //        Active = volunteer.Active,
+    //        MaximumDistance = volunteer.MaximumDistance,
+    //        Type = (BO.DistanceType)volunteer.Type,
+    //        TotalCallsHandled = 0,
+    //        TotalCallsCanceled = 0,
+    //        TotalCallsChosenHandleExpired = 0,
+    //        Progress = new BO.CallInProgress(),
+    //    };
+
+    //}
+
 
     // כל המתודות במחלקה יהיו internal static
 }
