@@ -1,8 +1,13 @@
 ﻿namespace BlImplementation;
+
+using BL.Helpers;
 using BlApi;
 using BO;
 using DO;
 using Helpers;
+using System;
+using System.Diagnostics;
+
 internal class volunteerImplementation : IVolunteer
 {
     private readonly DalApi.IDal _dal = DalApi.Factory.Get;
@@ -63,6 +68,7 @@ internal class volunteerImplementation : IVolunteer
             {
                 BO.VolunteerField.Id => volunteers.OrderBy(v => v.Id),
                 BO.VolunteerField.Name => volunteers.OrderBy(v => v.Name),
+                BO.VolunteerField.Active => volunteers.OrderBy(v => v.Active),
                 _ => volunteers.OrderBy(v => v.Id)
             };
         }
@@ -107,26 +113,9 @@ internal class volunteerImplementation : IVolunteer
         {
             throw new BO.BlDoesNotExistException("There is no volunteer with this ID.");
         }
-        //return VolunteerManager.ToBOVolunteer(volunteer);
-        return new BO.Volunteer
-        {
-            Id = volunteer.Id,
-            Name = volunteer.Name,
-            Phone = volunteer.Phone,
-            Mail = volunteer.Mail,
-            Password = volunteer.Password,
-            Address = volunteer.Address,
-            Latitude = volunteer.Latitude,
-            Longitude = volunteer.Longitude,
-            Role = (BO.Roles)volunteer.Role,
-            Active = volunteer.Active,
-            MaximumDistance = volunteer.MaximumDistance,
-            Type = (BO.DistanceType)volunteer.Type,
-            TotalCallsHandled = 0,
-            TotalCallsCanceled = 0,
-            TotalCallsChosenHandleExpired = 0,
-            Progress = new BO.CallInProgress(),
-        };
+        BO.Volunteer    BoVolunteer = VolunteerManager.ToBOVolunteer(volunteer);
+        return BoVolunteer;
+
     }
 
     public void UpdatingVolunteerDetails(int id, BO.Volunteer volunteer)
@@ -137,7 +126,6 @@ internal class volunteerImplementation : IVolunteer
             DO.Volunteer? requester = _dal.Volunteer.Read(id);
             if (requester == null)
             {
-             
                 throw new BO.BlDoesNotExistException("There is no volunteer with this ID.");
             }
             // Check permissions
@@ -157,7 +145,7 @@ internal class volunteerImplementation : IVolunteer
             {
                 throw new BO.UnauthorizedAccessException("Only managers can update the role.");
             }
-            DO.Volunteer volunteerToUpdate= VolunteerManager.ToBOVolunteer(volunteer);
+            DO.Volunteer volunteerToUpdate= VolunteerManager.ToDOVolunteer(volunteer);
             //DO.Volunteer volunteerToUpdate = new DO.Volunteer(
             //    volunteer.Id,
             //    volunteer.Name ?? string.Empty,
@@ -199,23 +187,17 @@ internal class volunteerImplementation : IVolunteer
 
     public void AddVolunteer(BO.Volunteer volunteer)
     {
+
+        if (!string.IsNullOrEmpty(volunteer.Address))
+        {
+            var coordinate = Helpers.Tools.GetAddressCoordinates(volunteer.Address);
+            volunteer.Latitude = coordinate.Latitude;
+            volunteer.Longitude = coordinate.Longitude;
+        }
         Helpers.VolunteerManager.IntegrityCheck(volunteer);
         try
         {
-            DO.Volunteer volunteerToAdd = VolunteerManager.ToBOVolunteer(volunteer);
-            //DO.Volunteer volunteerToAdd = new DO.Volunteer(
-            //    volunteer.Id,
-            //    volunteer.Name ?? string.Empty,
-            //    volunteer.Phone ?? string.Empty,
-            //    volunteer.Mail ?? string.Empty,
-            //    volunteer.Password ?? string.Empty,
-            //    volunteer.Address ?? string.Empty,
-            //    volunteer.Latitude?? 0,
-            //    volunteer.Longitude?? 0,
-            //    volunteer.Active,
-            //    volunteer.MaximumDistance,
-            //    (DO.Roles)volunteer.Role,
-            //    (DO.DistanceType)volunteer.Type);
+            DO.Volunteer volunteerToAdd = VolunteerManager.ToDOVolunteer(volunteer);
 
             _dal.Volunteer.Create(volunteerToAdd);
         }

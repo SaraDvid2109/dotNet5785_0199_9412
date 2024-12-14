@@ -346,7 +346,7 @@ public static class Initialization
             else
                 TypeEndOfTreatment = EndType.ExpiredCancellation;
 
-            s_dal!.Assignment.Create(new(0, CallId, VolunteerId, EnterTime, EndTime, TypeEndOfTreatment));
+            s_dal!.Assignment.Create(new(0, CallId, VolunteerId, EnterTime ?? DateTime.MinValue, EndTime, TypeEndOfTreatment));
 
             i++;
         }

@@ -14,10 +14,10 @@ public record Assignment
   int Id,
   int CallId,
   int VolunteerId,
-  DateTime? EnterTime,
+  DateTime EnterTime,
   DateTime? EndTime,
   EndType? TypeEndOfTreatment
 )
 {
-    public Assignment() : this(0, 0, 0, null, null, null) { }
+    public Assignment() : this(0, 0, 0, DateTime.MinValue, null, null) { }
 }

@@ -86,7 +86,7 @@ internal class CallImplementation : ICall
             {
                 VolunteerId = a.VolunteerId,
                 Name = "",
-                EnterTime = a.EnterTime ?? DateTime.MinValue,
+                EnterTime = a.EnterTime,
                 EndTime = a.EndTime,
                 EndType = 0,
                 TypeEndOfTreatment = a.TypeEndOfTreatment.HasValue ? (BO.EndType)a.TypeEndOfTreatment.Value :null

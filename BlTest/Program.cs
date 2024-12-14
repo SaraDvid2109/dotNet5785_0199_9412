@@ -5,6 +5,7 @@ using BlApi;
 using BO;
 using DalApi;
 using DO;
+using Helpers;
 
 namespace BlTest
 {
@@ -108,7 +109,7 @@ namespace BlTest
                                 ? parsedStatus
         :                       throw new BO.BlFormatException("Invalid input. Please enter true, false, or leave empty.");
                             
-                            Console.Write("Sort by field (0:Id 1:Name 2:Active 3:Phone 4:Mail 5:Address 6:Role 7:MaximumDistance 8:Type): ");
+                            Console.Write("Sort by field (0:Id 1:Name 2:Active ): ");
                             if (!Enum.TryParse(Console.ReadLine(), true, out BO.VolunteerField sortField))
                                 sortField = VolunteerField.Id;
                             //throw new BO.BlFormatException("Invalid Field.");
@@ -566,21 +567,9 @@ namespace BlTest
             if (!double.TryParse(Console.ReadLine(), out double maxDistance))
                 throw new BO.BlFormatException("Maximum distance is invalid!");
 
-            Console.Write("Enter Volunteer Type (0:Car 1:Walking 2:Aerial): ");
+            Console.Write("Enter Volunteer Type (0:Aerial 1:Car 2:Walking): ");
             if (!Enum.TryParse(Console.ReadLine(), true, out BO.DistanceType type))
                 throw new BO.BlFormatException("Type is invalid!");
-
-            //Console.Write("Enter Total Calls Handled: ");
-            //if (!int.TryParse(Console.ReadLine(), out int totalCallsHandled))
-            //    throw new BO.BlFormatException("Total calls handled is invalid!");
-
-            //Console.Write("Enter Total Calls Canceled: ");
-            //if (!int.TryParse(Console.ReadLine(), out int totalCallsCanceled))
-            //    throw new BO.BlFormatException("Total calls canceled is invalid!");
-
-            //Console.Write("Enter Total Expired Calls: ");
-            //if (!int.TryParse(Console.ReadLine(), out int totalCallsExpired))
-            //    throw new BO.BlFormatException("Total expired calls is invalid!");
 
             BO.Volunteer volunteer = new BO.Volunteer
             {
@@ -596,10 +585,12 @@ namespace BlTest
                 Role = role,
                 Active = active,
                 MaximumDistance = maxDistance
+
                 //TotalCallsHandled = totalCallsHandled,
                 //TotalCallsCanceled = totalCallsCanceled,
                 //TotalCallsChosenHandleExpired = totalCallsExpired
             };
+
 
             return volunteer;
         }

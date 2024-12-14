@@ -60,10 +60,6 @@ internal static class VolunteerManager
         }
 
         var coordinates = Tools.CheckAddressVolunteer;
-        if (coordinates == null)
-        {
-            throw new BO.BlFormatException("Invalid address.");
-        }
 
         if (!string.IsNullOrEmpty(volunteer.Address))
         {
@@ -148,7 +144,7 @@ internal static class VolunteerManager
        return assignments;
     }
 
-    public static DO.Volunteer ToBOVolunteer(BO.Volunteer volunteer)
+    public static DO.Volunteer ToDOVolunteer(BO.Volunteer volunteer)
     {
         return new DO.Volunteer(
                 volunteer.Id,
@@ -165,6 +161,60 @@ internal static class VolunteerManager
                 (DO.DistanceType)volunteer.Type);
 
     }
+
+    public static BO.Volunteer ToBOVolunteer(DO.Volunteer volunteer)
+    {
+        List<DO.Assignment> assignments = s_dal.Assignment.ReadAll().ToList();
+        var idCall = assignments.FirstOrDefault(item => item.VolunteerId == volunteer.Id && item.TypeEndOfTreatment == null);
+        var treated = Helpers.VolunteerManager.GetAssignments(assignments, volunteer, DO.EndType.Treated) ?? Enumerable.Empty<DO.Assignment>();
+        var selfCancellation = Helpers.VolunteerManager.GetAssignments(assignments, volunteer, DO.EndType.SelfCancellation) ?? Enumerable.Empty<DO.Assignment>();
+        var expiredCancellation = Helpers.VolunteerManager.GetAssignments(assignments, volunteer, DO.EndType.ExpiredCancellation) ?? Enumerable.Empty<DO.Assignment>();
+        BO.CallInProgress? progress = null;
+        if (idCall != null)
+        {
+            var call = s_dal.Call.Read(idCall.CallId);
+
+            if (call != null)
+            {
+                progress = new BO.CallInProgress
+                {
+                    Id = idCall.Id,
+                    CallId = call.Id,
+                    CallType = (BO.CallType)call.CarTaypeToSend,
+                    Destination = call.Description,
+                    Address = call.Address,
+                    OpenTime = call.OpenTime,
+                    MaxTime = call.MaxTime ?? DateTime.MinValue,
+                    EnterTime = idCall.EnterTime,
+                    Distance = Helpers.Tools.CalculateDistanceBetweenAddresses(volunteer.Address ?? string.Empty, call.Address),
+                    Status = Helpers.CallManager.Status(call.Id)
+                };
+            }
+
+        }
+        //return VolunteerManager.ToBOVolunteer(volunteer);
+        return new BO.Volunteer
+        {
+            Id = volunteer.Id,
+            Name = volunteer.Name,
+            Phone = volunteer.Phone,
+            Mail = volunteer.Mail,
+            Password = volunteer.Password,
+            Address = volunteer.Address,
+            Latitude = volunteer.Latitude,
+            Longitude = volunteer.Longitude,
+            Role = (BO.Roles)volunteer.Role,
+            Active = volunteer.Active,
+            MaximumDistance = volunteer.MaximumDistance,
+            Type = (BO.DistanceType)volunteer.Type,
+            Progress = progress,
+            TotalCallsHandled = treated.Count(),
+            TotalCallsCanceled = selfCancellation.Count(),
+            TotalCallsChosenHandleExpired = expiredCancellation.Count(),
+        };
+
+    }
+
 
     //internal static BO.Volunteer ToDOVolunteer(DO.Volunteer? volunteer)
     //{
