@@ -14,4 +14,18 @@
     <Role>Volunteer</Role>
     <Type>Aerial</Type>
   </Volunteer>
+  <Volunteer>
+	<Id>329210188</Id>
+	<Name>sara</Name>
+	<Phone>0504117777</Phone>
+	<Mail>d@gmail.com</Mail>
+	<Password>123!@#Da</Password>
+	<Address />
+	<Latitude>0</Latitude>
+	<Longitude>0</Longitude>
+	<Active>false</Active>
+	<MaximumDistance>6</MaximumDistance>
+	<Role>Manager</Role>
+	<Type>Aerial</Type>
+  </Volunteer>
 </ArrayOfVolunteer>
