@@ -148,7 +148,7 @@ internal static class CallManager
             CallType = (BO.CallType)call.CarTaypeToSend,
             Address = call.Address,
             OpenTime = call.OpenTime,
-            EnterTime = assignment.EnterTime ?? throw new BO.BlNullPropertyException("EnterTime is null."),
+            EnterTime = assignment.EnterTime,
             EndTime = assignment.EndTime,
             TypeEndOfTreatment = (BO.EndType?)assignment.TypeEndOfTreatment
         };
@@ -190,6 +190,22 @@ internal static class CallManager
                 (DO.CallType)call.CarTaypeToSend);
     }
 
+    //public static BO.CallInProgress ToBOCallInProgress(DO.Call call)
+    //{
+    //    return new BO.CallInProgress
+    //    {
+    //        Id = call.Id,
+    //        CallType = (BO.CallType)call.CarTaypeToSend,
+    //        Destination = call.Description,
+    //        Address = call.Address,
+    //        OpenTime = call.OpenTime,
+    //        MaxTime = call.MaxTime ?? DateTime.MinValue,
+    //        EnterTime = ClockManager.Now,
+    //        Distance = 0,
+    //        Status = Status(call.Id)
+    //    };
+    //}
+
     //public static BO.ClosedCallInList ToBOClosedCall(DO.Call call)
     //{
     //    var assignments = s_dal.Assignment.ReadAll();
@@ -210,7 +226,7 @@ internal static class CallManager
     //    };
     //}
 
-    
+
 
     //public static IEnumerable<DO.Call> SortClosedCall(IEnumerable<DO.Call> toSort, BO.ClosedCallInListField? sortBy)
     //{

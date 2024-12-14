@@ -44,7 +44,7 @@ internal static class Tools
             throw new ArgumentException("Address cannot be null or empty.", nameof(address));
         }
 
-        const string LocationIqApiKey = "pk.ddce0bbd11edfee17d07cb35922321f7";
+        const string LocationIqApiKey = "pk.a0941b60144dc7fe0b85814d99ab3be7";
         const string BaseUrl = "https://us1.locationiq.com/v1/search.php";
 
         // בניית כתובת הבקשה
@@ -242,9 +242,8 @@ internal static class Tools
 
         private static double CalculateTravelDistance(string address1, string address2, string mode)
         {
-            const string LocationIqApiKey = "pk.ddce0bbd11edfee17d07cb35922321f7";
+            const string LocationIqApiKey = "pk.a0941b60144dc7fe0b85814d99ab3be7";
             const string BaseUrl = "https://us1.locationiq.com/v1/directions/";
-
             // מקבל את הקואורדינטות של הכתובות
             var (latitude1, longitude1) = GetAddressCoordinates(address1);
             var (latitude2, longitude2) = GetAddressCoordinates(address2);
