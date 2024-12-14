@@ -1,7 +1,6 @@
 ﻿namespace BlImplementation;
 using BlApi;
 using BO;
-using DalApi;
 using DO;
 using Helpers;
 internal class volunteerImplementation : IVolunteer
@@ -72,7 +71,7 @@ internal class volunteerImplementation : IVolunteer
         {
             var idCall = assignments.FirstOrDefault(item => item.VolunteerId == volunteer.Id && item.TypeEndOfTreatment == null);
             var treated = Helpers.VolunteerManager.GetAssignments(assignments, volunteer, DO.EndType.Treated) ?? Enumerable.Empty<DO.Assignment>();
-            var selfCancellation = Helpers.VolunteerManager.GetAssignments(assignments, volunteer, EndType.SelfCancellation) ?? Enumerable.Empty<DO.Assignment>();
+            var selfCancellation = Helpers.VolunteerManager.GetAssignments(assignments, volunteer, DO.EndType.SelfCancellation) ?? Enumerable.Empty<DO.Assignment>();
             var expiredCancellation = Helpers.VolunteerManager.GetAssignments(assignments, volunteer, DO.EndType.ExpiredCancellation) ?? Enumerable.Empty<DO.Assignment>();
 
             return new BO.VolunteerInList
