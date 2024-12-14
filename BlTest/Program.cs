@@ -282,9 +282,11 @@ namespace BlTest
                     case "4":
                         try
                         {
+                            Console.Write("Enter Call ID: ");
+                            if (!int.TryParse(Console.ReadLine(), out int callId))
+                                throw new BlFormatException("invalid ID");
                             BO.Call callToUpdate = CreateCall();
-                            
-                            s_bl.call.UpdatingCallDetails(callToUpdate);
+                            s_bl.call.UpdatingCallDetails(callId,callToUpdate);
                             Console.WriteLine("Call updated successfully.");
                         }
                         catch (Exception ex)
@@ -425,9 +427,10 @@ namespace BlTest
                         // בחירת קריאה לטיפול
                         Console.WriteLine("Enter volunteer ID:");
                         if (!int.TryParse(Console.ReadLine(), out int volunteerIdChoose))
-                            throw new BlFormatException("invalid ID");
+                            throw new BlFormatException("invalid volunteer ID");
                         Console.WriteLine("Enter call ID:");
                         if (!int.TryParse(Console.ReadLine(), out int callIdChoose))
+                            throw new BlFormatException("invalid call ID");
                         try
                         {
                             s_bl.call.ChooseCallForHandling(volunteerIdChoose, callIdChoose);
@@ -551,7 +554,7 @@ namespace BlTest
             //                   double.TryParse(longitudeInput, out double lon) ? lon ://Valid input (number): the value will be converted to double.
             //                   throw new BO.BlFormatException("Longitude is invalid!");//Invalid input (for example: "abc"): an error will be thrown.
 
-            Console.Write("Enter Volunteer Role (0:Volunteer 1:Admin): ");
+            Console.Write("Enter Volunteer Role (0:Volunteer 1:Manager): ");
             if (!Enum.TryParse(Console.ReadLine(), true, out BO.Roles role))
                 throw new BO.BlFormatException("Role is invalid!");
 
@@ -604,7 +607,6 @@ namespace BlTest
         private static BO.Call CreateCall()
         {
            
-
             Console.Write("Enter Type (RegularVehicle, Ambulance, IntensiveCareAmbulance, None): ");
             if (!Enum.TryParse(Console.ReadLine(), true, out BO.CallType type))
                 throw new BO.BlFormatException("type is invalid!");
@@ -650,7 +652,7 @@ namespace BlTest
                 Address = address,
                 //Latitude = latitude,
                 //Longitude =longitude,
-                //OpenTime =openTime,//init
+                OpenTime = DateTime.Now,
                 MaxTime = maxTime,
                 Status = status,
                 ListAssignmentsForCalls = listAssignmentsForCalls,

@@ -74,6 +74,7 @@ internal static class CallManager
         else
         {
             var assignment = GetLastAssignment(assignments);
+
             if (assignment!.TypeEndOfTreatment == null)
             {
                 if (call!.MaxTime - ClockManager.Now <= s_dal.Config.RiskRange)
@@ -182,7 +183,7 @@ internal static class CallManager
         return  new DO.Call(
                 call.Id,
                 call.Description,
-                call.Address ?? string.Empty,
+                call.Address ?? throw new BO.BlNullPropertyException("No address entered!"),
                 call.Latitude,
                 call.Longitude,
                 call.OpenTime,

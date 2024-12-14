@@ -8,7 +8,7 @@ public interface ICall
     public Array CallQuantities();
     public IEnumerable<BO.CallInList> CallInLists(BO.CallField? filter, object? value, BO.CallField? sort);
     public BO.Call GetCallDetails(int id);
-    public void UpdatingCallDetails(BO.Call call);
+    public void UpdatingCallDetails(int id,BO.Call call);
     public void DeleteCall(int id);
     public void AddCall(BO.Call call);
     public IEnumerable<BO.ClosedCallInList> closedCallsHandledByVolunteer(int id , BO.CallType? filter, BO.ClosedCallInListField? sortBy);

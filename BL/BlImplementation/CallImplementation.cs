@@ -4,6 +4,7 @@ using BO;
 using Helpers;
 using System;
 using System.Net;
+using System.Runtime.CompilerServices;
 using System.Xml.Linq;
 
 namespace BlImplementation;
@@ -96,14 +97,18 @@ internal class CallImplementation : ICall
         return boCall;
     }
    
-    public void UpdatingCallDetails(BO.Call call)
+    public void UpdatingCallDetails(int id ,BO.Call call)
     {
+        var coordinates = Tools.GetAddressCoordinates(call.Address);
+        call.Latitude = coordinates.Latitude;
+        call.Longitude = coordinates.Longitude;
+
         CallManager.IntegrityCheck(call);
 
         try
         {
             DO.Call DOcall = new DO.Call(
-           call.Id,
+           /*call.Id*/id,
            call.Description,
            call.Address ?? string.Empty,
            call.Latitude,
@@ -134,7 +139,9 @@ internal class CallImplementation : ICall
                                         where assignment.CallId == id
                                         select assignment;
                 if (assignmentsOfCall == null && CallManager.Status(id) == BO.CallStatus.Open)
-                    _dal.Volunteer.Delete(id);
+                    _dal.Call.Delete(id);
+                else
+                    throw new BO.UnauthorizedAccessException("You cannot delete this call.");
             }
             else
                 throw new BO.BlNullPropertyException("no assignments");
@@ -147,13 +154,16 @@ internal class CallImplementation : ICall
 
     public void AddCall(BO.Call call)
     {
+        var coordinates=Tools.GetAddressCoordinates(call.Address);
+        call.Latitude = coordinates.Latitude;
+        call.Longitude = coordinates.Longitude;
         Helpers.CallManager.IntegrityCheck(call);
         try
         {
             DO.Call callToAdd = new DO.Call(
                 call.Id,
                 call.Description,
-                call.Address ?? string.Empty,
+                call.Address ,
                 call.Latitude,
                 call.Longitude,
                 call.OpenTime,

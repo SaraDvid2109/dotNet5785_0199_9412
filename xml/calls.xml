@@ -1,16 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <ArrayOfCall xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
   <Call>
-    <Id>0</Id>
-    <Description>Snake bite</Description>
-    <Address>Herzl St 10, Tel Aviv</Address>
-    <Latitude>32.066158</Latitude>
-    <Longitude>34.779808</Longitude>
-    <OpenTime>2024-05-09T00:00:00</OpenTime>
-    <MaxTime>2024-05-09T00:26:00</MaxTime>
-    <CarTaypeToSend>Ambulance</CarTaypeToSend>
-  </Call>
-  <Call>
     <Id>1</Id>
     <Description>Routine elderly health assessment</Description>
     <Address>Ben Gurion St 5, Ramat Gan</Address>
@@ -488,6 +478,26 @@
     <Longitude>34.919138</Longitude>
     <OpenTime>2024-09-11T00:00:00</OpenTime>
     <MaxTime>2024-09-11T00:29:00</MaxTime>
+    <CarTaypeToSend>Ambulance</CarTaypeToSend>
+  </Call>
+  <Call>
+    <Id>0</Id>
+    <Description>wow wow</Description>
+    <Address>HaKibbutz HaMeuhad St 6, Kfar Yona</Address>
+    <Latitude>32.31669</Latitude>
+    <Longitude>34.93507</Longitude>
+    <OpenTime>2024-12-15T00:49:33.6906703+02:00</OpenTime>
+    <MaxTime>2024-12-15T01:00:00</MaxTime>
+    <CarTaypeToSend>Ambulance</CarTaypeToSend>
+  </Call>
+  <Call>
+    <Id>49</Id>
+    <Description>to close</Description>
+    <Address>HaKibbutz HaMeuhad St 6, Kfar Yona</Address>
+    <Latitude>32.31669</Latitude>
+    <Longitude>34.93507</Longitude>
+    <OpenTime>2024-12-15T01:40:44.4088824+02:00</OpenTime>
+    <MaxTime>2024-12-15T01:50:00</MaxTime>
     <CarTaypeToSend>Ambulance</CarTaypeToSend>
   </Call>
 </ArrayOfCall>
