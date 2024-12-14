@@ -13,13 +13,26 @@ internal static class Tools
 {
     public static string ToStringProperty<T>(this T t)
     {
+        //string result = "";
+        //PropertyInfo[] properties = t!.GetType().GetProperties();
+        //foreach (var prop in properties)
+        //{
+        //    result += $"{prop.Name}: {prop.GetValue(null) ?? "null"}\n";
+        //}
+        //return result;
+       
+        if (t == null)
+            throw new ArgumentNullException(nameof(t), "Object cannot be null.");
+
         string result = "";
-        PropertyInfo[] properties = t!.GetType().GetProperties();
+        PropertyInfo[] properties = t.GetType().GetProperties();
         foreach (var prop in properties)
         {
-            result += $"{prop.Name}: {prop.GetValue(null) ?? "null"}\n";
+            var value = prop.GetValue(t) ?? "null";
+            result += $"{prop.Name}: {value}\n";
         }
         return result;
+    
     }
 
     #region Adress & Latitude & Longitude calculation

@@ -98,11 +98,13 @@ namespace BlTest
 
                         case 2:
                             Console.Write("Please enter true or false for active status: ");
-                            bool.TryParse(Console.ReadLine(), out bool status);
+                            //bool.TryParse(Console.ReadLine(), out bool status);
                             //if (!bool.TryParse(Console.ReadLine(), out bool status))
                             //    throw new BO.BlFormatException("Invalid input. Please try again.");
+                            string? input = Console.ReadLine();
+                            bool? status = string.IsNullOrWhiteSpace(input);
 
-                            Console.Write("Sort by field (0:Id 1:Name 2:Active 3:Phone 4:Mail 5:Address 6:Role 7:MaximumDistance 8:Type): ");
+                                Console.Write("Sort by field (0:Id 1:Name 2:Active 3:Phone 4:Mail 5:Address 6:Role 7:MaximumDistance 8:Type): ");
                             if (!Enum.TryParse(Console.ReadLine(), true, out BO.VolunteerField sortField))
                                 sortField = VolunteerField.Id;
                             //throw new BO.BlFormatException("Invalid Field.");
