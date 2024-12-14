@@ -139,5 +139,13 @@ internal static class VolunteerManager
         return sum % 10 == 0;
     }
 
+    public static IEnumerable<DO.Assignment> GetAssignments(List<DO.Assignment> assignment, DO.Volunteer v, DO.EndType type)
+    {
+        var assignments = from item in assignment
+                          where item.VolunteerId == v.Id && item.TypeEndOfTreatment == type
+                          select item;
+       return assignments;
+    }
+
     // כל המתודות במחלקה יהיו internal static
 }

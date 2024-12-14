@@ -2,7 +2,6 @@
 using BlApi;
 using DO;
 using Helpers;
-
 internal class volunteerImplementation : IVolunteer
 {
     private readonly DalApi.IDal _dal = DalApi.Factory.Get;
@@ -41,6 +40,7 @@ internal class volunteerImplementation : IVolunteer
         IEnumerable<DO.Volunteer> volunteers;
         IEnumerable<IGrouping<bool, DO.Volunteer>> groupedVolunteers;
         IEnumerable<DO.Volunteer> sortVolunteers;
+        List<DO.Assignment> assignments = _dal.Assignment.ReadAll().ToList();
         if (active == null)
             volunteers = _dal.Volunteer.ReadAll();
         else
@@ -50,41 +50,52 @@ internal class volunteerImplementation : IVolunteer
                 throw new BO.BlNullPropertyException("Volunteer data source is empty or null.");
 
             volunteers = groupedVolunteers.FirstOrDefault(g => g.Key == active.Value) ?? Enumerable.Empty<DO.Volunteer>();
-
         }
+       
+
         if (!volunteers.Any())
             return Enumerable.Empty<BO.VolunteerInList>();
-        //if (field == null)
-        //    sortVolunteers = volunteers.OrderBy(v => v.Id);
         else
         {
-
             sortVolunteers = field switch
             {
                 BO.VolunteerField.Id => volunteers.OrderBy(v => v.Id),
                 BO.VolunteerField.Name => volunteers.OrderBy(v => v.Name),
-                //BO.VolunteerField.Active => volunteers.OrderBy(v => v.Active),
-                BO.VolunteerField.Phone => volunteers.OrderBy(v => v.Phone),
-                BO.VolunteerField.Mail => volunteers.OrderBy(v => v.Mail),
-                BO.VolunteerField.Address => volunteers.OrderBy(v => v.Address),
-                BO.VolunteerField.MaximumDistance => volunteers.OrderBy(v => v.MaximumDistance),
-                BO.VolunteerField.Role => volunteers.OrderBy(v => v.Role),
-                BO.VolunteerField.Type => volunteers.OrderBy(v => v.Type),
                 _ => volunteers.OrderBy(v => v.Id)
             };
         }
 
-        return sortVolunteers.Select(volunteer => new BO.VolunteerInList
+        return sortVolunteers.Select(volunteer =>
         {
-            Id = volunteer.Id,
-            Name = volunteer.Name,
-            Active = volunteer.Active,
-            TotalCallsHandled = 0,
-            TotalCallsCanceled = 0,
-            TotalCallsChosenHandleExpired = 0,
-            CallHandledId = 0
+            var idCall = assignments.FirstOrDefault(item => item.VolunteerId == volunteer.Id && item.TypeEndOfTreatment == null);
+            var treated = Helpers.VolunteerManager.GetAssignments(assignments, volunteer, DO.EndType.Treated) ?? Enumerable.Empty<DO.Assignment>();
+            var selfCancellation = Helpers.VolunteerManager.GetAssignments(assignments, volunteer, EndType.SelfCancellation) ?? Enumerable.Empty<DO.Assignment>();
+            var expiredCancellation = Helpers.VolunteerManager.GetAssignments(assignments, volunteer, DO.EndType.ExpiredCancellation) ?? Enumerable.Empty<DO.Assignment>();
+
+            return new BO.VolunteerInList
+            {
+                Id = volunteer.Id,
+                Name = volunteer.Name,
+                Active = volunteer.Active,
+                TotalCallsHandled = treated.Count(),
+                TotalCallsCanceled = selfCancellation.Count(),
+                TotalCallsChosenHandleExpired = expiredCancellation.Count(),
+                CallHandledId = idCall?.Id,
+                CallHandledType = idCall?.TypeEndOfTreatment.HasValue == true ? (BO.CallType)idCall.TypeEndOfTreatment.Value : BO.CallType.None
+
+            };
         });
 
+        //return sortVolunteers.Select(volunteer => new BO.VolunteerInList
+        //{
+        //    Id = volunteer.Id,
+        //    Name = volunteer.Name,
+        //    Active = volunteer.Active,
+        //    TotalCallsHandled = 0,
+        //    TotalCallsCanceled = 0,
+        //    TotalCallsChosenHandleExpired = 0,
+        //    CallHandledId = 0
+        //});
     }
 
     public BO.Volunteer GetVolunteerDetails(int id)

@@ -23,7 +23,7 @@ internal class CallImplementation : ICall
     {
         IEnumerable<DO.Call> calls;
         IEnumerable<IGrouping<object, DO.Call>> groupedCalls;
-        IEnumerable<DO.Call> sotrtCalls;
+        IEnumerable<DO.Call> sortCalls;
         calls = _dal.Call.ReadAll();
         if (filter == null)
             calls = _dal.Call.ReadAll();
@@ -39,10 +39,10 @@ internal class CallImplementation : ICall
             calls = groupedCalls.FirstOrDefault(c => c.Key == value) ?? Enumerable.Empty<DO.Call>();
         }
         if (sort == null)
-            sotrtCalls = calls.OrderBy(c => c.Id);
+            sortCalls = calls.OrderBy(c => c.Id);
         else
         {
-            sotrtCalls = sort switch
+            sortCalls = sort switch
             {
                 BO.CallField.Address => calls.OrderBy(c => c.Address).Distinct(),
                 BO.CallField.CarTaypeToSend => calls.OrderBy(c => c.CarTaypeToSend).Distinct(),
@@ -51,7 +51,7 @@ internal class CallImplementation : ICall
             };
         }
 
-        return sotrtCalls.Select(call => new BO.CallInList()
+        return sortCalls.Select(call => new BO.CallInList()
         {
             CallId = call.Id,
             CallType = (BO.CallType)call.CarTaypeToSend,
