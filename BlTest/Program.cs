@@ -216,14 +216,14 @@ namespace BlTest
                 Console.WriteLine("1. Call list by status");
                 Console.WriteLine("2. Call list");
                 Console.WriteLine("3. Call details");
-                Console.WriteLine("4. Update a call");
-                Console.WriteLine("5. Delete a call");
-                Console.WriteLine("6. Add a call");
+                Console.WriteLine("4. Update call");
+                Console.WriteLine("5. Delete call");
+                Console.WriteLine("6. Add call");
                 Console.WriteLine("7. List of closed calls handled by a volunteer");
                 Console.WriteLine("8. List of open calls available for a volunteer");
                 Console.WriteLine("9. End treatment on a call");
-                Console.WriteLine("10. Cancel treatment on a call");
-                Console.WriteLine("11. Select a call for treatment");
+                Console.WriteLine("10.Cancel treatment on a call");
+                Console.WriteLine("11.Select a call for treatment");
                 Console.Write("Select an option: ");
                 string choice = Console.ReadLine() ?? "";
                 switch (choice)
@@ -533,17 +533,17 @@ namespace BlTest
             Console.Write("Enter Volunteer Address: ");
             string address = Console.ReadLine() ??"";
 
-            Console.Write("Enter Volunteer Latitude (leave empty for default 0.0): ");
-            string? latitudeInput = Console.ReadLine();
-            double latitude = string.IsNullOrWhiteSpace(latitudeInput) ? 0.0 ://Empty input: will be set to 0.0.
-                              double.TryParse(latitudeInput, out double lat) ? lat ://Valid input (number): the value will be converted to double.
-                              throw new BO.BlFormatException("Latitude is invalid!");//Invalid input (for example: "abc"): an error will be thrown.
+            //Console.Write("Enter Volunteer Latitude (leave empty for default 0.0): ");
+            //string? latitudeInput = Console.ReadLine();
+            //double latitude = string.IsNullOrWhiteSpace(latitudeInput) ? 0.0 ://Empty input: will be set to 0.0.
+            //                  double.TryParse(latitudeInput, out double lat) ? lat ://Valid input (number): the value will be converted to double.
+            //                  throw new BO.BlFormatException("Latitude is invalid!");//Invalid input (for example: "abc"): an error will be thrown.
 
-            Console.Write("Enter Volunteer Longitude (leave empty for default 0.0): ");
-            string? longitudeInput = Console.ReadLine();
-            double longitude = string.IsNullOrWhiteSpace(longitudeInput) ? 0.0 ://Empty input: will be set to 0.0.
-                               double.TryParse(longitudeInput, out double lon) ? lon ://Valid input (number): the value will be converted to double.
-                               throw new BO.BlFormatException("Longitude is invalid!");//Invalid input (for example: "abc"): an error will be thrown.
+            //Console.Write("Enter Volunteer Longitude (leave empty for default 0.0): ");
+            //string? longitudeInput = Console.ReadLine();
+            //double longitude = string.IsNullOrWhiteSpace(longitudeInput) ? 0.0 ://Empty input: will be set to 0.0.
+            //                   double.TryParse(longitudeInput, out double lon) ? lon ://Valid input (number): the value will be converted to double.
+            //                   throw new BO.BlFormatException("Longitude is invalid!");//Invalid input (for example: "abc"): an error will be thrown.
 
             Console.Write("Enter Volunteer Role (0:Volunteer 1:Admin): ");
             if (!Enum.TryParse(Console.ReadLine(), true, out BO.Roles role))
@@ -581,8 +581,8 @@ namespace BlTest
                 Mail = mail,
                 Password = password,
                 Address = address,
-                Latitude = latitude,
-                Longitude = longitude,
+                //Latitude = latitude,
+                //Longitude = longitude,
                 Type = type,
                 Role = role,
                 Active = active,
@@ -607,21 +607,27 @@ namespace BlTest
             string description = Console.ReadLine() ?? "";
 
             Console.Write("Enter call Address : ");
-            string address = Console.ReadLine() ?? "";
+            string address = Console.ReadLine()??"";
+            if (string.IsNullOrWhiteSpace(address))
+            {
+                throw new BO.BlFormatException("Must enter an address!");
+            }
+            //Console.Write("Enter call Address : ");
+            //string address = Console.ReadLine() ?? throw new BO.BlFormatException("Must enter an address!");
 
-            Console.Write("Enter call Latitude : ");
-            if (!double.TryParse(Console.ReadLine(),out double latitude))
-                throw new BO.BlFormatException("latitude is invalid!");
+            //Console.Write("Enter call Latitude : ");
+            //if (!double.TryParse(Console.ReadLine(),out double latitude))
+            //    throw new BO.BlFormatException("latitude is invalid!");
 
-            Console.Write("Enter call Longitude : ");
-            if (!double.TryParse(Console.ReadLine(), out double longitude))
-                throw new BO.BlFormatException("longitude is invalid!");
+            //Console.Write("Enter call Longitude : ");
+            //if (!double.TryParse(Console.ReadLine(), out double longitude))
+            //    throw new BO.BlFormatException("longitude is invalid!");
 
-            Console.WriteLine("Enter Open Time (format: yyyy-MM-dd HH:mm:ss): ");
-            if (!DateTime.TryParse(Console.ReadLine(), out DateTime openTime))
-                throw new DalFormatException("Open Time is invalid!");
+            //Console.WriteLine("Enter Open Time (format: yyyy-MM-dd HH:mm:ss): ");
+            //if (!DateTime.TryParse(Console.ReadLine(), out DateTime openTime))
+            //    throw new DalFormatException("Open Time is invalid!");
 
-            Console.WriteLine("Enter Max Time (format: yyyy-MM-dd HH:mm:ss): ");
+            Console.WriteLine("Enter Max Time 5 to 30 minutes(format: yyyy-MM-dd HH:mm:ss): ");
             if (!DateTime.TryParse(Console.ReadLine(), out DateTime maxTime))
                 throw new DalFormatException("Max Time is invalid!");
 
@@ -633,17 +639,16 @@ namespace BlTest
             BO.Call call = new BO.Call
             {
 
-             CarTaypeToSend = type,
-             Description = description,
-             Address =address,
-             Latitude = latitude,
-             Longitude =longitude,
-             //OpenTime =openTime,//init
-             MaxTime=maxTime,
-             Status=status,
-             ListAssignmentsForCalls= listAssignmentsForCalls, 
-
-    };
+                CarTaypeToSend = type,
+                Description = description,
+                Address = address,
+                //Latitude = latitude,
+                //Longitude =longitude,
+                //OpenTime =openTime,//init
+                MaxTime = maxTime,
+                Status = status,
+                ListAssignmentsForCalls = listAssignmentsForCalls,
+            };
             return call;
         }
 
