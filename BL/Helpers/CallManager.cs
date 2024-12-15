@@ -147,6 +147,63 @@ internal static class CallManager
         return toFilter;
     }
 
+    public static IEnumerable<BO.CallInList> FilterCallInList(IEnumerable<BO.CallInList> toFilter, object? obj, BO.CallInListFields? filter)
+    {
+
+        var calls = toFilter;
+        switch (filter)
+        {
+            case BO.CallInListFields.Id:
+                calls = from call in calls
+                        where call.Id == (int?)obj
+                        select call;
+                break;
+            case BO.CallInListFields.CallId:
+                calls = from call in calls
+                        where call.CallId == (int?)obj
+                        select call;
+                break;
+            case BO.CallInListFields.CallType:
+                calls = from call in calls
+                        where call.CallType == (BO.CallType?)obj
+                        select call;
+                break;
+            case BO.CallInListFields.OpenTime:
+                calls = from call in calls
+                        where call.OpenTime == (DateTime?)obj
+                        select call;
+                break;
+            case BO.CallInListFields.TimeLeftToFinish:
+                calls = from call in calls
+                        where call.TimeLeftToFinish == (TimeSpan?)obj
+                        select call;
+                break;
+            case BO.CallInListFields.LastVolunteer:
+                calls = from call in calls
+                        where call.LastVolunteer == (string?)obj
+                        select call;
+                break;
+            case BO.CallInListFields.TreatmentTimeLeft:
+                calls = from call in calls
+                        where call.TreatmentTimeLeft == (TimeSpan?)obj
+                        select call;
+                break;
+            case BO.CallInListFields.Status:
+                calls = from call in calls
+                        where call.Status == (BO.CallStatus?)obj
+                        select call;
+                break;
+            case BO.CallInListFields.TotalAssignments:
+                calls = from call in calls
+                        where call.TotalAssignments == (int?)obj
+                        select call;
+                break;
+            default:
+                calls = toFilter;
+                break;
+        }
+        return calls;
+    }
     public static BO.ClosedCallInList ToBOClosedCall(DO.Call call)
     {
         var assignments = s_dal.Assignment.ReadAll();

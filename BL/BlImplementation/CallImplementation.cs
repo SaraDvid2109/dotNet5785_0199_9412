@@ -5,6 +5,7 @@ using BO;
 using DO;
 using Helpers;
 using System;
+using System.Collections.Generic;
 using System.Diagnostics;
 
 internal class CallImplementation : ICall
@@ -31,63 +32,80 @@ internal class CallImplementation : ICall
         //return groupedCalls.ToArray();
     }
 
-    public IEnumerable<BO.CallInList> CallInLists(BO.CallInListFieldsFilter? filter, object? value, BO.CallInListFieldsSort? sort)
+    public IEnumerable<BO.CallInList> CallInLists(BO.CallInListFields? filter, object? value, BO.CallInListFields? sort)
     {
         IEnumerable<DO.Call> calls;
-        IEnumerable<IGrouping<object, DO.Call>> groupedCalls;
-        IEnumerable<DO.Call> sortCalls;
+        //IEnumerable<IGrouping<object, DO.Call>> groupedCalls;
+        IEnumerable<BO.CallInList> sortCalls;
+        List<BO.CallInList> callInLists = new List<BO.CallInList>();
         calls = _dal.Call.ReadAll();
-        if (filter != null)
-        {   
-            groupedCalls = filter switch
-            {
-                BO.CallInListFieldsFilter.CallId => calls.GroupBy(c => (object)c.Id).Distinct(),
-                BO.CallInListFieldsFilter.CallType => calls.GroupBy(c => (object)c.CarTypeToSend).Distinct(),
-                BO.CallInListFieldsFilter.OpenTime => calls.GroupBy(c => (object)c.OpenTime).Distinct(),
-                _ => calls.GroupBy(c => (object)c.Id).Distinct()
-            };
-            calls = groupedCalls.FirstOrDefault(c => c.Key == value) ?? Enumerable.Empty<DO.Call>();
+        foreach (var c in calls)
+        {
+            var assignment = _dal.Assignment.ReadAll(a => a.CallId == c.Id);
+            callInLists.Add(CallManager.ConvertFromDOToCallInList(c, assignment));
         }
-        if (sort == null)
-            sortCalls = calls.OrderBy(c => c.Id);
-        else
+        var filterCalls = CallManager.FilterCallInList(callInLists, value, filter);
+        //if (filter != null)
+        //{   
+        //    groupedCalls = filter switch
+        //    {
+        //        BO.CallInListFields.CallId => calls.GroupBy(c => (object)c.Id).Distinct(),
+        //        BO.CallInListFields.CallType => calls.GroupBy(c => (object)c.CarTypeToSend).Distinct(),
+        //        BO.CallInListFields.OpenTime => calls.GroupBy(c => (object)c.OpenTime).Distinct(),
+        //        BO.CallInListFields.Id => calls.GroupBy(c =>
+        //        (object)(assignment.FirstOrDefault(a => a.CallId == c.Id)?.Id ?? -1)),
+
+        //        _ => calls.GroupBy(c => (object)c.Id).Distinct()
+        //    };
+        //    calls = groupedCalls.FirstOrDefault(c => c.Key == value) ?? Enumerable.Empty<DO.Call>();
+        //}
+        //if (sort == null)
+        //    sortCalls = calls.OrderBy(c => c.Id);
+        //else
         {
             sortCalls = sort switch
             {
-                BO.CallInListFieldsSort.CallId => calls.OrderBy(c => c.Id).Distinct(),
-                BO.CallInListFieldsSort.CallType => calls.OrderBy(c => c.CarTypeToSend).Distinct(),
-                BO.CallInListFieldsSort.OpenTime => calls.OrderBy(c => c.OpenTime).Distinct(),
-                _ => calls.OrderBy(c => c.Id).Distinct()
+                BO.CallInListFields.Id => filterCalls.OrderBy(c => c.Id),
+                BO.CallInListFields.CallId => filterCalls.OrderBy(c => c.CallId),
+                BO.CallInListFields.CallType => filterCalls.OrderBy(c => c.CallType),
+                BO.CallInListFields.OpenTime => filterCalls.OrderBy(c => c.OpenTime),
+                BO.CallInListFields.TimeLeftToFinish => filterCalls.OrderBy(c => c.TimeLeftToFinish),
+                BO.CallInListFields.LastVolunteer => filterCalls.OrderBy(c => c.LastVolunteer),
+                BO.CallInListFields.TreatmentTimeLeft => filterCalls.OrderBy(c => c.TreatmentTimeLeft),
+                BO.CallInListFields.Status => filterCalls.OrderBy(c => c.Status),
+                BO.CallInListFields.TotalAssignments => filterCalls.OrderBy(c => c.TotalAssignments),
+                _ => filterCalls.OrderBy(c => c.CallId)
             };
         }
+        return sortCalls;
 
-        return sortCalls.Select(call =>
-        {
-            var assignments = CallManager.GetAssignmentCall(call.Id);
-            return CallManager.ConvertFromDOToCallInList(call, assignments ?? Enumerable.Empty<DO.Assignment>());
+        //return sortCalls.Select(call =>
+        //{
+        //    var assignments = CallManager.GetAssignmentCall(call.Id);
+        //    return CallManager.ConvertFromDOToCallInList(call, assignments ?? Enumerable.Empty<DO.Assignment>());
 
-            //if (assignments == null)
-            //    throw new BO.BlNullPropertyException("no assignments");
-            //var assignmentOfCall = assignments.FirstOrDefault(a => a.CallId == call.Id);
-            //TimeSpan? time = null;
-            //if (assignmentOfCall.EndTime != null)
-            //{
-            //    time = assignmentOfCall.EndTime - assignmentOfCall.EnterTime;
-            //}
-            //return new BO.CallInList()
-            //{
-            //   Id = assignments?.LastOrDefault()?.Id ?? 0,
-            //   CallId = call.Id,
-            //   CallType = (BO.CallType)call.CarTypeToSend,
-            //   OpenTime = call.OpenTime,
-            //   TimeLeftToFinish = ClockManager.Now - call.MaxTime > TimeSpan.Zero ? ClockManager.Now - call.MaxTime : TimeSpan.Zero,
-            //   LastVolunteer = CallManager.getLastVolunteer(call),
-            //   TreatmentTimeLeft = time,
-            //   Status = CallManager.Status(call.Id),
-            //   TotalAssignments = assignments?.Count() ?? 0
-            //   };
-            //});
-        });
+        //    //if (assignments == null)
+        //    //    throw new BO.BlNullPropertyException("no assignments");
+        //    //var assignmentOfCall = assignments.FirstOrDefault(a => a.CallId == call.Id);
+        //    //TimeSpan? time = null;
+        //    //if (assignmentOfCall.EndTime != null)
+        //    //{
+        //    //    time = assignmentOfCall.EndTime - assignmentOfCall.EnterTime;
+        //    //}
+        //    //return new BO.CallInList()
+        //    //{
+        //    //   Id = assignments?.LastOrDefault()?.Id ?? 0,
+        //    //   CallId = call.Id,
+        //    //   CallType = (BO.CallType)call.CarTypeToSend,
+        //    //   OpenTime = call.OpenTime,
+        //    //   TimeLeftToFinish = ClockManager.Now - call.MaxTime > TimeSpan.Zero ? ClockManager.Now - call.MaxTime : TimeSpan.Zero,
+        //    //   LastVolunteer = CallManager.getLastVolunteer(call),
+        //    //   TreatmentTimeLeft = time,
+        //    //   Status = CallManager.Status(call.Id),
+        //    //   TotalAssignments = assignments?.Count() ?? 0
+        //    //   };
+        //    //});
+        //});
     }
 
     public BO.Call GetCallDetails(int id)
@@ -237,6 +255,11 @@ internal class CallImplementation : ICall
             BO.ClosedCallInListField.Id => filterCalls.OrderBy(c => c.Id),
             BO.ClosedCallInListField.CallType => filterCalls.OrderBy(c => c.CarTypeToSend),
             BO.ClosedCallInListField.Address => filterCalls.OrderBy(c => c.Address),
+            BO.ClosedCallInListField.OpenTime => filterCalls.OrderBy(c => c.OpenTime),
+            BO.ClosedCallInListField.EnterTime => filterCalls.OrderBy(c =>
+            assignment.FirstOrDefault(a => a.CallId == c.Id)?.EnterTime),
+            BO.ClosedCallInListField.EndTime => filterCalls.OrderBy(c =>
+            assignment.FirstOrDefault(a => a.CallId == c.Id)?.EndTime),
             BO.ClosedCallInListField.TypeEndOfTreatment => filterCalls.OrderBy(c =>
             assignment.FirstOrDefault(a => a.CallId == c.Id)?.TypeEndOfTreatment),
 
@@ -274,7 +297,10 @@ internal class CallImplementation : ICall
             {
                 BO.OpenCallInListField.Id => filterCalls.OrderBy(c => c.Id),
                 BO.OpenCallInListField.CallType => filterCalls.OrderBy(c => c.CarTypeToSend),/////
+                BO.OpenCallInListField.Destination => filterCalls.OrderBy(c => c.Description),
                 BO.OpenCallInListField.Address => filterCalls.OrderBy(c => c.Address),
+                BO.OpenCallInListField.OpenTime => filterCalls.OrderBy(c => c.OpenTime),
+                BO.OpenCallInListField.MaxTime => filterCalls.OrderBy(c => c.MaxTime),
                 BO.OpenCallInListField.Distance => filterCalls.OrderBy(c => Tools.DistanceCalculator.CalculateDistance(c.Address, volunteer.Address, volunteer.Type)),
                 _ => filterCalls.OrderBy(c => c.Id)
             };

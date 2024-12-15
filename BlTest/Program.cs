@@ -255,14 +255,16 @@ namespace BlTest
                     case "2":
                         try
                         {
-                            Console.Write("Enter filter field: 0-CallId,1-CallType,2-OpenTime (or press Enter for none): ");
-                            BO.CallInListFieldsFilter? filterField = Enum.TryParse(Console.ReadLine(), true, out BO.CallInListFieldsFilter filter) ? filter : (BO.CallInListFieldsFilter?)null;
+                            Console.Write("Enter filter field: 0: Id, 1: CallId, 2: CallType, 3: OpenTime, 4: TimeLeftToFinish, " +
+                                "5: LastVolunteer, 6: TreatmentTimeLeft, 7: Status, 8: TotalAssignments (or press Enter for none): ");
+                            BO.CallInListFields? filterField = Enum.TryParse(Console.ReadLine(), true, out BO.CallInListFields filter) ? filter : (BO.CallInListFields?)null;
 
                             Console.Write("Enter filter value (or press Enter for none): ");
                             object? filterValue = string.IsNullOrWhiteSpace(Console.ReadLine()) ? null : Console.ReadLine();
 
-                            Console.Write("Enter sort field: 0-CallId,1-CallType,2-OpenTime(or press Enter for none): ");
-                            BO.CallInListFieldsSort? sortField = Enum.TryParse(Console.ReadLine(), true, out BO.CallInListFieldsSort sort) ? sort : (BO.CallInListFieldsSort?)null;
+                            Console.Write("Enter sort field: 0: Id, 1: CallId, 2: CallType, 3: OpenTime, 4: TimeLeftToFinish, " +
+                                "5: LastVolunteer, 6: TreatmentTimeLeft, 7: Status, 8: TotalAssignments(or press Enter for none): ");
+                            BO.CallInListFields? sortField = Enum.TryParse(Console.ReadLine(), true, out BO.CallInListFields sort) ? sort : (BO.CallInListFields?)null;
 
                             var sortCalls = s_bl.call.CallInLists(filterField, filterValue, sortField);
 
@@ -346,11 +348,11 @@ namespace BlTest
                             if (!int.TryParse(Console.ReadLine(), out int volunteerIdToclosed))
                                 throw new BlFormatException("invalid ID");
 
-                            Console.Write("Enter call type (or press Enter for none): ");
+                            Console.Write("Enter call type 0: RegularVehicle, 1: Ambulance, 2: IntensiveCareAmbulance, 3: None (or press Enter for none): ");
                             BO.CallType? callType = Enum.TryParse(Console.ReadLine(), true, out BO.CallType type) 
                                 ? type : (BO.CallType?)null;//Can be null
 
-                            Console.Write("Enter sort field (or press Enter for none): ");
+                            Console.Write("Enter sort field 0: Id , 1: CallType, 2: Address, 3: OpenTime, 4: EnterTime, 5: EndTime, 6: TypeEndOfTreatment (or press Enter for none): ");
                             BO.ClosedCallInListField? sortBy = Enum.TryParse(Console.ReadLine(), true, out BO.ClosedCallInListField sortField)
                                 ? sortField : (BO.ClosedCallInListField?)null;//Can be null
 
@@ -374,11 +376,12 @@ namespace BlTest
                             if (!int.TryParse(Console.ReadLine(), out int volunteerIdToOpen))
                                 throw new BlFormatException("invalid ID");
 
-                            Console.Write("Enter call type (or press Enter for none): ");
+                            Console.Write("Enter call type: 0: RegularVehicle, 1: Ambulance, 2: IntensiveCareAmbulance, 3: None (or press Enter for none): ");
                             BO.CallType? callType = Enum.TryParse(Console.ReadLine(), true, out BO.CallType type)
                                 ? type : (BO.CallType?)null;//Can be null
 
-                            Console.Write("Enter sort field (or press Enter for none): ");
+                            Console.Write("Enter sort field: 0: Id , 1: CallType, 2: Address, 3: OpenTime, 4: EnterTime," +
+                                " 5: EndTime,6: TypeEndOfTreatment (or press Enter for none): ");
                             BO.OpenCallInListField? sortBy = Enum.TryParse(Console.ReadLine(), true, out BO.OpenCallInListField sortField) 
                                 ? sortField : (BO.OpenCallInListField?)null;//Can be null
 
