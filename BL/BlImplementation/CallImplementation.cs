@@ -168,7 +168,7 @@ internal class CallImplementation : ICall
                 var assignmentsOfCall = from assignment in assignments
                                         where assignment.CallId == id
                                         select assignment;
-                if (assignmentsOfCall == null && CallManager.Status(id) == BO.CallStatus.Open)
+                if (!assignmentsOfCall.Any() && CallManager.Status(id) == BO.CallStatus.Open)
                     _dal.Call.Delete(id);
                 else
                     throw new BO.UnauthorizedAccessException("You cannot delete this call.");
@@ -294,7 +294,7 @@ internal class CallImplementation : ICall
 
         if (assignment.VolunteerId != volunteerId)
             throw new BO.UnauthorizedAccessException("You do not have access permission to update the assignment");
-        if (assignment.TypeEndOfTreatment != null || assignment.EndTime != null)
+        if (assignment.TypeEndOfTreatment!= null/*||*/ && assignment.EndTime!= null)
             throw new BO.UnauthorizedAccessException("You cannot update this assignment");
 
         DO.Assignment assignmentToUpdate = assignment with { EndTime = ClockManager.Now, TypeEndOfTreatment = DO.EndType.Treated };
@@ -319,7 +319,7 @@ internal class CallImplementation : ICall
 
         if (volunteer.Role == DO.Roles.Volunteer && assignment.VolunteerId != volunteerId)
             throw new BO.UnauthorizedAccessException("Sorry! You do not have access permission to revoke the assignment");
-        if (assignment.TypeEndOfTreatment != null || assignment.EndTime != null)
+        if (assignment.TypeEndOfTreatment != null /*||*/&& assignment.EndTime != null)
             throw new BO.UnauthorizedAccessException("You cannot cancel this assignment");
 
         DO.Assignment assignmentToUpdate;
