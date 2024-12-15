@@ -12,11 +12,24 @@ internal class CallImplementation : ICall
 {
     private readonly DalApi.IDal _dal = DalApi.Factory.Get;
 
-    public Array CallQuantities()
+    public IEnumerable<int> CallQuantities()
     {
-        var calls = _dal.Call.ReadAll();
-        var groupedCalls = calls.GroupBy(c=> CallManager.Status(c.Id)).ToArray();
-        return groupedCalls;
+        var ListCall=_dal.Call.ReadAll();
+        var groupedCalls = ListCall
+        .GroupBy(call => CallManager.Status(call.Id))
+        .ToDictionary(group => group.Key, group => group.Count());
+        // Create an array to store the counts for each call type
+        int maxTypeOfCallValue = Enum.GetValues(typeof(BO.CallStatus)).Cast<int>().Max();
+        int[] result = new int[maxTypeOfCallValue + 1];
+        foreach (var group in groupedCalls)
+        {
+            result[(int)group.Key] = group.Value;
+        }
+
+        return result;
+        //var calls = _dal.Call.ReadAll();
+        //var groupedCalls = calls.GroupBy(c => CallManager.Status(c.Id));
+        //return groupedCalls.ToArray();
     }
 
     public IEnumerable<BO.CallInList> CallInLists(BO.CallField? filter, object? value, BO.CallField? sort)
@@ -32,7 +45,7 @@ internal class CallImplementation : ICall
             groupedCalls = filter switch
             {
                 BO.CallField.Address => calls.GroupBy(c => c.Address),
-                BO.CallField.CarTaypeToSend => calls.GroupBy(c => (object)c.CarTaypeToSend),
+                BO.CallField.CarTaypeToSend => calls.GroupBy(c => (object)c.CarTypeToSend),
                 BO.CallField.Id => calls.GroupBy(c => (object)c.Id),
                 _ => calls.GroupBy(c => (object)c.Id)
             };
@@ -45,20 +58,28 @@ internal class CallImplementation : ICall
             sortCalls = sort switch
             {
                 BO.CallField.Address => calls.OrderBy(c => c.Address).Distinct(),
-                BO.CallField.CarTaypeToSend => calls.OrderBy(c => c.CarTaypeToSend).Distinct(),
+                BO.CallField.CarTaypeToSend => calls.OrderBy(c => c.CarTypeToSend).Distinct(),
                 BO.CallField.Id => calls.OrderBy(c => c.Id).Distinct(),
                 _ => calls.OrderBy(c => c.Id).Distinct()
             };
         }
 
-        return sortCalls.Select(call => new BO.CallInList()
+        return sortCalls.Select(call =>
         {
-            CallId = call.Id,
-            CallType = (BO.CallType)call.CarTaypeToSend,
-            OpenTime = call.OpenTime,
-            LastVolunteer = CallManager.getLastVolunteer(call),
-            Status = CallManager.Status(call.Id)  
+            var assignments = CallManager.GetAssignmentCall(call.Id);
+
+           return new BO.CallInList()
+            {
+               Id = assignments?.LastOrDefault()?.Id ?? 0,
+               CallId = call.Id,
+                CallType = (BO.CallType)call.CarTypeToSend,
+                OpenTime = call.OpenTime,
+                LastVolunteer = CallManager.getLastVolunteer(call),
+                Status = CallManager.Status(call.Id),
+               TotalAssignments = assignments?.Count() ?? 0
+           };
         });
+        
     }
 
     public BO.Call GetCallDetails(int id)
@@ -72,7 +93,7 @@ internal class CallImplementation : ICall
         var boCall = new BO.Call
         {
             Id = doCall.Id,
-            CarTaypeToSend = (BO.CallType)doCall.CarTaypeToSend,
+            CarTypeToSend = (BO.CallType)doCall.CarTypeToSend,
             Description = doCall.Description,
             Address = doCall.Address,
             Latitude = doCall.Latitude,
@@ -87,7 +108,6 @@ internal class CallImplementation : ICall
                 Name = "",
                 EnterTime = a.EnterTime,
                 EndTime = a.EndTime,
-                EndType = 0,
                 TypeEndOfTreatment = a.TypeEndOfTreatment.HasValue ? (BO.EndType)a.TypeEndOfTreatment.Value :null
 
             }).ToList()
@@ -98,6 +118,10 @@ internal class CallImplementation : ICall
    
     public void UpdatingCallDetails(int id ,BO.Call call)
     {
+        if (call.Address == null)
+        {
+            throw new BO.BlFormatException("Invalid address.");
+        }
         var coordinates = Tools.GetAddressCoordinates(call.Address);
         call.Latitude = coordinates.Latitude;
         call.Longitude = coordinates.Longitude;
@@ -114,7 +138,7 @@ internal class CallImplementation : ICall
            call.Longitude,
            call.OpenTime,
            call.MaxTime,
-           (DO.CallType)call.CarTaypeToSend);
+           (DO.CallType)call.CarTypeToSend);
         
             _dal.Call.Update(DOCall);
         }
@@ -153,6 +177,10 @@ internal class CallImplementation : ICall
 
     public void AddCall(BO.Call call)
     {
+        if (call.Address == null)
+        {
+            throw new BO.BlFormatException("Invalid address.");
+        }
         var coordinates=Tools.GetAddressCoordinates(call.Address);
         call.Latitude = coordinates.Latitude;
         call.Longitude = coordinates.Longitude;
@@ -167,7 +195,7 @@ internal class CallImplementation : ICall
                 call.Longitude,
                 call.OpenTime,
                 call.MaxTime,
-                (DO.CallType)call.CarTaypeToSend);
+                (DO.CallType)call.CarTypeToSend);
 
             _dal.Call.Create(callToAdd);
         }
@@ -200,7 +228,7 @@ internal class CallImplementation : ICall
          var sortedcall = sortBy switch
         {
             BO.ClosedCallInListField.Id => filterCalls.OrderBy(c => c.Id),
-            BO.ClosedCallInListField.CallType => filterCalls.OrderBy(c => c.CarTaypeToSend),
+            BO.ClosedCallInListField.CallType => filterCalls.OrderBy(c => c.CarTypeToSend),
             BO.ClosedCallInListField.Address => filterCalls.OrderBy(c => c.Address),
             BO.ClosedCallInListField.TypeEndOfTreatment => filterCalls.OrderBy(c =>
             assignment.FirstOrDefault(a => a.CallId == c.Id)?.TypeEndOfTreatment),
@@ -238,7 +266,7 @@ internal class CallImplementation : ICall
             sortedcall = sortBy switch
             {
                 BO.OpenCallInListField.Id => filterCalls.OrderBy(c => c.Id),
-                BO.OpenCallInListField.CallType => filterCalls.OrderBy(c => c.CarTaypeToSend),/////
+                BO.OpenCallInListField.CallType => filterCalls.OrderBy(c => c.CarTypeToSend),/////
                 BO.OpenCallInListField.Address => filterCalls.OrderBy(c => c.Address),
                 BO.OpenCallInListField.Distance => filterCalls.OrderBy(c => Tools.DistanceCalculator.CalculateDistance(c.Address, volunteer.Address, volunteer.Type)),
                 _ => filterCalls.OrderBy(c => c.Id)

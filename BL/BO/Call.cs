@@ -3,7 +3,7 @@ namespace BO;
 public class Call
 {
     public int Id { get; init; }
-    public CallType CarTaypeToSend { get; init; }
+    public CallType CarTypeToSend { get; init; }
     public string? Description { get; init; }
     public string? Address { get; set; }
     public double? Latitude { get; set; }

@@ -664,7 +664,7 @@ internal class Program
             Longitude: longitude,
             OpenTime: openTime,
             MaxTime: maxTime,
-            CarTaypeToSend: type
+            CarTypeToSend: type
         );
         return call;
     }

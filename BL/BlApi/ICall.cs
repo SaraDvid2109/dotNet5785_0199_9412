@@ -5,7 +5,7 @@ namespace BlApi;
 /// </summary>
 public interface ICall
 {
-    public Array CallQuantities();
+    public IEnumerable<int> CallQuantities();
     public IEnumerable<BO.CallInList> CallInLists(BO.CallField? filter, object? value, BO.CallField? sort);
     public BO.Call GetCallDetails(int id);
     public void UpdatingCallDetails(int id,BO.Call call);

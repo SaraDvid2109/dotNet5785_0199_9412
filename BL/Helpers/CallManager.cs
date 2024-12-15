@@ -12,7 +12,7 @@ internal static class CallManager
 
     public static void IntegrityCheck(BO.Call call)
     {
-        if (!Enum.IsDefined(typeof(BO.CallType), call.CarTaypeToSend))
+        if (!Enum.IsDefined(typeof(BO.CallType), call.CarTypeToSend))
         {
             throw new BO.BlFormatException("Invalid CallType format.");
         }
@@ -60,11 +60,22 @@ internal static class CallManager
     public static BO.CallStatus Status(int callId) //stage 4
     {
         var call = s_dal.Call.Read(callId);
-        if (call == null)
-            throw new BO.BlDoesNotExistException($"Call with id {callId} does not exist");
-
         var assignments = GetAssignmentCall(callId);
-        if (assignments == null)
+        //// Log the contents of assignments
+        //Console.WriteLine("Assignments retrieved: ");
+        //if (assignments == null)
+        //{
+        //    Console.WriteLine("Assignments is null");
+        //}
+        //else
+        //{
+        //    Console.WriteLine($"Assignments count: {assignments.Count()}");
+        //    foreach (var assignment in assignments)
+        //    {
+        //        Console.WriteLine($"Assignment ID: {assignment.Id}, CallId: {assignment.CallId}");
+        //    }
+        //}
+        if (assignments == null || !assignments.Any())
         {
             if (call!.MaxTime - ClockManager.Now <= s_dal.Config.RiskRange)
                 return BO.CallStatus.OpenAtRisk;
@@ -74,8 +85,12 @@ internal static class CallManager
         else
         {
             var assignment = GetLastAssignment(assignments);
-
-            if (assignment!.TypeEndOfTreatment == null)
+            if (assignment == null)
+            {
+                // Handle the null case appropriately
+                throw new BO.BlNullReferenceException("Assignment does not exist");
+            }
+            if (assignment.TypeEndOfTreatment == null)
             {
                 if (call!.MaxTime - ClockManager.Now <= s_dal.Config.RiskRange)
                     return BO.CallStatus.TreatmentOfRisk;
@@ -94,7 +109,7 @@ internal static class CallManager
 
     public static IEnumerable<DO.Assignment>? GetAssignmentCall(int callId)
     {
-        var assignments = s_dal.Assignment.ReadAll();
+        IEnumerable<DO.Assignment>? assignments = s_dal.Assignment.ReadAll();
         if (assignments != null)
             assignments = from assignment in assignments
                           where assignment.CallId == callId
@@ -126,7 +141,7 @@ internal static class CallManager
         if (type != null)
         {
             toFilter = from call in toFilter
-                       where call.CarTaypeToSend == (DO.CallType)type
+                       where call.CarTypeToSend == (DO.CallType)type
                        select call;
         }
         return toFilter;
@@ -146,7 +161,7 @@ internal static class CallManager
         return new BO.ClosedCallInList
         {
             Id = call.Id,
-            CallType = (BO.CallType)call.CarTaypeToSend,
+            CallType = (BO.CallType)call.CarTypeToSend,
             Address = call.Address,
             OpenTime = call.OpenTime,
             EnterTime = assignment.EnterTime,
@@ -169,7 +184,7 @@ internal static class CallManager
         return new BO.OpenCallInList
         {
             Id = call.Id,
-            CallType = (BO.CallType)call.CarTaypeToSend,
+            CallType = (BO.CallType)call.CarTypeToSend,
             Destination = call.Description,
             Address = call.Address,
             OpenTime = call.OpenTime,
@@ -188,7 +203,7 @@ internal static class CallManager
                 call.Longitude,
                 call.OpenTime,
                 call.MaxTime,
-                (DO.CallType)call.CarTaypeToSend);
+                (DO.CallType)call.CarTypeToSend);
     }
 
     //public static BO.CallInProgress ToBOCallInProgress(DO.Call call)

@@ -236,8 +236,21 @@ namespace BlTest
                 switch (choice)
                 {
                     case "1":
-                        Array calls=s_bl.call.CallQuantities();
-                        Console.WriteLine(calls);
+
+
+                        IEnumerable<int> calls;
+                        try
+                        {
+                        calls = s_bl.call.CallQuantities();                        }
+                        catch (BO.BlDoesNotExistException ex)
+                        {
+                            throw new BO.BlDoesNotExistException("ERRORE: " + ex);
+                        }
+                        foreach (var call in calls)
+                            Console.WriteLine(call);
+                        
+                        
+                        //Console.WriteLine(calls);
                         break;
                     case "2":
                         try
@@ -638,7 +651,7 @@ namespace BlTest
             BO.Call call = new BO.Call
             {
 
-                CarTaypeToSend = type,
+                CarTypeToSend = type,
                 Description = description,
                 Address = address,
                 //Latitude = latitude,

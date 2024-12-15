@@ -179,7 +179,7 @@ internal static class VolunteerManager
                 {
                     Id = idCall.Id,
                     CallId = call.Id,
-                    CallType = (BO.CallType)call.CarTaypeToSend,
+                    CallType = (BO.CallType)call.CarTypeToSend,
                     Destination = call.Description,
                     Address = call.Address,
                     OpenTime = call.OpenTime,

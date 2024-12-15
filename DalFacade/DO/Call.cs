@@ -24,7 +24,7 @@ public record Call
     double? Longitude,
     DateTime OpenTime,
     DateTime? MaxTime,
-    CallType CarTaypeToSend
+    CallType CarTypeToSend
 )
 {
     public Call() : this(0, null, string.Empty, null, null, DateTime.MinValue, null, 0) { }
