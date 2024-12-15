@@ -68,18 +68,18 @@ internal class CallImplementation : ICall
         {
             var assignments = CallManager.GetAssignmentCall(call.Id);
 
-           return new BO.CallInList()
+            return new BO.CallInList()
             {
-               Id = assignments?.LastOrDefault()?.Id ?? 0,
-               CallId = call.Id,
+                Id = assignments?.LastOrDefault()?.Id ?? 0,
+                CallId = call.Id,
                 CallType = (BO.CallType)call.CarTypeToSend,
                 OpenTime = call.OpenTime,
                 LastVolunteer = CallManager.getLastVolunteer(call),
                 Status = CallManager.Status(call.Id),
-               TotalAssignments = assignments?.Count() ?? 0
-           };
+                TotalAssignments = assignments?.Count() ?? 0
+            };
         });
-        
+
     }
 
     public BO.Call GetCallDetails(int id)
@@ -87,8 +87,8 @@ internal class CallImplementation : ICall
         var doCall = _dal.Call.Read(id);
         if (doCall == null)
             throw new BO.BlDoesNotExistException("There is no call with this ID.");
-         var doAssignments = _dal.Assignment.ReadAll()
-                .Where(a => a.CallId == id);
+        var doAssignments = _dal.Assignment.ReadAll()
+               .Where(a => a.CallId == id);
 
         var boCall = new BO.Call
         {
@@ -115,7 +115,7 @@ internal class CallImplementation : ICall
 
         return boCall;
     }
-   
+
     public void UpdatingCallDetails(int id, BO.Call call)
     {
         if (call.Address == null)
@@ -139,7 +139,7 @@ internal class CallImplementation : ICall
            call.OpenTime,
            call.MaxTime,
            (DO.CallType)call.CarTypeToSend);
-        
+
             _dal.Call.Update(DOCall);
         }
         catch (DO.DalDoesNotExistException ex)
@@ -198,7 +198,7 @@ internal class CallImplementation : ICall
 
             _dal.Call.Create(callToAdd);
         }
-        catch (DO.DalAlreadyExistException ex) 
+        catch (DO.DalAlreadyExistException ex)
         { throw new BO.BllAlreadyExistException("Error creating call", ex); }
     }
 
@@ -212,19 +212,19 @@ internal class CallImplementation : ICall
         //All the ID of the calls the volunteer took
         var callsVolunteer = from a in assignment
                              where a.VolunteerId == VolunteerId
-                            select a.CallId;
+                             select a.CallId;
         //All calls of the volunteer received as a parameter
         var calls = _dal.Call.ReadAll(c => callsVolunteer.Contains(c.Id));
-       
+
         var fitCalls = from call in calls
-                       where (CallManager.Status(call.Id) == BO.CallStatus.Close 
+                       where (CallManager.Status(call.Id) == BO.CallStatus.Close
                                                       || CallManager.Status(call.Id) == BO.CallStatus.Expired)
                        select call;
         //filter to calls of volunteer using assignment
         var filterCalls = CallManager.Filter(fitCalls, filter);
-        
-         //var finalListCalls = CallManager.SortClosedCall(callsForList, sortBy);
-         var sortedcall = sortBy switch
+
+        //var finalListCalls = CallManager.SortClosedCall(callsForList, sortBy);
+        var sortedcall = sortBy switch
         {
             BO.ClosedCallInListField.Id => filterCalls.OrderBy(c => c.Id),
             BO.ClosedCallInListField.CallType => filterCalls.OrderBy(c => c.CarTypeToSend),
@@ -257,7 +257,7 @@ internal class CallImplementation : ICall
                         select call;
 
         filterCalls = CallManager.Filter(openCalls, filter);
-            
+
         if (sortBy == null)
             return filterCalls.OrderBy(c => c.Id).Select(c => CallManager.ToBOOpenCall(c, volunteer));
         else
