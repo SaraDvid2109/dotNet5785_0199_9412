@@ -255,14 +255,14 @@ namespace BlTest
                     case "2":
                         try
                         {
-                            Console.Write("Enter filter field: 0-Id,1-Address,2-CarTaypeToSend (or press Enter for none): ");
-                            BO.CallField? filterField = Enum.TryParse(Console.ReadLine(), true, out BO.CallField filter) ? filter : (BO.CallField?)null;
+                            Console.Write("Enter filter field: 0-CallId,1-CallType,2-OpenTime (or press Enter for none): ");
+                            BO.CallInListFieldsFilter? filterField = Enum.TryParse(Console.ReadLine(), true, out BO.CallInListFieldsFilter filter) ? filter : (BO.CallInListFieldsFilter?)null;
 
                             Console.Write("Enter filter value (or press Enter for none): ");
                             object? filterValue = string.IsNullOrWhiteSpace(Console.ReadLine()) ? null : Console.ReadLine();
 
-                            Console.Write("Enter sort field:0-Id,1-Address,2-CarTaypeToSend (or press Enter for none): ");
-                            BO.CallField? sortField = Enum.TryParse(Console.ReadLine(), true, out BO.CallField sort) ? sort : (BO.CallField?)null;
+                            Console.Write("Enter sort field: 0-CallId,1-CallType,2-OpenTime(or press Enter for none): ");
+                            BO.CallInListFieldsSort? sortField = Enum.TryParse(Console.ReadLine(), true, out BO.CallInListFieldsSort sort) ? sort : (BO.CallInListFieldsSort?)null;
 
                             var sortCalls = s_bl.call.CallInLists(filterField, filterValue, sortField);
 

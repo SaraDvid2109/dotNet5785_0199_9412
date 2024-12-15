@@ -20,19 +20,58 @@ internal static class Tools
         //    result += $"{prop.Name}: {prop.GetValue(null) ?? "null"}\n";
         //}
         //return result;
-       
         if (t == null)
             throw new ArgumentNullException(nameof(t), "Object cannot be null.");
 
-        string result = "";
+        var result = new StringBuilder();
         PropertyInfo[] properties = t.GetType().GetProperties();
+
         foreach (var prop in properties)
         {
-            var value = prop.GetValue(t) ?? "null";
-            result += $"{prop.Name}: {value}\n";
+            // Skip properties without a getter
+            if (!prop.CanRead)
+                continue;
+
+            // Get the value of the property
+            object? value;
+            try
+            {
+                value = prop.GetValue(t);
+            }
+            catch (TargetInvocationException)
+            {
+                value = "Error accessing property";
+            }
+
+            // If the property is a collection, list its elements
+            if (value is System.Collections.IEnumerable enumerable && value is not string)
+            {
+                result.AppendLine($"{prop.Name}: [");
+                foreach (var item in enumerable)
+                {
+                    result.AppendLine($"  {item}");
+                }
+                result.AppendLine("]");
+            }
+            else
+            {
+                result.AppendLine($"{prop.Name}: {value ?? "null"}");
+            }
         }
-        return result;
-    
+
+        return result.ToString();
+        //if (t == null)
+        //    throw new ArgumentNullException(nameof(t), "Object cannot be null.");
+
+        //string result = "";
+        //PropertyInfo[] properties = t.GetType().GetProperties();
+        //foreach (var prop in properties)
+        //{
+        //    var value = prop.GetValue(t) ?? "null";
+        //    result += $"{prop.Name}: {value}\n";
+        //}
+        //return result;
+
     }
 
     #region Adress & Latitude & Longitude calculation
