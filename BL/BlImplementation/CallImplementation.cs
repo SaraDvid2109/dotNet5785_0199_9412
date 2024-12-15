@@ -11,13 +11,29 @@ using System.Diagnostics;
 internal class CallImplementation : ICall
 {
     private readonly DalApi.IDal _dal = DalApi.Factory.Get;
-
-    public Array CallQuantities()
+    public int[] CallQuantities()
     {
+       
         var calls = _dal.Call.ReadAll();
-        var groupedCalls = calls.GroupBy(c=> CallManager.Status(c.Id)).ToArray();
-        return groupedCalls;
+
+        var groupedCalls = calls
+            .GroupBy(c => CallManager.Status(c.Id));
+           
+        int[] result = new int[6];
+        foreach (var group in groupedCalls)
+        {
+            result[(int)group.Key] = group.Count(); 
+        }
+
+        return result;
     }
+
+    //public Array CallQuantities()
+    //{
+    //    var calls = _dal.Call.ReadAll();
+    //    var groupedCalls = calls.GroupBy(c=> CallManager.Status(c.Id)).ToArray();
+    //    return groupedCalls;
+    //}
 
     public IEnumerable<BO.CallInList> CallInLists(BO.CallField? filter, object? value, BO.CallField? sort)
     {
@@ -53,11 +69,15 @@ internal class CallImplementation : ICall
 
         return sortCalls.Select(call => new BO.CallInList()
         {
+            Id = CallManager.GetAssignmentCall(call.Id)?./*First()*/Last().Id,
             CallId = call.Id,
             CallType = (BO.CallType)call.CarTaypeToSend,
             OpenTime = call.OpenTime,
+            TimeLeftToFinish= call.MaxTime - ClockManager.Now,
             LastVolunteer = CallManager.getLastVolunteer(call),
-            Status = CallManager.Status(call.Id)  
+            TreatmentTimeLeft= CallManager.GetAssignmentCall(call.Id)?.Last().EndTime - call.OpenTime ,
+            Status = CallManager.Status(call.Id),
+            TotalAssignments= CallManager.GetAssignmentCall(call.Id).Count(),
         });
     }
 
@@ -84,10 +104,9 @@ internal class CallImplementation : ICall
             ListAssignmentsForCalls = doAssignments.Select(a => new BO.CallAssignInList
             {
                 VolunteerId = a.VolunteerId,
-                Name = "",
+                Name = _dal.Volunteer.Read(a.VolunteerId)?.Name,
                 EnterTime = a.EnterTime,
                 EndTime = a.EndTime,
-                EndType = 0,
                 TypeEndOfTreatment = a.TypeEndOfTreatment.HasValue ? (BO.EndType)a.TypeEndOfTreatment.Value :null
 
             }).ToList()
@@ -128,7 +147,6 @@ internal class CallImplementation : ICall
     {
         try
         {
-            // not sure about this --- I changed a little
             DO.Call? callToDelete = _dal.Call.Read(id);
             if (callToDelete == null) throw new BO.BlDoesNotExistException("There is no call with this ID.");
             var assignments = _dal.Assignment.ReadAll();

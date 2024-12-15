@@ -242,13 +242,13 @@ namespace BlTest
                     case "2":
                         try
                         {
-                            Console.Write("Enter filter field (or press Enter for none): ");
+                            Console.Write("Enter filter field: 0-Id,1-Address,2-CarTaypeToSend (or press Enter for none): ");
                             BO.CallField? filterField = Enum.TryParse(Console.ReadLine(), true, out BO.CallField filter) ? filter : (BO.CallField?)null;
 
                             Console.Write("Enter filter value (or press Enter for none): ");
                             object? filterValue = string.IsNullOrWhiteSpace(Console.ReadLine()) ? null : Console.ReadLine();
 
-                            Console.Write("Enter sort field (or press Enter for none): ");
+                            Console.Write("Enter sort field:0-Id,1-Address,2-CarTaypeToSend (or press Enter for none): ");
                             BO.CallField? sortField = Enum.TryParse(Console.ReadLine(), true, out BO.CallField sort) ? sort : (BO.CallField?)null;
 
                             var sortCalls = s_bl.call.CallInLists(filterField, filterValue, sortField);
@@ -287,7 +287,7 @@ namespace BlTest
                             if (!int.TryParse(Console.ReadLine(), out int callId))
                                 throw new BlFormatException("invalid ID");
                             BO.Call callToUpdate = CreateCall();
-                            s_bl.call.UpdatingCallDetails(callToUpdate.Id,callToUpdate);
+                            s_bl.call.UpdatingCallDetails(/*callToUpdate.Id*/callId, callToUpdate);
                             Console.WriteLine("Call updated successfully.");
                         }
                         catch (Exception ex)
@@ -630,9 +630,9 @@ namespace BlTest
             if (!DateTime.TryParse(Console.ReadLine(), out DateTime maxTime))
                 throw new DalFormatException("Max Time is invalid!");
 
-            Console.Write("Enter status (Open, Treatment, OpenAtRisk, TreatmentOfRisk, Expired, Close): ");
-            if (!Enum.TryParse(Console.ReadLine(), true, out BO.CallStatus status))
-                throw new BO.BlFormatException("type is invalid!");
+            //Console.Write("Enter status (Open, Treatment, OpenAtRisk, TreatmentOfRisk, Expired, Close): ");
+            //if (!Enum.TryParse(Console.ReadLine(), true, out BO.CallStatus status))
+            //    throw new BO.BlFormatException("type is invalid!");
             List<BO.CallAssignInList>? listAssignmentsForCalls =new List<BO.CallAssignInList>();////////////
 
             BO.Call call = new BO.Call
@@ -643,9 +643,9 @@ namespace BlTest
                 Address = address,
                 //Latitude = latitude,
                 //Longitude =longitude,
-                OpenTime = DateTime.Now,
+                OpenTime = s_bl.Admin.GetClock()/*DateTime.Now*/,
                 MaxTime = maxTime,
-                Status = status,
+                Status = BO.CallStatus.Open,
                 ListAssignmentsForCalls = listAssignmentsForCalls,
             };
             return call;

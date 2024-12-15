@@ -64,7 +64,7 @@ internal static class CallManager
             throw new BO.BlDoesNotExistException($"Call with id {callId} does not exist");
 
         var assignments = GetAssignmentCall(callId);
-        if (assignments == null)
+        if (assignments == null|| !assignments.Any())
         {
             if (call!.MaxTime - ClockManager.Now <= s_dal.Config.RiskRange)
                 return BO.CallStatus.OpenAtRisk;
@@ -74,7 +74,6 @@ internal static class CallManager
         else
         {
             var assignment = GetLastAssignment(assignments);
-
             if (assignment!.TypeEndOfTreatment == null)
             {
                 if (call!.MaxTime - ClockManager.Now <= s_dal.Config.RiskRange)
