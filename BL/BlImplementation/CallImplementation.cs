@@ -105,7 +105,7 @@ internal class CallImplementation : ICall
             ListAssignmentsForCalls = doAssignments.Select(a => new BO.CallAssignInList
             {
                 VolunteerId = a.VolunteerId,
-                Name = "",
+                Name = _dal.Volunteer.Read(a.VolunteerId)?.Name,
                 EnterTime = a.EnterTime,
                 EndTime = a.EndTime,
                 TypeEndOfTreatment = a.TypeEndOfTreatment.HasValue ? (BO.EndType)a.TypeEndOfTreatment.Value :null
@@ -152,7 +152,6 @@ internal class CallImplementation : ICall
     {
         try
         {
-            // not sure about this --- I changed a little
             DO.Call? callToDelete = _dal.Call.Read(id);
             if (callToDelete == null) throw new BO.BlDoesNotExistException("There is no call with this ID.");
             var assignments = _dal.Assignment.ReadAll();
