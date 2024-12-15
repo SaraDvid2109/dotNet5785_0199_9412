@@ -14,7 +14,7 @@ internal class CallImplementation : ICall
 
     public IEnumerable<int> CallQuantities()
     {
-        var ListCall=_dal.Call.ReadAll();
+        var ListCall = _dal.Call.ReadAll();
         var groupedCalls = ListCall
         .GroupBy(call => CallManager.Status(call.Id))
         .ToDictionary(group => group.Key, group => group.Count());
@@ -113,8 +113,8 @@ internal class CallImplementation : ICall
         var doCall = _dal.Call.Read(id);
         if (doCall == null)
             throw new BO.BlDoesNotExistException("There is no call with this ID.");
-         var doAssignments = _dal.Assignment.ReadAll()
-                .Where(a => a.CallId == id);
+        var doAssignments = _dal.Assignment.ReadAll()
+               .Where(a => a.CallId == id);
 
         var boCall = new BO.Call
         {
@@ -141,8 +141,8 @@ internal class CallImplementation : ICall
 
         return boCall;
     }
-   
-    public void UpdatingCallDetails(int id ,BO.Call call)
+
+    public void UpdatingCallDetails(int id, BO.Call call)
     {
         if (call.Address == null)
         {
@@ -165,7 +165,7 @@ internal class CallImplementation : ICall
            call.OpenTime,
            call.MaxTime,
            (DO.CallType)call.CarTypeToSend);
-        
+
             _dal.Call.Update(DOCall);
         }
         catch (DO.DalDoesNotExistException ex)
@@ -186,7 +186,7 @@ internal class CallImplementation : ICall
                 var assignmentsOfCall = from assignment in assignments
                                         where assignment.CallId == id
                                         select assignment;
-                if (assignmentsOfCall == null && CallManager.Status(id) == BO.CallStatus.Open)
+                if (!assignmentsOfCall.Any() && CallManager.Status(id) == BO.CallStatus.Open)
                     _dal.Call.Delete(id);
                 else
                     throw new BO.UnauthorizedAccessException("You cannot delete this call.");
@@ -196,7 +196,7 @@ internal class CallImplementation : ICall
         }
         catch (DO.DalDoesNotExistException ex)
         {
-            throw new BO.BlDoesNotExistException("Error deleting volunteer:",ex);
+            throw new BO.BlDoesNotExistException("Error deleting volunteer:", ex);
         }
     }
 
@@ -206,7 +206,7 @@ internal class CallImplementation : ICall
         {
             throw new BO.BlFormatException("Invalid address.");
         }
-        var coordinates=Tools.GetAddressCoordinates(call.Address);
+        var coordinates = Tools.GetAddressCoordinates(call.Address);
         call.Latitude = coordinates.Latitude;
         call.Longitude = coordinates.Longitude;
         Helpers.CallManager.IntegrityCheck(call);
@@ -215,7 +215,7 @@ internal class CallImplementation : ICall
             DO.Call callToAdd = new DO.Call(
                 call.Id,
                 call.Description,
-                call.Address ,
+                call.Address,
                 call.Latitude,
                 call.Longitude,
                 call.OpenTime,
@@ -224,8 +224,8 @@ internal class CallImplementation : ICall
 
             _dal.Call.Create(callToAdd);
         }
-        catch (DO.DalAlreadyExistException ex) 
-        { throw new BO.BllAlreadyExistException("Error creating call",ex); }
+        catch (DO.DalAlreadyExistException ex)
+        { throw new BO.BllAlreadyExistException("Error creating call", ex); }
     }
 
     public IEnumerable<BO.ClosedCallInList> closedCallsHandledByVolunteer(int VolunteerId, BO.CallType? filter, BO.ClosedCallInListField? sortBy)
@@ -236,14 +236,14 @@ internal class CallImplementation : ICall
 
         var assignment = _dal.Assignment.ReadAll();
         //All the ID of the calls the volunteer took
-        var callsVolunteer =from a in assignment
-                            where a.VolunteerId==VolunteerId
-                            select a.CallId;
+        var callsVolunteer = from a in assignment
+                             where a.VolunteerId == VolunteerId
+                             select a.CallId;
         //All calls of the volunteer received as a parameter
         var calls = _dal.Call.ReadAll(c => callsVolunteer.Contains(c.Id));
-       
+
         var fitCalls = from call in calls
-                       where (CallManager.Status(call.Id) == BO.CallStatus.Close 
+                       where (CallManager.Status(call.Id) == BO.CallStatus.Close
                                                       || CallManager.Status(call.Id) == BO.CallStatus.Expired)
                        select call;
         //filter to calls of volunteer using assignment
@@ -288,7 +288,7 @@ internal class CallImplementation : ICall
                         select call;
 
         filterCalls = CallManager.Filter(openCalls, filter);
-            
+
         if (sortBy == null)
             return filterCalls.OrderBy(c => c.Id).Select(c => CallManager.ToBOOpenCall(c, volunteer));
         else
@@ -320,7 +320,7 @@ internal class CallImplementation : ICall
 
         if (assignment.VolunteerId != volunteerId)
             throw new BO.UnauthorizedAccessException("You do not have access permission to update the assignment");
-        if (assignment.TypeEndOfTreatment != null || assignment.EndTime != null)
+        if (assignment.TypeEndOfTreatment!= null/*||*/ && assignment.EndTime!= null)
             throw new BO.UnauthorizedAccessException("You cannot update this assignment");
 
         DO.Assignment assignmentToUpdate = assignment with { EndTime = ClockManager.Now, TypeEndOfTreatment = DO.EndType.Treated };
@@ -345,7 +345,7 @@ internal class CallImplementation : ICall
 
         if (volunteer.Role == DO.Roles.Volunteer && assignment.VolunteerId != volunteerId)
             throw new BO.UnauthorizedAccessException("Sorry! You do not have access permission to revoke the assignment");
-        if (assignment.TypeEndOfTreatment != null || assignment.EndTime != null)
+        if (assignment.TypeEndOfTreatment != null /*||*/&& assignment.EndTime != null)
             throw new BO.UnauthorizedAccessException("You cannot cancel this assignment");
 
         DO.Assignment assignmentToUpdate;
