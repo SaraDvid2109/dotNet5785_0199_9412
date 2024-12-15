@@ -211,7 +211,7 @@ internal static class CallManager
     //    return new BO.CallInProgress
     //    {
     //        Id = call.Id,
-    //        CallType = (BO.CallType)call.CarTaypeToSend,
+    //        CallType = (BO.CallType)call.CarTypeToSend,
     //        Destination = call.Description,
     //        Address = call.Address,
     //        OpenTime = call.OpenTime,
@@ -229,7 +229,7 @@ internal static class CallManager
     //    return new BO.ClosedCallInList
     //    {
     //        Id = call.Id,
-    //        CallType = (BO.CallType)call.CarTaypeToSend,
+    //        CallType = (BO.CallType)call.CarTypeToSend,
     //        Address = call.Address,
     //        OpenTime = call.OpenTime,
     //        EnterTime = s_dal.Assignment.Read(a => a.CallId == call.Id && (assignments.MaxBy(a => a.Id)).Id == a.Id).EnterTime,
@@ -303,6 +303,45 @@ internal static class CallManager
         {
             s_dal.Assignment.Update(assignment);
         }
+    }
+
+    public static BO.CallInList ConvertFromDOToCallInList(DO.Call call, IEnumerable<DO.Assignment> assignments)
+    {
+        var assignmentOfCall = assignments.FirstOrDefault(a => a.CallId == call.Id);
+        if (assignmentOfCall == null)
+        {
+            return new BO.CallInList
+            {
+                Id = null,
+                CallId = call.Id,
+                CallType = (BO.CallType)call.CarTypeToSend,
+                OpenTime = call.OpenTime,
+                TimeLeftToFinish = null,
+                LastVolunteer = null,
+                TreatmentTimeLeft = null,
+                Status = Status(call.Id),
+                TotalAssignments = 0
+            };
+        }
+
+        var volunteer = s_dal.Volunteer.Read(assignmentOfCall.VolunteerId);
+        TimeSpan? time = null;
+        if (assignmentOfCall.EndTime != null)
+        {
+            time = assignmentOfCall.EndTime - assignmentOfCall.EnterTime;
+        }
+        return new BO.CallInList
+        {
+            Id = assignmentOfCall.Id,
+            CallId = call.Id,
+            CallType = (BO.CallType)call.CarTypeToSend,
+            OpenTime = call.OpenTime,
+            TimeLeftToFinish = ClockManager.Now - call.MaxTime> TimeSpan.Zero ? ClockManager.Now - call.MaxTime: TimeSpan.Zero,
+            LastVolunteer = volunteer!.Name,
+            TreatmentTimeLeft = time,
+            Status = Status(call.Id),
+            TotalAssignments = assignments.Count()
+        };
     }
 
     // כל המתודות במחלקה יהיו internal static

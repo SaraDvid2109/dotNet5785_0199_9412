@@ -1,5 +1,4 @@
 ﻿namespace BlImplementation;
-
 using BL.Helpers;
 using BlApi;
 using BO;
@@ -32,22 +31,20 @@ internal class CallImplementation : ICall
         //return groupedCalls.ToArray();
     }
 
-    public IEnumerable<BO.CallInList> CallInLists(BO.CallField? filter, object? value, BO.CallField? sort)
+    public IEnumerable<BO.CallInList> CallInLists(BO.CallInListFieldsFilter? filter, object? value, BO.CallInListFieldsSort? sort)
     {
         IEnumerable<DO.Call> calls;
         IEnumerable<IGrouping<object, DO.Call>> groupedCalls;
         IEnumerable<DO.Call> sortCalls;
         calls = _dal.Call.ReadAll();
-        if (filter == null)
-            calls = _dal.Call.ReadAll();
-        else
-        {
+        if (filter != null)
+        {   
             groupedCalls = filter switch
             {
-                BO.CallField.Address => calls.GroupBy(c => c.Address),
-                BO.CallField.CarTaypeToSend => calls.GroupBy(c => (object)c.CarTypeToSend),
-                BO.CallField.Id => calls.GroupBy(c => (object)c.Id),
-                _ => calls.GroupBy(c => (object)c.Id)
+                BO.CallInListFieldsFilter.CallId => calls.GroupBy(c => (object)c.Id).Distinct(),
+                BO.CallInListFieldsFilter.CallType => calls.GroupBy(c => (object)c.CarTypeToSend).Distinct(),
+                BO.CallInListFieldsFilter.OpenTime => calls.GroupBy(c => (object)c.OpenTime).Distinct(),
+                _ => calls.GroupBy(c => (object)c.Id).Distinct()
             };
             calls = groupedCalls.FirstOrDefault(c => c.Key == value) ?? Enumerable.Empty<DO.Call>();
         }
@@ -57,9 +54,9 @@ internal class CallImplementation : ICall
         {
             sortCalls = sort switch
             {
-                BO.CallField.Address => calls.OrderBy(c => c.Address).Distinct(),
-                BO.CallField.CarTaypeToSend => calls.OrderBy(c => c.CarTypeToSend).Distinct(),
-                BO.CallField.Id => calls.OrderBy(c => c.Id).Distinct(),
+                BO.CallInListFieldsSort.CallId => calls.OrderBy(c => c.Id).Distinct(),
+                BO.CallInListFieldsSort.CallType => calls.OrderBy(c => c.CarTypeToSend).Distinct(),
+                BO.CallInListFieldsSort.OpenTime => calls.OrderBy(c => c.OpenTime).Distinct(),
                 _ => calls.OrderBy(c => c.Id).Distinct()
             };
         }
@@ -67,19 +64,30 @@ internal class CallImplementation : ICall
         return sortCalls.Select(call =>
         {
             var assignments = CallManager.GetAssignmentCall(call.Id);
+            return CallManager.ConvertFromDOToCallInList(call, assignments ?? Enumerable.Empty<DO.Assignment>());
 
-            return new BO.CallInList()
-            {
-                Id = assignments?.LastOrDefault()?.Id ?? 0,
-                CallId = call.Id,
-                CallType = (BO.CallType)call.CarTypeToSend,
-                OpenTime = call.OpenTime,
-                LastVolunteer = CallManager.getLastVolunteer(call),
-                Status = CallManager.Status(call.Id),
-                TotalAssignments = assignments?.Count() ?? 0
-            };
+            //if (assignments == null)
+            //    throw new BO.BlNullPropertyException("no assignments");
+            //var assignmentOfCall = assignments.FirstOrDefault(a => a.CallId == call.Id);
+            //TimeSpan? time = null;
+            //if (assignmentOfCall.EndTime != null)
+            //{
+            //    time = assignmentOfCall.EndTime - assignmentOfCall.EnterTime;
+            //}
+            //return new BO.CallInList()
+            //{
+            //   Id = assignments?.LastOrDefault()?.Id ?? 0,
+            //   CallId = call.Id,
+            //   CallType = (BO.CallType)call.CarTypeToSend,
+            //   OpenTime = call.OpenTime,
+            //   TimeLeftToFinish = ClockManager.Now - call.MaxTime > TimeSpan.Zero ? ClockManager.Now - call.MaxTime : TimeSpan.Zero,
+            //   LastVolunteer = CallManager.getLastVolunteer(call),
+            //   TreatmentTimeLeft = time,
+            //   Status = CallManager.Status(call.Id),
+            //   TotalAssignments = assignments?.Count() ?? 0
+            //   };
+            //});
         });
-
     }
 
     public BO.Call GetCallDetails(int id)
@@ -108,7 +116,7 @@ internal class CallImplementation : ICall
                 Name = _dal.Volunteer.Read(a.VolunteerId)?.Name,
                 EnterTime = a.EnterTime,
                 EndTime = a.EndTime,
-                TypeEndOfTreatment = a.TypeEndOfTreatment.HasValue ? (BO.EndType)a.TypeEndOfTreatment.Value : null
+                TypeEndOfTreatment = a.TypeEndOfTreatment.HasValue ? (BO.EndType)a.TypeEndOfTreatment :null
 
             }).ToList()
         };
@@ -222,9 +230,9 @@ internal class CallImplementation : ICall
                        select call;
         //filter to calls of volunteer using assignment
         var filterCalls = CallManager.Filter(fitCalls, filter);
-
-        //var finalListCalls = CallManager.SortClosedCall(callsForList, sortBy);
-        var sortedcall = sortBy switch
+        
+         //var finalListCalls = CallManager.SortClosedCall(callsForList, sortBy);
+         var sortedCall = sortBy switch
         {
             BO.ClosedCallInListField.Id => filterCalls.OrderBy(c => c.Id),
             BO.ClosedCallInListField.CallType => filterCalls.OrderBy(c => c.CarTypeToSend),
@@ -234,7 +242,7 @@ internal class CallImplementation : ICall
 
             _ => filterCalls.OrderBy(c => c.Id)
         };
-        return sortedcall.Select(call => CallManager.ToBOClosedCall(call));
+        return sortedCall.Select(call => CallManager.ToBOClosedCall(call));
     }
 
     public IEnumerable<BO.OpenCallInList> openCallsForSelectionByVolunteer(int id, BO.CallType? filter, BO.OpenCallInListField? sortBy)
@@ -248,7 +256,7 @@ internal class CallImplementation : ICall
         }
 
         var calls = _dal.Call.ReadAll();
-        IEnumerable<DO.Call> sortedcall;
+        IEnumerable<DO.Call> sortedCall;
         IEnumerable<DO.Call> filterCalls;
 
         var openCalls = from call in calls
@@ -262,7 +270,7 @@ internal class CallImplementation : ICall
             return filterCalls.OrderBy(c => c.Id).Select(c => CallManager.ToBOOpenCall(c, volunteer));
         else
         {
-            sortedcall = sortBy switch
+            sortedCall = sortBy switch
             {
                 BO.OpenCallInListField.Id => filterCalls.OrderBy(c => c.Id),
                 BO.OpenCallInListField.CallType => filterCalls.OrderBy(c => c.CarTypeToSend),/////
@@ -271,7 +279,7 @@ internal class CallImplementation : ICall
                 _ => filterCalls.OrderBy(c => c.Id)
             };
         }
-        return sortedcall.Select(c => CallManager.ToBOOpenCall(c, volunteer));
+        return sortedCall.Select(c => CallManager.ToBOOpenCall(c, volunteer));
 
     }
 

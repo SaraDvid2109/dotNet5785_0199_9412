@@ -8,6 +8,28 @@ public enum EndType { Treated, AdminCancellation, SelfCancellation, ExpiredCance
 public enum CallStatus { Open, Treatment, OpenAtRisk, TreatmentOfRisk, Expired, Close };
 public enum TimeUnit { Minute, Hour, Day, Month, Year };
 public enum VolunteerField { Id, Name, Active }
-public enum CallField { Id, Address, CarTaypeToSend }
+public enum CallField { Id, Address, CarTypeToSend }
 public enum ClosedCallInListField { Id , CallType, Address, OpenTime, EnterTime, EndTime,TypeEndOfTreatment }
 public enum OpenCallInListField { Id, CallType, Destination, Address, OpenTime, MaxTime, Distance }
+
+public enum CallInListFieldsFilter
+{
+   //Id,
+    CallId,
+    CallType,
+    OpenTime,
+    //TimeLeftToFinish,
+    //LastVolunteer,
+    //TreatmentTimeLeft,
+    //Status,
+    //TotalAssignments
+};
+
+public enum CallInListFieldsSort
+{
+    //Id,
+    CallId,
+    CallType,
+    OpenTime,
+    //TotalAssignments
+};
