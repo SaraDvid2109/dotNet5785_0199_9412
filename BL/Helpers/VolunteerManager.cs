@@ -60,7 +60,6 @@ internal static class VolunteerManager
         }
 
         var coordinates = Tools.CheckAddressVolunteer;
-
         if (!string.IsNullOrEmpty(volunteer.Address))
         {
             var coordinate = Helpers.Tools.GetAddressCoordinates(volunteer.Address);

@@ -1,13 +1,12 @@
-﻿using BL.Helpers;
+﻿namespace BlImplementation;
+
+using BL.Helpers;
 using BlApi;
 using BO;
+using DO;
 using Helpers;
 using System;
-using System.Net;
-using System.Runtime.CompilerServices;
-using System.Xml.Linq;
-
-namespace BlImplementation;
+using System.Diagnostics;
 
 internal class CallImplementation : ICall
 {
@@ -107,7 +106,7 @@ internal class CallImplementation : ICall
 
         try
         {
-            DO.Call DOcall = new DO.Call(
+            DO.Call DOCall = new DO.Call(
            /*call.Id*/id,
            call.Description,
            call.Address ?? string.Empty,
@@ -117,7 +116,7 @@ internal class CallImplementation : ICall
            call.MaxTime,
            (DO.CallType)call.CarTaypeToSend);
         
-            _dal.Call.Update(DOcall);
+            _dal.Call.Update(DOCall);
         }
         catch (DO.DalDoesNotExistException ex)
         {

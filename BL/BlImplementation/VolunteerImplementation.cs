@@ -113,7 +113,7 @@ internal class volunteerImplementation : IVolunteer
         {
             throw new BO.BlDoesNotExistException("There is no volunteer with this ID.");
         }
-        BO.Volunteer    BoVolunteer = VolunteerManager.ToBOVolunteer(volunteer);
+        BO.Volunteer BoVolunteer = VolunteerManager.ToBOVolunteer(volunteer);
         return BoVolunteer;
 
     }

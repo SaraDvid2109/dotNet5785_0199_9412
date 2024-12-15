@@ -287,7 +287,7 @@ namespace BlTest
                             if (!int.TryParse(Console.ReadLine(), out int callId))
                                 throw new BlFormatException("invalid ID");
                             BO.Call callToUpdate = CreateCall();
-                            s_bl.call.UpdatingCallDetails(callId,callToUpdate);
+                            s_bl.call.UpdatingCallDetails(callToUpdate.Id,callToUpdate);
                             Console.WriteLine("Call updated successfully.");
                         }
                         catch (Exception ex)
