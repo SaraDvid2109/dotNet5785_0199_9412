@@ -14,7 +14,7 @@ internal class CallImplementation : ICall
 
     public IEnumerable<int> CallQuantities()
     {
-        var ListCall=_dal.Call.ReadAll();
+        var ListCall = _dal.Call.ReadAll();
         var groupedCalls = ListCall
         .GroupBy(call => CallManager.Status(call.Id))
         .ToDictionary(group => group.Key, group => group.Count());
@@ -108,7 +108,7 @@ internal class CallImplementation : ICall
                 Name = _dal.Volunteer.Read(a.VolunteerId)?.Name,
                 EnterTime = a.EnterTime,
                 EndTime = a.EndTime,
-                TypeEndOfTreatment = a.TypeEndOfTreatment.HasValue ? (BO.EndType)a.TypeEndOfTreatment.Value :null
+                TypeEndOfTreatment = a.TypeEndOfTreatment.HasValue ? (BO.EndType)a.TypeEndOfTreatment.Value : null
 
             }).ToList()
         };
@@ -116,7 +116,7 @@ internal class CallImplementation : ICall
         return boCall;
     }
    
-    public void UpdatingCallDetails(int id ,BO.Call call)
+    public void UpdatingCallDetails(int id, BO.Call call)
     {
         if (call.Address == null)
         {
@@ -170,7 +170,7 @@ internal class CallImplementation : ICall
         }
         catch (DO.DalDoesNotExistException ex)
         {
-            throw new BO.BlDoesNotExistException("Error deleting volunteer:",ex);
+            throw new BO.BlDoesNotExistException("Error deleting volunteer:", ex);
         }
     }
 
@@ -180,7 +180,7 @@ internal class CallImplementation : ICall
         {
             throw new BO.BlFormatException("Invalid address.");
         }
-        var coordinates=Tools.GetAddressCoordinates(call.Address);
+        var coordinates = Tools.GetAddressCoordinates(call.Address);
         call.Latitude = coordinates.Latitude;
         call.Longitude = coordinates.Longitude;
         Helpers.CallManager.IntegrityCheck(call);
@@ -189,7 +189,7 @@ internal class CallImplementation : ICall
             DO.Call callToAdd = new DO.Call(
                 call.Id,
                 call.Description,
-                call.Address ,
+                call.Address,
                 call.Latitude,
                 call.Longitude,
                 call.OpenTime,
@@ -199,7 +199,7 @@ internal class CallImplementation : ICall
             _dal.Call.Create(callToAdd);
         }
         catch (DO.DalAlreadyExistException ex) 
-        { throw new BO.BllAlreadyExistException("Error creating call",ex); }
+        { throw new BO.BllAlreadyExistException("Error creating call", ex); }
     }
 
     public IEnumerable<BO.ClosedCallInList> closedCallsHandledByVolunteer(int VolunteerId, BO.CallType? filter, BO.ClosedCallInListField? sortBy)
@@ -210,8 +210,8 @@ internal class CallImplementation : ICall
 
         var assignment = _dal.Assignment.ReadAll();
         //All the ID of the calls the volunteer took
-        var callsVolunteer =from a in assignment
-                            where a.VolunteerId==VolunteerId
+        var callsVolunteer = from a in assignment
+                             where a.VolunteerId == VolunteerId
                             select a.CallId;
         //All calls of the volunteer received as a parameter
         var calls = _dal.Call.ReadAll(c => callsVolunteer.Contains(c.Id));
