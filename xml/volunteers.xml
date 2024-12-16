@@ -210,4 +210,18 @@
     <Role>Volunteer</Role>
     <Type>Aerial</Type>
   </Volunteer>
+  <Volunteer>
+    <Id>213899412</Id>
+    <Name>f2c</Name>
+    <Phone>0504117273</Phone>
+    <Mail />
+    <Password>123!@#sA</Password>
+    <Address>Ben Yehuda St 100, Tel Aviv, 6347511</Address>
+    <Latitude>32.087066</Latitude>
+    <Longitude>34.773227</Longitude>
+    <Active>true</Active>
+    <MaximumDistance>8</MaximumDistance>
+    <Role>Volunteer</Role>
+    <Type>Walking</Type>
+  </Volunteer>
 </ArrayOfVolunteer>

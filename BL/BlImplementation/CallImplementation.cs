@@ -290,7 +290,8 @@ internal class CallImplementation : ICall
         filterCalls = CallManager.Filter(openCalls, filter);
 
         if (sortBy == null)
-            return filterCalls.OrderBy(c => c.Id).Select(c => CallManager.ToBOOpenCall(c, volunteer));
+            return filterCalls.OrderBy(c => c.Id).Select(c => CallManager.ToBOOpenCall(c, volunteer))
+                               .Where(c => volunteer.MaximumDistance.HasValue && c.Distance <= volunteer.MaximumDistance.Value);
         else
         {
             sortedCall = sortBy switch
@@ -306,7 +307,8 @@ internal class CallImplementation : ICall
             };
         }
         return sortedCall.Select(c => CallManager.ToBOOpenCall(c, volunteer))
-            .Where(c => c.Distance.Equals(volunteer.MaximumDistance)|| c.Distance<volunteer.MaximumDistance);
+                        .Where(c => volunteer.MaximumDistance.HasValue && c.Distance <= volunteer.MaximumDistance.Value);
+
 
     }
 
