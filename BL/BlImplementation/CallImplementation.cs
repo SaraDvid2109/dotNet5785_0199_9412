@@ -7,11 +7,16 @@ using Helpers;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
-
+/// <summary>
+/// Implementation of the logical service entity interface for call management
+/// </summary>
 internal class CallImplementation : ICall
 {
     private readonly DalApi.IDal _dal = DalApi.Factory.Get;
-
+    /// <summary>
+    /// Retrieves the quantities of calls grouped by their status.
+    /// </summary>
+    /// <returns>An array where each index represents a call status and the value represents the count of calls with that status.</returns>
     public IEnumerable<int> CallQuantities()
     {
         var ListCall = _dal.Call.ReadAll();
@@ -31,7 +36,13 @@ internal class CallImplementation : ICall
         //var groupedCalls = calls.GroupBy(c => CallManager.Status(c.Id));
         //return groupedCalls.ToArray();
     }
-
+    /// <summary>
+    /// Returns a list of calls with optional filtering and sorting.
+    /// </summary>
+    /// <param name="filter">The field to filter the calls by (optional).</param>
+    /// <param name="value">The value to filter the calls with (optional).</param>
+    /// <param name="sort">The field to sort the calls by (optional).</param>
+    /// <returns>A sorted and/or filtered list of calls in the BO.CallInList format.</returns>
     public IEnumerable<BO.CallInList> CallInLists(BO.CallInListFields? filter, object? value, BO.CallInListFields? sort)
     {
         IEnumerable<DO.Call> calls;
@@ -107,7 +118,12 @@ internal class CallImplementation : ICall
         //    //});
         //});
     }
-
+    /// <summary>
+    /// Returns the details of a specific call by its ID.
+    /// </summary>
+    /// <param name="id">The ID of the call </param>
+    /// <returns> the call details.</returns>
+    /// <exception cref="BO.BlDoesNotExistException">Thrown if no call with the specified ID exists.</exception>
     public BO.Call GetCallDetails(int id)
     {
         var doCall = _dal.Call.Read(id);
@@ -141,7 +157,13 @@ internal class CallImplementation : ICall
 
         return boCall;
     }
-
+    /// <summary>
+    /// Updates the details of an existing call.
+    /// </summary>
+    /// <param name="id">The ID of the call to update.</param>
+    /// <param name="call">The updated call details.</param>
+    /// <exception cref="BO.BlFormatException">Thrown if the provided call data is in an invalid format (e.g., missing address).</exception>
+    /// <exception cref="BO.BlDoesNotExistException">Thrown if the call with the specified ID does not exist in the database.</exception>
     public void UpdatingCallDetails(int id, BO.Call call)
     {
         if (call.Address == null)
@@ -173,7 +195,13 @@ internal class CallImplementation : ICall
             throw new BO.BlDoesNotExistException("Error:" + ex);
         }
     }
-
+    /// <summary>
+    /// Deletes a call by its ID if it meets the necessary conditions.
+    /// </summary>
+    /// <param name="id">The ID of the call to be deleted.</param>
+    /// <exception cref="BO.BlDoesNotExistException">Thrown if no call exists with the specified ID.</exception>
+    /// <exception cref="BO.UnauthorizedAccessException">Thrown if the call cannot be deleted due to existing assignments or the call's status.</exception>
+    /// <exception cref="BO.BlNullPropertyException">Thrown if no assignments are found for the call.</exception>
     public void DeleteCall(int id)
     {
         try
@@ -199,6 +227,12 @@ internal class CallImplementation : ICall
             throw new BO.BlDoesNotExistException("Error deleting volunteer:", ex);
         }
     }
+    /// <summary>
+    /// Adds a new call to the system.
+    /// </summary>
+    /// <param name="call">The call object containing the details of the call to be added.</param>
+    /// <exception cref="BO.BlFormatException">Thrown if the address is invalid.</exception>
+    /// <exception cref="BO.BllAlreadyExistException">Thrown if a call with the same ID already exists.</exception>
 
     public void AddCall(BO.Call call)
     {
@@ -227,7 +261,14 @@ internal class CallImplementation : ICall
         catch (DO.DalAlreadyExistException ex)
         { throw new BO.BllAlreadyExistException("Error creating call", ex); }
     }
-
+    /// <summary>
+    /// Returns a list of closed calls handled by a specific volunteer, with optional filtering and sorting.
+    /// </summary>
+    /// <param name="VolunteerId">The ID of the volunteer whose closed calls are being retrieved.</param>
+    /// <param name="filter">The type of the call to filter the closed calls (RegularVehicle, Ambulance, IntensiveCareAmbulance, None).</param>
+    /// <param name="sortBy">The field by which to sort the list of closed calls (e.g., ID, Address, EnterTime, etc.).</param>
+    /// <returns>Sorted and filtered list of closed calls handled by the volunteer.</returns>
+    /// <exception cref="BO.BlDoesNotExistException">Thrown if the volunteer with the specified ID does not exist.</exception>
     public IEnumerable<BO.ClosedCallInList> closedCallsHandledByVolunteer(int VolunteerId, BO.CallType? filter, BO.ClosedCallInListField? sortBy)
     {
         DO.Volunteer? volunteer = _dal.Volunteer.Read(VolunteerId);
@@ -267,7 +308,15 @@ internal class CallImplementation : ICall
         };
         return sortedCall.Select(call => CallManager.ToBOClosedCall(call));
     }
-
+    /// <summary>
+    /// Returns a list of open calls available for selection by a specific volunteer, with optional filtering and sorting.
+    /// </summary>
+    /// <param name="id">The ID of the volunteer whose open calls are being retrieved.</param>
+    /// <param name="filter">The type of the call to filter the open calls (RegularVehicle, Ambulance, IntensiveCareAmbulance, None).</param>
+    /// <param name="sortBy">The field by which to sort the list of open calls (e.g., ID, Address, OpenTime, etc.).</param>
+    /// <returns>Sorted and filtered list of open calls available for selection by the volunteer.</returns>
+    /// <exception cref="BO.BlDoesNotExistException">Thrown if the volunteer with the specified ID does not exist.</exception>
+    /// <exception cref="BlNullPropertyException">Thrown if the volunteer's address is null.</exception>
     public IEnumerable<BO.OpenCallInList> openCallsForSelectionByVolunteer(int id, BO.CallType? filter, BO.OpenCallInListField? sortBy)
     {
         DO.Volunteer? volunteer = _dal.Volunteer.Read(id);
@@ -311,7 +360,13 @@ internal class CallImplementation : ICall
 
 
     }
-
+    /// <summary>
+    /// Updates the end of treatment details for a specific assignment handled by a volunteer.
+    /// </summary>
+    /// <param name="volunteerId">The ID of the volunteer who is updating the assignment.</param>
+    /// <param name="assignmentId">The ID of the assignment to be updated.</param>
+    /// <exception cref="BO.BlDoesNotExistException">Thrown if the volunteer or the assignment with the specified ID does not exist.</exception>
+    /// <exception cref="BO.UnauthorizedAccessException">Thrown if the volunteer does not have permission to update the assignment or if the assignment cannot be updated due to existing end time or treatment type.</exception>
     public void UpdateEndOfTreatmentCall(int volunteerId, int assignmentId)
     {
         DO.Volunteer? volunteer = _dal.Volunteer.Read(volunteerId);
@@ -336,7 +391,13 @@ internal class CallImplementation : ICall
             throw new BO.BlDoesNotExistException("Error attempting to update call handling completion:" + ex);
         }
     }
-
+    /// <summary>
+    /// Cancels the handling of a specific assignment by a volunteer or an administrator.
+    /// </summary>
+    /// <param name="volunteerId">The ID of the volunteer attempting to cancel the assignment.</param>
+    /// <param name="assignmentId">The ID of the assignment to be canceled.</param>
+    /// <exception cref="BO.BlDoesNotExistException">Thrown if the volunteer or the assignment with the specified ID does not exist.</exception>
+    /// <exception cref="BO.UnauthorizedAccessException">Thrown if the volunteer does not have permission to cancel the assignment or if the assignment cannot be canceled due to existing end time or treatment type.</exception>
     public void CancelCallHandling(int volunteerId, int assignmentId)
     {
         DO.Volunteer? volunteer = _dal.Volunteer.Read(volunteerId);
@@ -365,7 +426,13 @@ internal class CallImplementation : ICall
             throw new BO.BlDoesNotExistException("Error trying to update call cancellation :" + ex);
         }
     }
-
+    /// <summary>
+    /// Assigns a specific call to a volunteer for handling.
+    /// </summary>
+    /// <param name="volunteerId">The ID of the volunteer choosing to handle the call.</param>
+    /// <param name="callId">The ID of the call to be handled by the volunteer.</param>
+    /// <exception cref="BO.BlDoesNotExistException">Thrown if the volunteer or the call with the specified ID does not exist.</exception>
+    /// <exception cref="BO.BlOperationNotAllowedException">Thrown if the volunteer is already handling another call or if the call is not available for handling.</exception>
     public void ChooseCallForHandling(int volunteerId, int callId)
     {
         DO.Volunteer? volunteer = _dal.Volunteer.Read(volunteerId);
@@ -380,10 +447,10 @@ internal class CallImplementation : ICall
         {
             var assignmentVolunteer = assignments.FirstOrDefault(a => a.VolunteerId == volunteerId && a.TypeEndOfTreatment == null);
             if (assignmentVolunteer != null)
-                throw new OperationNotAllowedException($"Volunteer with {volunteerId} is already treating a call");
+                throw new BlOperationNotAllowedException($"Volunteer with {volunteerId} is already treating a call");
         }
         if (CallManager.Status(callId) != BO.CallStatus.Open && CallManager.Status(callId) != BO.CallStatus.OpenAtRisk)
-            throw new OperationNotAllowedException($"The call is already being handled by another volunteer.");
+            throw new BlOperationNotAllowedException($"The call is already being handled by another volunteer.");
 
         DO.Assignment assignmentToAdd = new DO.Assignment(0, callId, volunteerId, ClockManager.Now, null, null);
         _dal.Assignment.Create(assignmentToAdd);

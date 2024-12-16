@@ -1,4 +1,5 @@
 ﻿using BlApi;
+using BO;
 using DalApi;
 using System;
 using System.Collections.Generic;
@@ -21,7 +22,7 @@ internal static class Tools
         //}
         //return result;
         if (t == null)
-            throw new ArgumentNullException(nameof(t), "Object cannot be null.");
+            throw new BlNullPropertyException("Object cannot be null.");
 
         var result = new StringBuilder();
         PropertyInfo[] properties = t.GetType().GetProperties();
@@ -80,7 +81,7 @@ internal static class Tools
     {
         if (string.IsNullOrWhiteSpace(address))
         {
-            throw new ArgumentException("Address cannot be null or empty.", nameof(address));
+            throw new BlNullPropertyException("Address cannot be null or empty.");
         }
 
         const string LocationIqApiKey = "pk.a0941b60144dc7fe0b85814d99ab3be7";
@@ -99,12 +100,12 @@ internal static class Tools
             }
             catch (Exception ex)
             {
-                throw new Exception("Error sending request to LocationIQ API.", ex);
+                throw new BlFileLoadCreateException("Error sending request to LocationIQ API.", ex);
             }
 
             if (!response.IsSuccessStatusCode)
             {
-                throw new Exception($"Error fetching data from LocationIQ: {response.ReasonPhrase}");
+                throw new BlFileLoadCreateException($"Error fetching data from LocationIQ: {response.ReasonPhrase}");
             }
 
             string responseContent = response.Content.ReadAsStringAsync().Result;
@@ -114,7 +115,7 @@ internal static class Tools
 
             if (locationData == null || locationData.Count == 0)
             {
-                throw new Exception("No coordinates found for the provided address.");
+                throw new BlDoesNotExistException("No coordinates found for the provided address.");
             }
 
             var coordinates = locationData[0];
@@ -131,7 +132,7 @@ internal static class Tools
             }
             else
             {
-                throw new Exception($"Invalid coordinate data. Latitude valid: {isLatValid}, Longitude valid: {isLonValid}");
+                throw new BlFormatException($"Invalid coordinate data. Latitude valid: {isLatValid}, Longitude valid: {isLonValid}");
             }
         }
     }
@@ -153,12 +154,12 @@ internal static class Tools
     {
         if (vol.Latitude == null || vol.Longitude == null)
         {
-            throw new Exception("Latitude or Longitude is null.");
+            throw new BlNullPropertyException("Latitude or Longitude is null.");
         }
 
         if (string.IsNullOrEmpty(vol.Address))
         {
-            throw new Exception("Address is null or empty.");
+            throw new BlNullPropertyException("Address is null or empty.");
         }
         var (expectedLatitude, expectedLongitude) = Tools.GetAddressCoordinates(vol.Address);
 
@@ -177,7 +178,7 @@ internal static class Tools
     {
         if (string.IsNullOrEmpty(c.Address))
         {
-            throw new Exception("Address is null or empty.");
+            throw new BlNullPropertyException("Address is null or empty.");
         }
         var (expectedLatitude, expectedLongitude) = Tools.GetAddressCoordinates(c.Address);
         const double tolerance = 0.0001;
@@ -235,7 +236,7 @@ internal static class Tools
         {
             if (string.IsNullOrWhiteSpace(address1) || string.IsNullOrWhiteSpace(address2))
             {
-                throw new ArgumentException("Addresses cannot be null or empty.");
+                throw new BlNullPropertyException("Addresses cannot be null or empty.");
             }
 
             switch (distanceType)

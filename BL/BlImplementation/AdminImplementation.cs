@@ -4,7 +4,7 @@ using BO;
 
 namespace BlImplementation;
 /// <summary>
-/// 
+/// Implementation of the logical service entity interface for managing administrative tasks
 /// </summary>
 internal class AdminImplementation : IAdmin
 {
