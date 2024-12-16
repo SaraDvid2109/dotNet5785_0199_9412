@@ -508,7 +508,7 @@ internal class Program
         switch (choice)
         {
             case 0:
-                Console.WriteLine("Enter new Clock value in the format 'dd/MM/yyyy HH:mm':");
+                Console.WriteLine("Enter new Clock value in the format 'dd/MM/YYYY HH:mm':");
                 if (!DateTime.TryParse(Console.ReadLine(), out DateTime clockValue))
                     throw new DalFormatException(" clock Value is invalid!");
                 if (s_dal != null)
@@ -645,11 +645,11 @@ internal class Program
         if (!double.TryParse(Console.ReadLine(), out double longitude))
             throw new DalFormatException("Latitude is invalid!");
 
-        Console.WriteLine("Enter Open Time (format: yyyy-MM-dd HH:mm:ss): ");
+        Console.WriteLine("Enter Open Time (format: YYYY-MM-dd HH:mm:ss): ");
         if (!DateTime.TryParse(Console.ReadLine(), out DateTime openTime))
             throw new DalFormatException("Open Time is invalid!");
 
-        Console.WriteLine("Enter Max Time (format: yyyy-MM-dd HH:mm:ss): ");
+        Console.WriteLine("Enter Max Time (format: YYYY-MM-dd HH:mm:ss): ");
         if (!DateTime.TryParse(Console.ReadLine(), out DateTime maxTime))
             throw new DalFormatException("Open Time is invalid!");
 
@@ -684,11 +684,11 @@ internal class Program
         if (!int.TryParse(Console.ReadLine(), out int volunteerId))
             throw new DalFormatException("Volunteer ID is invalid!");
 
-        Console.WriteLine("Enter Enter Time (format: yyyy-MM-dd HH:mm:ss): ");
+        Console.WriteLine("Enter Enter Time (format: YYYY-MM-dd HH:mm:ss): ");
         if (!DateTime.TryParse(Console.ReadLine(), out DateTime enterTime))
             throw new DalFormatException("Enter Time is invalid!");
 
-        Console.WriteLine("Enter End Time (format: yyyy-MM-dd HH:mm:ss): ");
+        Console.WriteLine("Enter End Time (format: YYYY-MM-dd HH:mm:ss): ");
         if (!DateTime.TryParse(Console.ReadLine(), out DateTime endTime))
             throw new DalFormatException("End Time is invalid!");
 

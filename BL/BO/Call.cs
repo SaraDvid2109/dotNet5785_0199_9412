@@ -1,5 +1,11 @@
 ﻿using Helpers;
 namespace BO;
+
+/// <summary>
+/// Represents a logical data entity for a "call," containing detailed information such as location, 
+/// type of vehicle required, and assignments related to the call.
+/// This entity is used for viewing, adding, updating, or deleting a call.
+/// </summary>
 public class Call
 {
     public int Id { get; init; }

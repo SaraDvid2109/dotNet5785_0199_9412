@@ -6,10 +6,18 @@ using Microsoft.VisualBasic;
 using System.Net;
 namespace Helpers;
 
+/// <summary>
+/// The <c>CallManager</c> class provides helper methods for managing and processing calls.
+/// It interacts with the data access layer (DAL) to perform operations related to calls and assignments.
+/// </summary>
 internal static class CallManager
 {
     private static IDal s_dal = Factory.Get; //stage 4
 
+    /// <summary>
+    /// Performs an integrity check on the provided call, validating its fields and ensuring it meets business logic constraints.
+    /// </summary>
+    /// <param name="call">The call to be validated.</param>
     public static void IntegrityCheck(BO.Call call)
     {
         if (!Enum.IsDefined(typeof(BO.CallType), call.CarTypeToSend))
@@ -57,24 +65,15 @@ internal static class CallManager
         }
     }
 
+    /// <summary>
+    /// Returns the status of a specific call based on its assignments and current time.
+    /// </summary>
+    /// <param name="callId">The ID of the call.</param>
+    /// <returns>The status of the call as an enum value of type <see cref="BO.CallStatus"/>.</returns>
     public static BO.CallStatus Status(int callId) //stage 4
     {
         var call = s_dal.Call.Read(callId);
         var assignments = GetAssignmentCall(callId);
-        //// Log the contents of assignments
-        //Console.WriteLine("Assignments retrieved: ");
-        //if (assignments == null)
-        //{
-        //    Console.WriteLine("Assignments is null");
-        //}
-        //else
-        //{
-        //    Console.WriteLine($"Assignments count: {assignments.Count()}");
-        //    foreach (var assignment in assignments)
-        //    {
-        //        Console.WriteLine($"Assignment ID: {assignment.Id}, CallId: {assignment.CallId}");
-        //    }
-        //}
         if (assignments == null || !assignments.Any())
         {
             if (call!.MaxTime - ClockManager.Now <= s_dal.Config.RiskRange)
@@ -107,6 +106,11 @@ internal static class CallManager
         }
     }
 
+    /// <summary>
+    /// Retrieves all assignments for a given call ID.
+    /// </summary>
+    /// <param name="callId">The ID of the call.</param>
+    /// <returns>A collection of <see cref="DO.Assignment"/> related to the call.</returns>
     public static IEnumerable<DO.Assignment>? GetAssignmentCall(int callId)
     {
         IEnumerable<DO.Assignment>? assignments = s_dal.Assignment.ReadAll();
@@ -118,6 +122,11 @@ internal static class CallManager
         return assignments;
     }
 
+    /// <summary>
+    /// Retrieves the last assignment of a call from a list of assignments.
+    /// </summary>
+    /// <param name="assignments">The list of assignments to search through.</param>
+    /// <returns>The last <see cref="DO.Assignment"/> or null if no assignment exists.</returns>
     public static DO.Assignment? GetLastAssignment(IEnumerable<DO.Assignment>? assignments)
     {
         if (assignments == null)
@@ -125,6 +134,11 @@ internal static class CallManager
         return assignments.OrderByDescending(a => a.TypeEndOfTreatment).FirstOrDefault();
     }
 
+    /// <summary>
+    /// Retrieves the name of the last volunteer assigned to a specific call.
+    /// </summary>
+    /// <param name="call">The call for which the volunteer is being queried.</param>
+    /// <returns>The name of the last volunteer assigned to the call.</returns>
     public static string getLastVolunteer(DO.Call call)
     {
         var assignments = AssignmentManager.findAssignment(call.Id);
@@ -137,6 +151,12 @@ internal static class CallManager
         return volunteer.Name;
     }
 
+    /// <summary>
+    /// Filters a collection of calls by the specified <see cref="BO.CallType"/>.
+    /// </summary>
+    /// <param name="toFilter">The collection of calls to filter.</param>
+    /// <param name="type">The <see cref="BO.CallType"/> to filter by.</param>
+    /// <returns>A filtered collection of calls.</returns>
     public static IEnumerable<DO.Call> Filter(IEnumerable<DO.Call> toFilter, BO.CallType? type)
     {
         if (type != null)
@@ -148,64 +168,13 @@ internal static class CallManager
         return toFilter;
     }
 
-    //public static IEnumerable<BO.CallInList> FilterCallInList(IEnumerable<BO.CallInList> toFilter, object? obj, BO.CallInListFields? filter)
-    //{
-
-    //    var calls = toFilter;
-    //    switch (filter)
-    //    {
-    //        case BO.CallInListFields.Id:
-    //            calls = from call in calls
-    //                    where call.Id == (int?)obj
-    //                    select call;
-    //            break;
-    //        case BO.CallInListFields.CallId:
-    //            calls = from call in calls
-    //                    where call.CallId == (int?)obj
-    //                    select call;
-    //            break;
-    //        case BO.CallInListFields.CallType:
-    //            calls = from call in calls
-    //                    where call.CallType == (BO.CallType?)obj
-    //                    select call;
-    //            break;
-    //        case BO.CallInListFields.OpenTime:
-    //            calls = from call in calls
-    //                    where call.OpenTime == (DateTime?)obj
-    //                    select call;
-    //            break;
-    //        case BO.CallInListFields.TimeLeftToFinish:
-    //            calls = from call in calls
-    //                    where call.TimeLeftToFinish == (TimeSpan?)obj
-    //                    select call;
-    //            break;
-    //        case BO.CallInListFields.LastVolunteer:
-    //            calls = from call in calls
-    //                    where call.LastVolunteer == (string?)obj
-    //                    select call;
-    //            break;
-    //        case BO.CallInListFields.TreatmentTimeLeft:
-    //            calls = from call in calls
-    //                    where call.TreatmentTimeLeft == (TimeSpan?)obj
-    //                    select call;
-    //            break;
-    //        case BO.CallInListFields.Status:
-    //            calls = from call in calls
-    //                    where call.Status == (BO.CallStatus?)obj
-    //                    select call;
-    //            break;
-    //        case BO.CallInListFields.TotalAssignments:
-    //            calls = from call in calls
-    //                    where call.TotalAssignments == (int?)obj
-    //                    select call;
-    //            break;
-    //        default:
-    //            calls = toFilter;
-    //            break;
-    //    }
-    //    return calls;
-    //}
-
+    /// <summary>
+    /// Filters a collection of <see cref="BO.CallInList"/> objects based on the provided filter field and value.
+    /// </summary>
+    /// <param name="toFilter">The collection of <see cref="BO.CallInList"/> to filter.</param>
+    /// <param name="obj">The value to filter by.</param>
+    /// <param name="filter">The field to filter by.</param>
+    /// <returns>A filtered collection of <see cref="BO.CallInList"/>.</returns>
     public static IEnumerable<BO.CallInList> FilterCallInList(IEnumerable<BO.CallInList> toFilter, object? obj, BO.CallInListFields? filter)
     {
         if (filter == null || obj == null)
@@ -284,6 +253,12 @@ internal static class CallManager
 
         return calls;
     }
+
+    /// <summary>
+    /// Converts a <see cref="DO.Call"/> to a <see cref="BO.ClosedCallInList"/> object.
+    /// </summary>
+    /// <param name="call">The call to be converted.</param>
+    /// <returns>A <see cref="BO.ClosedCallInList"/> object representing the call.</returns>
     public static BO.ClosedCallInList ToBOClosedCall(DO.Call call)
     {
         var assignments = s_dal.Assignment.ReadAll();
@@ -307,6 +282,11 @@ internal static class CallManager
         };
     }
 
+    /// <summary>
+    /// Converts a <see cref="DO.Call"/> and a <see cref="DO.Volunteer"/> to a <see cref="BO.OpenCallInList"/> object.
+    /// </summary>
+    /// <param name="call">The call to be converted.</param>
+    /// <param name="volunteer">The volunteer associated with the call.</param>
     public static BO.OpenCallInList ToBOOpenCall(DO.Call call, DO.Volunteer volunteer)
     {
         if (call.Address == null)
@@ -330,6 +310,11 @@ internal static class CallManager
         };
     }
 
+    /// <summary>
+    /// Converts a <see cref="BO.Call"/> object to a <see cref="DO.Call"/> object.
+    /// </summary>
+    /// <param name="call">The <see cref="BO.Call"/> object to be converted.</param>
+    /// <returns>A <see cref="DO.Call"/> object representing the call.</returns>
     public static DO.Call ToDOCall(BO.Call call)
     {
         return  new DO.Call(
@@ -342,66 +327,6 @@ internal static class CallManager
                 call.MaxTime,
                 (DO.CallType)call.CarTypeToSend);
     }
-
-    //public static BO.CallInProgress ToBOCallInProgress(DO.Call call)
-    //{
-    //    return new BO.CallInProgress
-    //    {
-    //        Id = call.Id,
-    //        CallType = (BO.CallType)call.CarTypeToSend,
-    //        Destination = call.Description,
-    //        Address = call.Address,
-    //        OpenTime = call.OpenTime,
-    //        MaxTime = call.MaxTime ?? DateTime.MinValue,
-    //        EnterTime = ClockManager.Now,
-    //        Distance = 0,
-    //        Status = Status(call.Id)
-    //    };
-    //}
-
-    //public static BO.ClosedCallInList ToBOClosedCall(DO.Call call)
-    //{
-    //    var assignments = s_dal.Assignment.ReadAll();
-    //    //need to read assignment of call and volunteer
-    //    return new BO.ClosedCallInList
-    //    {
-    //        Id = call.Id,
-    //        CallType = (BO.CallType)call.CarTypeToSend,
-    //        Address = call.Address,
-    //        OpenTime = call.OpenTime,
-    //        EnterTime = s_dal.Assignment.Read(a => a.CallId == call.Id && (assignments.MaxBy(a => a.Id)).Id == a.Id).EnterTime,
-    //        EndTime
-    //        TypeEndOfTreatment
-
-    //        EntryTimeForTreatment = assignment.EnterTime,
-    //        EndTimeOfTreatment = assignment.EndTime,
-    //        EndOfTreatmentType = (BO.EndType)assignment.EndOfTreatmentType
-    //    };
-    //}
-
-
-
-    //public static IEnumerable<DO.Call> SortClosedCall(IEnumerable<DO.Call> toSort, BO.ClosedCallInListField? sortBy)
-    //{
-    //if (sortBy != null)
-    //{
-    //    toFilter = from call in toFilter
-    //               orderby sortBy
-    //               select call;
-    //}
-    //else
-    //{
-    //    toFilter = from call in toFilter
-    //               orderby call.Id
-    //               select call;
-    //}
-    //return toFilter;
-    //}
-    //public static List<Assignment> GetAssignments(int callId)
-    //{
-    //    return s_dal.Assignment.ReadAll(a => a.CallId == callId ).Select(callId);
-
-    //}
 
     /// <summary>
     /// Method to perform periodic updates on students based on the clock update.
@@ -442,6 +367,12 @@ internal static class CallManager
         }
     }
 
+    /// <summary>
+    /// Converts a <see cref="DO.Call"/> and its assignments to a <see cref="BO.CallInList"/> object.
+    /// </summary>
+    /// <param name="call">The <see cref="DO.Call"/> to be converted.</param>
+    /// <param name="assignments">The assignments related to the call.</param>
+    /// <returns>A <see cref="BO.CallInList"/> object representing the call.</returns>
     public static BO.CallInList ConvertFromDOToCallInList(DO.Call call, IEnumerable<DO.Assignment> assignments)
     {
         var assignmentOfCall = assignments.FirstOrDefault(a => a.CallId == call.Id);

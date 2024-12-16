@@ -10,8 +10,18 @@ using System.Threading.Tasks;
 
 namespace Helpers;
 
+/// <summary>
+/// A utility class containing helper functions for performing common tasks on objects, geographical addresses, and data.
+/// All methods in this class are static, meaning they can be called without needing to instantiate the class.
+/// </summary>
 internal static class Tools 
 {
+    /// <summary>
+    /// Converts an object's properties to a string representation.
+    /// </summary>
+    /// <typeparam name="T">The type of the object.</typeparam>
+    /// <param name="t">The object to convert.</param>
+    /// <returns>A string representation of the object's properties and their values.</returns>
     public static string ToStringProperty<T>(this T t)
     {
         //string result = "";
@@ -77,6 +87,9 @@ internal static class Tools
 
     #region Adress & Latitude & Longitude calculation
 
+    /// <summary>
+    /// Gets the geographic coordinates (latitude and longitude) for a given address.
+    /// </summary>
     public static (double Latitude, double Longitude) GetAddressCoordinates(string address)
     {
         if (string.IsNullOrWhiteSpace(address))
@@ -226,7 +239,6 @@ internal static class Tools
         return degrees * (Math.PI / 180);
     }
 
-
     /// <summary>
     ///class to calculate any type of distance between to entries
     /// </summary>
@@ -328,6 +340,13 @@ internal static class Tools
 
                     // חישוב המרחק בקילומטרים
                     return routeData.Routes[0].Distance / 1000.0;
+                    //if (routeData != null && routeData.Routes != null && routeData.Routes.Length != 0)
+                    //{
+                    //    return routeData.Routes[0].Distance / 1000.0;
+                    //    //throw new Exception("No route data found for the provided addresses.");
+                    //}
+
+                    //throw new Exception("No route data found for the provided addresses.");
                 }
                 catch (HttpRequestException)
                 {

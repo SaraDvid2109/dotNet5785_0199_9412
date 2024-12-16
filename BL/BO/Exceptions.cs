@@ -1,6 +1,10 @@
 ﻿namespace BO;
 
 [Serializable]
+
+/// <summary>
+/// Exception thrown when the business logic entity (Bl) does not exist.
+/// </summary>
 public class BlDoesNotExistException : Exception
 {
     public BlDoesNotExistException(string? message) : base(message) { }
@@ -8,6 +12,9 @@ public class BlDoesNotExistException : Exception
                 : base(message, innerException) { }
 }
 
+/// <summary>
+/// Exception thrown when the business logic entity (Bl) already exists.
+/// </summary>
 public class BllAlreadyExistException : Exception
 {
     public BllAlreadyExistException(string? message) : base(message) { }
@@ -15,6 +22,9 @@ public class BllAlreadyExistException : Exception
                 : base(message, innerException) { }
 }
 
+/// <summary>
+/// Exception thrown when it is impossible to delete a business logic entity (Bl).
+/// </summary>
 public class BllDeletionImpossible : Exception
 {
     public BllDeletionImpossible(string? message) : base(message) { }
@@ -22,6 +32,9 @@ public class BllDeletionImpossible : Exception
                : base(message, innerException) { }
 }
 
+/// <summary>
+/// Exception thrown when a null reference is encountered in the business logic layer.
+/// </summary>
 public class BlNullReferenceException : Exception
 {
     public BlNullReferenceException(string? message) : base(message) { }
@@ -29,6 +42,9 @@ public class BlNullReferenceException : Exception
               : base(message, innerException) { }
 }
 
+/// <summary>
+/// Exception thrown when it is impossible to delete a business logic entity (Bl).
+/// </summary>
 public class BlFormatException : Exception
 {
     public BlFormatException(string? message) : base(message) { }
@@ -36,6 +52,9 @@ public class BlFormatException : Exception
              : base(message, innerException) { }
 }
 
+/// <summary>
+/// Exception thrown when a file loading or creation operation fails in the business logic layer.
+/// </summary>
 public class BlFileLoadCreateException : Exception////////////////////////////////////////////
 {
     public BlFileLoadCreateException(string? message) : base(message) { }
@@ -70,6 +89,9 @@ public class BlOperationNotAllowedException : Exception
     public BlOperationNotAllowedException(string? message) : base(message) { }
 }
 
+/// <summary>
+/// Exception thrown when the data in the business logic layer is invalid.
+/// </summary>
 public class BlInvalidData : Exception
 {
     public BlInvalidData(string? message) : base(message) { }

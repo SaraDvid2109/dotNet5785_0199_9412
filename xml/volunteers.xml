@@ -160,9 +160,9 @@
     <Phone>0557279986</Phone>
     <Mail>roniperetz@gmail.com</Mail>
     <Password>FTKFUvt</Password>
-    <Address>Herzliya St 15, Netanya, 4241102</Address>
-    <Latitude>32.328516</Latitude>
-    <Longitude>34.853196</Longitude>
+    <Address>HaKibbutz HaMeuhad St 6, Kfar Yona</Address>
+    <Latitude>32.317325</Latitude>
+    <Longitude>34.919138</Longitude>
     <Active>false</Active>
     <MaximumDistance>9</MaximumDistance>
     <Role>Volunteer</Role>
@@ -194,7 +194,7 @@
     <Active>false</Active>
     <MaximumDistance>2</MaximumDistance>
     <Role>Volunteer</Role>
-    <Type>Aerial</Type>
+    <Type>Walking</Type>
   </Volunteer>
   <Volunteer>
     <Id>366929118</Id>
@@ -212,13 +212,13 @@
   </Volunteer>
   <Volunteer>
     <Id>213899412</Id>
-    <Name>f2c</Name>
-    <Phone>0504117273</Phone>
+    <Name>bihfc</Name>
+    <Phone>0507437321</Phone>
     <Mail />
-    <Password>123!@#sA</Password>
-    <Address>Ben Yehuda St 100, Tel Aviv, 6347511</Address>
-    <Latitude>32.087066</Latitude>
-    <Longitude>34.773227</Longitude>
+    <Password>12ASfd@#</Password>
+    <Address>Sokolov St 30, Holon, 5831801</Address>
+    <Latitude>32.014046</Latitude>
+    <Longitude>34.772101</Longitude>
     <Active>true</Active>
     <MaximumDistance>8</MaximumDistance>
     <Role>Volunteer</Role>

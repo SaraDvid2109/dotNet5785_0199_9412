@@ -1,5 +1,6 @@
 ﻿namespace BlImplementation;
 using BlApi;
+
 /// <summary>
 /// Implementation of the Bl interface, initialized with instances for managing volunteers, calls, and admin operations.
 /// </summary>

@@ -1,6 +1,10 @@
 ﻿using Helpers;
 namespace BO;
 
+/// <summary>
+/// Represents a logical data entity for a "call in progress," containing detailed information about a call being handled by a volunteer.
+/// This entity is for read-only purposes and is displayed as part of the volunteer's details.
+/// </summary>
 public class CallInProgress
 {
     public int Id { get; init; }

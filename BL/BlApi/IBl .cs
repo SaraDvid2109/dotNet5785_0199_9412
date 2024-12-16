@@ -1,6 +1,6 @@
 ﻿using System.Threading.Tasks;
-
 namespace BlApi;
+
 /// <summary>
 /// A main logical interface that centralizes access to all logical service entities (interfaces)
 /// </summary>

@@ -2,6 +2,10 @@
 
 namespace Helpers;
 
+/// <summary>
+/// The <c>AssignmentManager</c> class provides helper methods for managing assignments.
+/// It interacts with the data access layer (DAL) to retrieve and manage assignment data.
+/// </summary>
 internal static class AssignmentManager
 {
     private static IDal s_dal = Factory.Get; //stage 4

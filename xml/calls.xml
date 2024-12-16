@@ -493,11 +493,21 @@
   <Call>
     <Id>51</Id>
     <Description>ננךהעחדמ</Description>
-    <Address>Ben Yehuda St 100, Tel Aviv, 6347511</Address>
-    <Latitude>32.087066</Latitude>
-    <Longitude>34.773227</Longitude>
+    <Address>HaKibbutz HaMeuhad St 6, Kfar Yona</Address>
+    <Latitude>32.317325</Latitude>
+    <Longitude>34.919138</Longitude>
     <OpenTime>2024-12-16T12:33:12</OpenTime>
     <MaxTime>2024-12-16T12:43:00</MaxTime>
     <CarTypeToSend>Ambulance</CarTypeToSend>
   </Call>
+  <Call>
+	  <Id>52</Id>
+	  <Description>ננךהעחדמ</Description>
+      <Address>HaKibbutz HaMeuhad St 6, Kfar Yona</Address>
+      <Latitude>32.317325</Latitude>
+	  <Longitude>34.919138</Longitude>
+      <OpenTime>2024-12-16T12:33:12</OpenTime>
+      <MaxTime>2024-12-16T12:43:00</MaxTime>
+      <CarTypeToSend>Ambulance</CarTypeToSend>
+ </Call>
 </ArrayOfCall>

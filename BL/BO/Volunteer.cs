@@ -1,5 +1,10 @@
 ﻿using Helpers;
 namespace BO;
+
+/// <summary>
+/// Represents a logical data entity for a volunteer, including personal details
+/// and current active call details if the volunteer is handling one.
+/// </summary>
 public class Volunteer
 {
     public int Id { get; init; }

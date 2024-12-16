@@ -1,4 +1,5 @@
 ﻿namespace BlApi;
+
 /// <summary>
 /// Logical service entity interface for managing administrative tasks
 /// </summary>

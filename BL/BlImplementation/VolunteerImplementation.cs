@@ -7,12 +7,14 @@ using DO;
 using Helpers;
 using System;
 using System.Diagnostics;
+
 /// <summary>
 /// Implementation of the logical service entity interface for volunteer management
 /// </summary>
 internal class volunteerImplementation : IVolunteer
 {
     private readonly DalApi.IDal _dal = DalApi.Factory.Get;
+
     /// <summary>
     /// Authenticates a volunteer by username and password and returns their role.
     /// </summary>
@@ -146,13 +148,13 @@ internal class volunteerImplementation : IVolunteer
     /// <exception cref="BO.UnauthorizedAccessException">Thrown if the user doesn't have permission to update the volunteer's details.</exception>
     public void UpdatingVolunteerDetails(int id, BO.Volunteer volunteer)
     {
-        //if (!string.IsNullOrEmpty(volunteer.Address))
+        if (!string.IsNullOrEmpty(volunteer.Address))
         {
             var coordinate = Helpers.Tools.GetAddressCoordinates(volunteer.Address);
             volunteer.Latitude = coordinate.Latitude;
             volunteer.Longitude = coordinate.Longitude;
         }
-        //Helpers.VolunteerManager.IntegrityCheck(volunteer);
+        Helpers.VolunteerManager.IntegrityCheck(volunteer);
         try
         {
             DO.Volunteer? requester = _dal.Volunteer.Read(id);
@@ -178,19 +180,7 @@ internal class volunteerImplementation : IVolunteer
                 throw new BO.UnauthorizedAccessException("Only managers can update the role.");
             }
             DO.Volunteer volunteerToUpdate= VolunteerManager.ToDOVolunteer(volunteer);
-            //DO.Volunteer volunteerToUpdate = new DO.Volunteer(
-            //    volunteer.Id,
-            //    volunteer.Name ?? string.Empty,
-            //    volunteer.Phone ?? string.Empty,
-            //    volunteer.Mail ?? string.Empty,
-            //    volunteer.Password ?? string.Empty,
-            //    volunteer.Address ?? string.Empty,
-            //    volunteer.Latitude??0,
-            //    volunteer.Longitude??0,
-            //    volunteer.Active,
-            //    volunteer.MaximumDistance,
-            //    (DO.Roles)volunteer.Role,
-            //    (DO.DistanceType)volunteer.Type);
+           
             _dal.Volunteer.Update(volunteerToUpdate);
         }
         catch (DO.DalDoesNotExistException ex)

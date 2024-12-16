@@ -1,6 +1,10 @@
 ﻿using Helpers;
 namespace BO;
 
+/// <summary>
+/// Represents a logical data entity for a "closed call in a list," containing details of completed or canceled calls.
+/// This entity is for read-only purposes and is displayed as part of a list of closed calls.
+/// </summary>
 public class ClosedCallInList
 {
     public int Id { get; init; }

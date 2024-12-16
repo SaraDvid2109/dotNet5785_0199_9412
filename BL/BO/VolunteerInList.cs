@@ -1,6 +1,10 @@
 ﻿using Helpers;
 namespace BO;
 
+/// <summary>
+/// Represents a logical data entity for a "volunteer in a list," containing summary details.
+/// This entity is for read-only purposes and is displayed as part of a list of volunteers.
+/// </summary>
 public class VolunteerInList
 {
     public int Id { get; init; }

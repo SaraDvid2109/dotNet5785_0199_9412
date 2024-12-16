@@ -1,4 +1,5 @@
 ﻿namespace BlApi;
+
 /// <summary>
 /// Factory class for creating an instance of the business logic layer (IBl).
 /// </summary>

@@ -7,12 +7,14 @@ using Helpers;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
+
 /// <summary>
 /// Implementation of the logical service entity interface for call management
 /// </summary>
 internal class CallImplementation : ICall
 {
     private readonly DalApi.IDal _dal = DalApi.Factory.Get;
+
     /// <summary>
     /// Retrieves the quantities of calls grouped by their status.
     /// </summary>

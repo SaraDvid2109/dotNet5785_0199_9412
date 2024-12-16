@@ -4,10 +4,19 @@ using DalApi;
 using DO;
 namespace Helpers;
 
+/// <summary>
+/// The VolunteerManager class handles operations related to volunteers, 
+/// including data validation checks and object conversion between BO and DO models.
+/// </summary>
 internal static class VolunteerManager
 {
     private static IDal s_dal = DalApi.Factory.Get; //stage 4
 
+    /// <summary>
+    /// Performs integrity checks on a volunteer's data. Throws exceptions if any data is invalid.
+    /// </summary>
+    /// <param name="volunteer">The volunteer object to validate.</param>
+    /// <exception cref="BO.BlFormatException">Thrown when any of the volunteer's data is invalid.</exception>
     public static void IntegrityCheck(BO.Volunteer volunteer)
     {
         if (!Enum.IsDefined(typeof(BO.Roles), volunteer.Role))
@@ -74,6 +83,11 @@ internal static class VolunteerManager
         }
     }
 
+    /// <summary>
+    /// Validates if the phone number is a valid Israeli phone number.
+    /// </summary>
+    /// <param name="phoneNumber">The phone number to validate.</param>
+    /// <returns>True if the phone number is valid, otherwise false.</returns>
     public static bool IsValidIsraeliPhoneNumber(string? phoneNumber)
     {
         // אם מספר הטלפון הוא null, הוא אינו תקין
@@ -109,6 +123,11 @@ internal static class VolunteerManager
         return true; // מספר הטלפון תקין
     }
 
+    /// <summary>
+    /// Validates if the ID is a valid Israeli ID number.
+    /// </summary>
+    /// <param name="id">The ID number to validate.</param>
+    /// <returns>True if the ID is valid, otherwise false.</returns>
     public static bool IsValidIsraeliID(string id)
     {
         // בדיקה ראשונית: האם הקלט מורכב מספרות בלבד ובעל אורך חוקי
@@ -135,6 +154,13 @@ internal static class VolunteerManager
         return sum % 10 == 0;
     }
 
+    /// <summary>
+    /// Gets the assignments of a volunteer based on the treatment end type.
+    /// </summary>
+    /// <param name="assignment">The list of assignments to check.</param>
+    /// <param name="v">The volunteer whose assignments are being checked.</param>
+    /// <param name="type">The end type of treatment.</param>
+    /// <returns>Filtered list of assignments based on the volunteer ID and end type.</returns>
     public static IEnumerable<DO.Assignment> GetAssignments(List<DO.Assignment> assignment, DO.Volunteer v, DO.EndType type)
     {
         var assignments = from item in assignment
@@ -143,6 +169,11 @@ internal static class VolunteerManager
        return assignments;
     }
 
+    /// <summary>
+    /// Converts a Business Object (BO) volunteer to a Data Object (DO) volunteer.
+    /// </summary>
+    /// <param name="volunteer">The BO.Volunteer object to convert.</param>
+    /// <returns>A DO.Volunteer object.</returns>
     public static DO.Volunteer ToDOVolunteer(BO.Volunteer volunteer)
     {
         return new DO.Volunteer(
@@ -161,6 +192,12 @@ internal static class VolunteerManager
 
     }
 
+    /// <summary>
+    /// Converts a Data Object (DO) volunteer to a Business Object (BO) volunteer.
+    /// Also calculates the volunteer's call statistics (handled, canceled, expired).
+    /// </summary>
+    /// <param name="volunteer">The DO.Volunteer object to convert.</param>
+    /// <returns>A BO.Volunteer object with additional call statistics.</returns>
     public static BO.Volunteer ToBOVolunteer(DO.Volunteer volunteer)
     {
         List<DO.Assignment> assignments = s_dal.Assignment.ReadAll().ToList();

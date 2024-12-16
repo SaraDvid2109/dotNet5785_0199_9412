@@ -14,8 +14,13 @@ namespace BlTest
     {
         static readonly BlApi.IBl s_bl = BlApi.Factory.Get();
 
+        /// <summary>
+        /// The main function of the program. 
+        /// It displays the main menu to the user and performs actions based on the user's choices.
+        /// </summary>
         static void Main(string[] args)
         {
+            // Displaying the main menu to the user
             while (true)
             {
                 Console.WriteLine("Main Menu:");
@@ -31,6 +36,7 @@ namespace BlTest
                     continue;
                 }
 
+                // Switch statement to handle the user's choice
                 switch (choice)
                 {
                     case 1:
@@ -50,8 +56,12 @@ namespace BlTest
                 }
             }
         }
-     
 
+        /// <summary>
+        /// This function handles the volunteer management process. It displays a menu with options to log in, 
+        /// display a list of volunteers, update volunteer details, delete volunteers, and add new volunteers.
+        /// The function runs in a loop until the user chooses to exit.
+        /// </summary>
         private static void ManageVolunteers()
         {
             while (true)
@@ -77,6 +87,8 @@ namespace BlTest
                     switch (choice)
                     {
                         case 1:
+                            // Handle login functionality for volunteers
+                            // Collects username and password for authentication
                             Console.Write("Enter Username: ");
                             string username = Console.ReadLine()??"";
                             if (string.IsNullOrWhiteSpace(username))
@@ -97,12 +109,9 @@ namespace BlTest
                             }
                             break;
 
-
                         case 2:
+                            // Display the list of volunteers filtered by active status and sorted by a specified field
                             Console.Write("Please enter true or false for active status: ");
-                            //bool.TryParse(Console.ReadLine(), out bool status);
-                            //if (!bool.TryParse(Console.ReadLine(), out bool status))
-                            //    throw new BO.BlFormatException("Invalid input. Please try again.");
                             string? input = Console.ReadLine(); 
                             bool? status = string.IsNullOrWhiteSpace(input)
                                 ? null
@@ -116,22 +125,8 @@ namespace BlTest
                             //throw new BO.BlFormatException("Invalid Field.");
                             try
                             {
-                                //Console.WriteLine($"the field:{sortField} and active:{status}");
                                 var volunteerList = s_bl.volunteer.VolunteerList(status, sortField);
-                                //Console.WriteLine($"the field:{sortField} and active:{status}");
-                                //if (volunteerList != null && volunteerList.Any())
-                                //{
-                                //    foreach (BO.VolunteerInList vol in volunteerList)
-                                //    {
-                                //        Console.WriteLine(vol);
-                                //    }
-                                //}
-                                //else
-                                //{
-                                //    throw new DalFormatException("No volunteers");
-                                //}
-                                //if (volunteerList == null|| !volunteerList.Any())////////////////////////////////
-                                //    throw new BO.BlFormatException("the list is empty");
+                                
                                 foreach (var v in volunteerList)
                                 {
                                     Console.WriteLine(v);
@@ -144,6 +139,7 @@ namespace BlTest
                             break;
 
                         case 3:
+                            // Display detailed information about a volunteer by their ID
                             Console.Write("Enter Volunteer ID: ");
                             if (!int.TryParse(Console.ReadLine(), out int volunteerId))
                                throw new BO.BlFormatException("Invalid input. Please enter a valid numeric ID.");
@@ -157,7 +153,9 @@ namespace BlTest
                                 Console.WriteLine($"Error: {ex.Message}");
                             }
                             break;
+
                         case 4:
+                            // Update details for a volunteer
                             Console.Write("Enter your ID: ");
                             if (!int.TryParse(Console.ReadLine(), out int id))
                                 throw new BO.BlFormatException("ID is invalid!");
@@ -174,6 +172,7 @@ namespace BlTest
                             break;
 
                         case 5:
+                            // Delete a volunteer by their ID
                             Console.Write("Enter Volunteer ID to delete: ");
                             if (!int.TryParse(Console.ReadLine(), out int deleteId))
                                 throw new BO.BlFormatException("Invalid input. Please enter a valid numeric ID.");
@@ -187,7 +186,9 @@ namespace BlTest
                                 Console.WriteLine($"Error: {ex.Message}");
                             }
                             break;
+
                         case 6:
+                            // Add a new volunteer
                             BO.Volunteer volunteer = CreateVolunteer();
                             try
                             {
@@ -201,6 +202,7 @@ namespace BlTest
                             break;
 
                         case 0:
+                            // Exit back to the main menu
                             return;
 
                         default:
@@ -215,6 +217,11 @@ namespace BlTest
             }
         }
 
+        /// <summary>
+        /// This function handles the call management process. It provides a menu with options to list calls, 
+        /// view call details, update, delete, or add calls. Additionally, the user can select or cancel calls, 
+        /// and manage treatment statuses of calls.
+        /// </summary>
         private static void ManageCalls()
         {
             while (true)
@@ -237,8 +244,7 @@ namespace BlTest
                 switch (choice)
                 {
                     case "1":
-
-
+                        // Display calls by status
                         IEnumerable<int> calls;
                         try
                         {
@@ -253,7 +259,9 @@ namespace BlTest
                         
                         //Console.WriteLine(calls);
                         break;
+
                     case "2":
+                        // Display a list of calls with filtering and sorting options
                         try
                         {
                             Console.Write("Enter filter field: 0: Id, 1: CallId, 2: CallType, 3: OpenTime, 4: TimeLeftToFinish, " +
@@ -281,6 +289,7 @@ namespace BlTest
                         break;
 
                     case "3":
+                        // View detailed information about a specific call by its ID
                         try
                         {
                             Console.Write("Enter Call ID: ");
@@ -297,6 +306,7 @@ namespace BlTest
                         break;
 
                     case "4":
+                        // Update call details
                         try
                         {
                             Console.Write("Enter Call ID: ");
@@ -313,6 +323,7 @@ namespace BlTest
                         break;
 
                     case "5":
+                        // Delete a call by its ID
                         try
                         {
                             Console.Write("Enter Call ID to delete: ");
@@ -329,6 +340,7 @@ namespace BlTest
                         break;
 
                     case "6":
+                        // Add a new call
                         try
                         {
                             BO.Call newCall = CreateCall();
@@ -343,10 +355,11 @@ namespace BlTest
                         break;
 
                     case "7":
+                        // List closed calls handled by a specific volunteer
                         try
                         {
                             Console.Write("Enter Volunteer ID: ");
-                            if (!int.TryParse(Console.ReadLine(), out int volunteerIdToclosed))
+                            if (!int.TryParse(Console.ReadLine(), out int volunteerIdToClosed))
                                 throw new BlFormatException("invalid ID");
 
                             Console.Write("Enter call type 0: RegularVehicle, 1: Ambulance, 2: IntensiveCareAmbulance, 3: None (or press Enter for none): ");
@@ -357,7 +370,7 @@ namespace BlTest
                             BO.ClosedCallInListField? sortBy = Enum.TryParse(Console.ReadLine(), true, out BO.ClosedCallInListField sortField)
                                 ? sortField : (BO.ClosedCallInListField?)null;//Can be null
 
-                            var closedCalls = s_bl.call.closedCallsHandledByVolunteer(volunteerIdToclosed, callType, sortBy);
+                            var closedCalls = s_bl.call.closedCallsHandledByVolunteer(volunteerIdToClosed, callType, sortBy);
 
                             foreach (var closedCall in closedCalls)
                             {
@@ -371,6 +384,7 @@ namespace BlTest
                         break;
 
                     case "8":
+                        // List open calls available for a specific volunteer
                         try
                         {
                             Console.Write("Enter Volunteer ID: ");
@@ -400,7 +414,9 @@ namespace BlTest
                             Console.WriteLine($"Error: {ex.Message}");
                         }
                         break;
+
                     case "9":
+                        // End treatment on a call
                         // עדכון סיום טיפול בקריאה
                         Console.WriteLine("Enter volunteer ID:");
                         if (!int.TryParse(Console.ReadLine(), out int volunteerId))
@@ -421,10 +437,10 @@ namespace BlTest
                         }
                         break;
 
-
                     case "10":
+                        // Cancel treatment on a call
                         // ביטול טיפול בקריאה
-                        
+
                         Console.WriteLine("Enter volunteer ID:");
                         if (!int.TryParse(Console.ReadLine(), out int volunteerIdCancel))
                             throw new BlFormatException("invalid ID");
@@ -444,6 +460,7 @@ namespace BlTest
                         break;
 
                     case "11":
+                        // Select a call for treatment
                         // בחירת קריאה לטיפול
                         Console.WriteLine("Enter volunteer ID:");
                         if (!int.TryParse(Console.ReadLine(), out int volunteerIdChoose))
@@ -462,8 +479,8 @@ namespace BlTest
                         }
                         break;
 
-
                     case "0":
+                        // Exit back to the main menu
                         Console.WriteLine("Exiting Call Management.");
                         return;
 
@@ -473,6 +490,12 @@ namespace BlTest
                 }
             }
         }
+
+        /// <summary>
+        /// Manages the administrative tasks, including options to interact with the system's clock, maximum time range, and database.
+        /// The method provides a menu of options for the administrator to get the current clock, forward the clock, set maximum range,
+        /// reset or initialize the database, and more. The method runs in a loop until the user chooses to exit.
+        /// </summary>
         private static void ManageAdmin()
         {
             while (true)
@@ -496,10 +519,13 @@ namespace BlTest
                 switch (choice)
                 {
                     case 1:
-                        DateTime clock= s_bl.Admin.GetClock();
+                        // Retrieves the current system clock
+                        DateTime clock = s_bl.Admin.GetClock();
                         Console.WriteLine(clock);
                         break;
+
                     case 2:
+                        // Advances the clock by one unit based on the user's input
                         Console.Write("Enter Time unit (0-Minute 1-Hour 2-Day 3-Month 4-Year )");
                         if (!Enum.TryParse(Console.ReadLine(), true, out BO.TimeUnit timeUnit))
                             throw new BO.BlFormatException("time unit is invalid!");
@@ -513,11 +539,15 @@ namespace BlTest
                             Console.WriteLine(ex.Message);
                         }
                         break;
+
                     case 3:
+                        // Retrieves the maximum time range of the system
                         TimeSpan maxRange = s_bl.Admin.GetMaxRange();
                         Console.WriteLine($"The current maximum time range is {maxRange}");
                         break;
+
                     case 4:
+                        // Sets the maximum time range for the system
                         Console.Write("Enter the maximum time range (in the format HH:MM:SS):");
                         if (!TimeSpan.TryParse(Console.ReadLine(), out TimeSpan maxRangeToSet))
                             throw new BO.BlFormatException("maximum time range  invalid!");
@@ -525,22 +555,35 @@ namespace BlTest
                         Console.WriteLine($"The maximum time range has been successfully set to {maxRangeToSet}.");
 
                         break;
+
                     case 5:
+                        // Resets the database
                         s_bl.Admin.ResetDB();
                         Console.WriteLine("Database reset.");
                         break;
+
                     case 6:
+                        // Initializes the database
                         s_bl.Admin.InitializeDB();
                         Console.WriteLine("Database initialized.");
                         break;
+
                     case 0:
+                        // Exits to the main menu
                         return;
+
                     default:
                         Console.WriteLine("Invalid choice. Please try again.");
                         break;
                 }
             }
         }
+
+        /// <summary>
+        /// Creates a new volunteer object by prompting the user for various details including ID, name, contact info,
+        /// role, and type. Returns the created volunteer.
+        /// </summary>
+        /// <returns>Newly created BO.Volunteer object</returns>
         private static BO.Volunteer CreateVolunteer()
         {
             Console.Write("Enter Volunteer ID: ");
@@ -614,6 +657,11 @@ namespace BlTest
             return volunteer;
         }
 
+        /// <summary>
+        /// Creates a new call object by prompting the user for various details such as type, description, address, and max time.
+        /// Returns the created call object.
+        /// </summary>
+        /// <returns>Newly created BO.Call object</returns>
         private static BO.Call CreateCall()
         {
            
@@ -641,18 +689,18 @@ namespace BlTest
             //if (!double.TryParse(Console.ReadLine(), out double longitude))
             //    throw new BO.BlFormatException("longitude is invalid!");
 
-            //Console.WriteLine("Enter Open Time (format: yyyy-MM-dd HH:mm:ss): ");
+            //Console.WriteLine("Enter Open Time (format: YYYY-MM-dd HH:mm:ss): ");
             //if (!DateTime.TryParse(Console.ReadLine(), out DateTime openTime))
             //    throw new DalFormatException("Open Time is invalid!");
 
-            Console.WriteLine("Enter Max Time 5 to 30 minutes(format:dd/MM/yyyy HH:mm:ss): ");
+            Console.WriteLine("Enter Max Time 5 to 30 minutes(format:dd/MM/YYYY HH:mm:ss): ");
             if (!DateTime.TryParse(Console.ReadLine(), out DateTime maxTime))
                 throw new DalFormatException("Max Time is invalid!");
 
             //Console.Write("Enter status (Open, Treatment, OpenAtRisk, TreatmentOfRisk, Expired, Close): ");
             //if (!Enum.TryParse(Console.ReadLine(), true, out BO.CallStatus status))
             //    throw new BO.BlFormatException("type is invalid!");
-            List<BO.CallAssignInList>? listAssignmentsForCalls =new List<BO.CallAssignInList>();////////////
+            List<BO.CallAssignInList>? listAssignmentsForCalls = new List<BO.CallAssignInList>();
 
             BO.Call call = new BO.Call
             {

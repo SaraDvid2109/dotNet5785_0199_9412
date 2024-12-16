@@ -3,12 +3,14 @@ using BlApi;
 using BO;
 
 namespace BlImplementation;
+
 /// <summary>
 /// Implementation of the logical service entity interface for managing administrative tasks
 /// </summary>
 internal class AdminImplementation : IAdmin
 {
     private readonly DalApi.IDal _dal = DalApi.Factory.Get;
+
     /// <summary>
     /// Returns the current clock time managed by ClockManager.
     /// </summary>

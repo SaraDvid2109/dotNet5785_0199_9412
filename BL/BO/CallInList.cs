@@ -1,5 +1,11 @@
 ﻿using Helpers;
 namespace BO;
+
+/// <summary>
+/// Represents a logical data entity for a "call in a list," providing summarized details 
+/// for viewing calls in a list of general calls.
+/// This entity is read-only and serves for display purposes.
+/// </summary>
 public class CallInList
 {
     public int? Id { get; init; }
