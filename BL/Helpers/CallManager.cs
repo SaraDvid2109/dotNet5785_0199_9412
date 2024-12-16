@@ -147,61 +147,140 @@ internal static class CallManager
         return toFilter;
     }
 
+    //public static IEnumerable<BO.CallInList> FilterCallInList(IEnumerable<BO.CallInList> toFilter, object? obj, BO.CallInListFields? filter)
+    //{
+
+    //    var calls = toFilter;
+    //    switch (filter)
+    //    {
+    //        case BO.CallInListFields.Id:
+    //            calls = from call in calls
+    //                    where call.Id == (int?)obj
+    //                    select call;
+    //            break;
+    //        case BO.CallInListFields.CallId:
+    //            calls = from call in calls
+    //                    where call.CallId == (int?)obj
+    //                    select call;
+    //            break;
+    //        case BO.CallInListFields.CallType:
+    //            calls = from call in calls
+    //                    where call.CallType == (BO.CallType?)obj
+    //                    select call;
+    //            break;
+    //        case BO.CallInListFields.OpenTime:
+    //            calls = from call in calls
+    //                    where call.OpenTime == (DateTime?)obj
+    //                    select call;
+    //            break;
+    //        case BO.CallInListFields.TimeLeftToFinish:
+    //            calls = from call in calls
+    //                    where call.TimeLeftToFinish == (TimeSpan?)obj
+    //                    select call;
+    //            break;
+    //        case BO.CallInListFields.LastVolunteer:
+    //            calls = from call in calls
+    //                    where call.LastVolunteer == (string?)obj
+    //                    select call;
+    //            break;
+    //        case BO.CallInListFields.TreatmentTimeLeft:
+    //            calls = from call in calls
+    //                    where call.TreatmentTimeLeft == (TimeSpan?)obj
+    //                    select call;
+    //            break;
+    //        case BO.CallInListFields.Status:
+    //            calls = from call in calls
+    //                    where call.Status == (BO.CallStatus?)obj
+    //                    select call;
+    //            break;
+    //        case BO.CallInListFields.TotalAssignments:
+    //            calls = from call in calls
+    //                    where call.TotalAssignments == (int?)obj
+    //                    select call;
+    //            break;
+    //        default:
+    //            calls = toFilter;
+    //            break;
+    //    }
+    //    return calls;
+    //}
+
     public static IEnumerable<BO.CallInList> FilterCallInList(IEnumerable<BO.CallInList> toFilter, object? obj, BO.CallInListFields? filter)
     {
+        if (filter == null || obj == null)
+            return toFilter;
 
         var calls = toFilter;
+        string? value = obj.ToString();
+
         switch (filter)
         {
             case BO.CallInListFields.Id:
+                if (!int.TryParse(value, out int id))
+                    throw new BO.BlInvalidData("Invalid number format");
                 calls = from call in calls
-                        where call.Id == (int?)obj
+                        where call.Id == id
                         select call;
                 break;
             case BO.CallInListFields.CallId:
+                if (!int.TryParse(value, out int callId))
+                    throw new BO.BlInvalidData("Invalid number format");
                 calls = from call in calls
-                        where call.CallId == (int?)obj
+                        where call.CallId == callId
                         select call;
                 break;
             case BO.CallInListFields.CallType:
+                if (!Enum.TryParse(typeof(BO.CallType), value, true, out var type))
+                    throw new BO.BlInvalidData("Invalid CallType value");
                 calls = from call in calls
-                        where call.CallType == (BO.CallType?)obj
+                        where call.CallType == (BO.CallType)type
                         select call;
                 break;
             case BO.CallInListFields.OpenTime:
+                if (!DateTime.TryParse(value, out DateTime openTime))
+                    throw new BO.BlInvalidData("Invalid open time format");
                 calls = from call in calls
-                        where call.OpenTime == (DateTime?)obj
+                        where call.OpenTime == openTime
                         select call;
                 break;
             case BO.CallInListFields.TimeLeftToFinish:
+                if (!TimeSpan.TryParse(value, out TimeSpan timeLeft))
+                    throw new BO.BlInvalidData("Invalid time left format");
                 calls = from call in calls
-                        where call.TimeLeftToFinish == (TimeSpan?)obj
+                        where call.TimeLeftToFinish == timeLeft
                         select call;
                 break;
             case BO.CallInListFields.LastVolunteer:
                 calls = from call in calls
-                        where call.LastVolunteer == (string?)obj
+                        where call.LastVolunteer == value
                         select call;
                 break;
             case BO.CallInListFields.TreatmentTimeLeft:
+                if (!TimeSpan.TryParse(value, out TimeSpan timeOfTreatment))
+                    throw new BO.BlInvalidData("Invalid time of treatment format");
                 calls = from call in calls
-                        where call.TreatmentTimeLeft == (TimeSpan?)obj
+                        where call.TreatmentTimeLeft == timeOfTreatment
                         select call;
                 break;
             case BO.CallInListFields.Status:
+                if (!Enum.TryParse(typeof(BO.CallStatus), value, true, out var callStatus))
+                    throw new BO.BlInvalidData($"Invalid CallStatus value");
                 calls = from call in calls
-                        where call.Status == (BO.CallStatus?)obj
+                        where call.Status == (BO.CallStatus)callStatus
                         select call;
                 break;
             case BO.CallInListFields.TotalAssignments:
+                if (!int.TryParse(value, out int numAssignments))
+                    throw new BO.BlInvalidData("Invalid number format");
                 calls = from call in calls
-                        where call.TotalAssignments == (int?)obj
+                        where call.TotalAssignments == numAssignments
                         select call;
                 break;
             default:
                 calls = toFilter;
                 break;
         }
+
         return calls;
     }
     public static BO.ClosedCallInList ToBOClosedCall(DO.Call call)

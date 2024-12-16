@@ -260,7 +260,7 @@ namespace BlTest
                             BO.CallInListFields? filterField = Enum.TryParse(Console.ReadLine(), true, out BO.CallInListFields filter) ? filter : (BO.CallInListFields?)null;
 
                             Console.Write("Enter filter value (or press Enter for none): ");
-                            object? filterValue = string.IsNullOrWhiteSpace(Console.ReadLine()) ? null : Console.ReadLine();
+                            object? filterValue = Console.ReadLine();
 
                             Console.Write("Enter sort field: 0: Id, 1: CallId, 2: CallType, 3: OpenTime, 4: TimeLeftToFinish, " +
                                 "5: LastVolunteer, 6: TreatmentTimeLeft, 7: Status, 8: TotalAssignments(or press Enter for none): ");

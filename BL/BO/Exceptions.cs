@@ -70,5 +70,14 @@ public class OperationNotAllowedException : Exception
     public OperationNotAllowedException(string? message) : base(message) { }
 }
 
+public class BlInvalidData : Exception
+{
+    public BlInvalidData(string? message) : base(message) { }
+}
+
+
+
+
+
 
 

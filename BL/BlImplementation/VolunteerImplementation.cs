@@ -120,7 +120,13 @@ internal class volunteerImplementation : IVolunteer
 
     public void UpdatingVolunteerDetails(int id, BO.Volunteer volunteer)
     {
-        Helpers.VolunteerManager.IntegrityCheck(volunteer);
+        //if (!string.IsNullOrEmpty(volunteer.Address))
+        {
+            var coordinate = Helpers.Tools.GetAddressCoordinates(volunteer.Address);
+            volunteer.Latitude = coordinate.Latitude;
+            volunteer.Longitude = coordinate.Longitude;
+        }
+        //Helpers.VolunteerManager.IntegrityCheck(volunteer);
         try
         {
             DO.Volunteer? requester = _dal.Volunteer.Read(id);
