@@ -305,7 +305,8 @@ internal class CallImplementation : ICall
                 _ => filterCalls.OrderBy(c => c.Id)
             };
         }
-        return sortedCall.Select(c => CallManager.ToBOOpenCall(c, volunteer));
+        return sortedCall.Select(c => CallManager.ToBOOpenCall(c, volunteer))
+            .Where(c => c.Distance.Equals(volunteer.MaximumDistance)|| c.Distance<volunteer.MaximumDistance);
 
     }
 
