@@ -6,6 +6,7 @@ using BO;
 using DalApi;
 using DO;
 using Helpers;
+using static System.Net.Mime.MediaTypeNames;
 
 namespace BlTest
 {
@@ -385,12 +386,14 @@ namespace BlTest
                             BO.OpenCallInListField? sortBy = Enum.TryParse(Console.ReadLine(), true, out BO.OpenCallInListField sortField) 
                                 ? sortField : (BO.OpenCallInListField?)null;//Can be null
 
-                            var closedCalls = s_bl.call.openCallsForSelectionByVolunteer(volunteerIdToOpen, callType, sortBy);
-
-                            foreach (var closedCall in closedCalls)
+                            var openCalls = s_bl.call.openCallsForSelectionByVolunteer(volunteerIdToOpen, callType, sortBy);
+                            
+                            foreach (var openCall in openCalls)
                             {
-                                Console.WriteLine(closedCall);
+                                Console.WriteLine(openCall);
                             }
+                            if (openCalls == null)
+                                Console.WriteLine("There are no open calls within the specified distance from your location.");
                         }
                         catch (Exception ex)
                         {
@@ -497,13 +500,13 @@ namespace BlTest
                         Console.WriteLine(clock);
                         break;
                     case 2:
-                        Console.Write("Enter Time unit (Minute/Hour/Day/Month/Year )");
+                        Console.Write("Enter Time unit (0-Minute 1-Hour 2-Day 3-Month 4-Year )");
                         if (!Enum.TryParse(Console.ReadLine(), true, out BO.TimeUnit timeUnit))
                             throw new BO.BlFormatException("time unit is invalid!");
                         try
                         {
                             s_bl.Admin.ForwardClock(timeUnit);
-                            Console.Write($"The clock advanced by one unit:{timeUnit}");
+                            Console.Write($"The clock advanced by one:{timeUnit}\n");
                         } 
                         catch (Exception ex)
                         {
@@ -642,7 +645,7 @@ namespace BlTest
             //if (!DateTime.TryParse(Console.ReadLine(), out DateTime openTime))
             //    throw new DalFormatException("Open Time is invalid!");
 
-            Console.WriteLine("Enter Max Time 5 to 30 minutes(format: yyyy-MM-dd HH:mm:ss): ");
+            Console.WriteLine("Enter Max Time 5 to 30 minutes(format:dd/MM/yyyy HH:mm:ss): ");
             if (!DateTime.TryParse(Console.ReadLine(), out DateTime maxTime))
                 throw new DalFormatException("Max Time is invalid!");
 

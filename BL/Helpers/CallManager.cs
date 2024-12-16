@@ -114,6 +114,7 @@ internal static class CallManager
             assignments = from assignment in assignments
                           where assignment.CallId == callId
                           select assignment;
+
         return assignments;
     }
 
