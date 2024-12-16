@@ -7,10 +7,19 @@ using DO;
 using Helpers;
 using System;
 using System.Diagnostics;
-
+/// <summary>
+/// Implementation of the logical service entity interface for volunteer management
+/// </summary>
 internal class volunteerImplementation : IVolunteer
 {
     private readonly DalApi.IDal _dal = DalApi.Factory.Get;
+    /// <summary>
+    /// Authenticates a volunteer by username and password and returns their role.
+    /// </summary>
+    /// <param name="username">The username of the volunteer.</param>
+    /// <param name="password">The password of the volunteer.</param>
+    /// <returns>The role of the volunteer (Role).</returns>
+    /// <exception cref="BO.BlNullPropertyException">Thrown if no volunteer is found with the given username or password.</exception>
     public BO.Roles Login(string username, string password)
     {
         DO.Volunteer? volunteer = _dal.Volunteer.ReadAll(v => v.Name == username && v.Password == password).FirstOrDefault();
@@ -41,7 +50,13 @@ internal class volunteerImplementation : IVolunteer
         };
         return boVolunteer.Role;
     }
-
+    /// <summary>
+    /// Filters and sorts the volunteers based on the given activity status and sorting field, then returns the filtered and sorted list.
+    /// </summary>
+    /// <param name="active">Filter for active/inactive volunteers (null for all).</param>
+    /// <param name="field">The field by which to sort the volunteers.</param>
+    /// <returns>A filtered and sorted list of volunteers.</returns>
+    /// <exception cref="BO.BlNullPropertyException">Thrown if the volunteer data source is empty or null.</exception>
     public IEnumerable<BO.VolunteerInList> VolunteerList(bool? active, BO.VolunteerField? field)
     {
         IEnumerable<DO.Volunteer> volunteers;
@@ -105,7 +120,12 @@ internal class volunteerImplementation : IVolunteer
         //    CallHandledId = 0
         //});
     }
-
+    /// <summary>
+    /// Returns the details of a volunteer by their ID.
+    /// </summary>
+    /// <param name="id">The ID of the volunteer.</param>
+    /// <returns>The volunteer details.</returns>
+    /// <exception cref="BO.BlDoesNotExistException">Thrown if no volunteer is found with the given ID.</exception>
     public BO.Volunteer GetVolunteerDetails(int id)
     {
         DO.Volunteer? volunteer = _dal.Volunteer.Read(id);
@@ -117,7 +137,13 @@ internal class volunteerImplementation : IVolunteer
         return BoVolunteer;
 
     }
-
+    /// <summary>
+    /// Updates the details of a volunteer by their ID.
+    /// </summary>
+    /// <param name="id">The ID of the volunteer to update.</param>
+    /// <param name="volunteer">The updated volunteer information.</param>
+    /// <exception cref="BO.BlDoesNotExistException">Thrown if no volunteer is found with the given ID or if the volunteer to update doesn't exist.</exception>
+    /// <exception cref="BO.UnauthorizedAccessException">Thrown if the user doesn't have permission to update the volunteer's details.</exception>
     public void UpdatingVolunteerDetails(int id, BO.Volunteer volunteer)
     {
         //if (!string.IsNullOrEmpty(volunteer.Address))
@@ -173,7 +199,12 @@ internal class volunteerImplementation : IVolunteer
             throw new BO.BlDoesNotExistException("Error updating volunteer details: " + ex.Message);
         }
     }
-
+    /// <summary>
+    /// Deletes a volunteer by their ID if the volunteer is inactive.
+    /// </summary>
+    /// <param name="id">The ID of the volunteer to delete.</param>
+    /// <exception cref="BO.BlDoesNotExistException">Thrown if no volunteer is found with the given ID.</exception>
+    /// <exception cref="BO.OperationNotAllowedException">Thrown if the volunteer is active and cannot be deleted.</exception>
     public void DeleteVolunteer(int id)
     {
         try
@@ -183,14 +214,18 @@ internal class volunteerImplementation : IVolunteer
             if (!volunteerToDelete.Active)
                 _dal.Volunteer.Delete(id);
             else
-                throw new BO.OperationNotAllowedException("The volunteer cannot be deleted.");
+                throw new BO.BlOperationNotAllowedException("The volunteer cannot be deleted.");
         }
         catch (DO.DalDoesNotExistException ex)
         {
             throw new BO.BlDoesNotExistException("Error deleting volunteer:" + ex.Message);
         }
     }
-
+    /// <summary>
+    /// Adds a new volunteer to the system.
+    /// </summary>
+    /// <param name="volunteer">The volunteer details to be added.</param>
+    /// <exception cref="BO.BllAlreadyExistException">Thrown if a volunteer with the same ID already exists.</exception>
     public void AddVolunteer(BO.Volunteer volunteer)
     {
 

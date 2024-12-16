@@ -65,9 +65,9 @@ public class UnauthorizedAccessException: Exception
 /// <summary>
 /// Exception thrown when the operation is not allowed due to business rules or system constraints.
 /// </summary>
-public class OperationNotAllowedException : Exception
+public class BlOperationNotAllowedException : Exception
 {
-    public OperationNotAllowedException(string? message) : base(message) { }
+    public BlOperationNotAllowedException(string? message) : base(message) { }
 }
 
 public class BlInvalidData : Exception
