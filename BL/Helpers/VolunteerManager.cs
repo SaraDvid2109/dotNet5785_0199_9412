@@ -12,6 +12,8 @@ internal static class VolunteerManager
 {
     private static IDal s_dal = DalApi.Factory.Get; //stage 4
 
+    internal static ObserverManager Observers = new(); //stage 5 
+
     /// <summary>
     /// Performs integrity checks on a volunteer's data. Throws exceptions if any data is invalid.
     /// </summary>
@@ -250,7 +252,6 @@ internal static class VolunteerManager
         };
 
     }
-
 
     //internal static BO.Volunteer ToDOVolunteer(DO.Volunteer? volunteer)
     //{

@@ -3,7 +3,7 @@
 /// <summary>
 /// Logical service entity interface for managing volunteers.
 /// </summary>
-public interface IVolunteer
+public interface IVolunteer : IObservable //stage 5
 {
     /// <summary>
     /// Authenticates a volunteer by username and password and returns their role.

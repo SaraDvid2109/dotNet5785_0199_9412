@@ -33,4 +33,11 @@ public interface IAdmin
     /// Initializes the database  and synchronizes the system clock.
     /// </summary>
     void InitializeDB();
+
+    #region Stage 5
+    void AddConfigObserver(Action configObserver);
+    void RemoveConfigObserver(Action configObserver);
+    void AddClockObserver(Action clockObserver);
+    void RemoveClockObserver(Action clockObserver);
+    #endregion Stage 5
 }

@@ -1,6 +1,6 @@
-﻿using BL.Helpers;
-using BlApi;
+﻿using BlApi;
 using BO;
+using Helpers;
 
 namespace BlImplementation;
 
@@ -17,7 +17,7 @@ internal class AdminImplementation : IAdmin
     /// <returns>The current  value representing the system's configured clock time.</returns>
     public DateTime GetClock()
     {
-        return ClockManager.Now;
+        return AdminManager.Now;
     }
     /// <summary>
     /// Advances the system clock by the specified time unit.
@@ -26,13 +26,13 @@ internal class AdminImplementation : IAdmin
     /// <exception cref="BO.BlFormatException">Thrown when an unhandled time unit is provided.</exception>
     public void ForwardClock(TimeUnit unit)
     {
-        ClockManager.UpdateClock(unit switch
+        AdminManager.UpdateClock(unit switch
         {
-            BO.TimeUnit.Minute => ClockManager.Now.AddMinutes(1),
-            BO.TimeUnit.Hour => ClockManager.Now.AddHours(1),
-            BO.TimeUnit.Day => ClockManager.Now.AddDays(1),
-            BO.TimeUnit.Month => ClockManager.Now.AddMonths(1),
-            BO.TimeUnit.Year => ClockManager.Now.AddYears(1),
+            BO.TimeUnit.Minute => AdminManager.Now.AddMinutes(1),
+            BO.TimeUnit.Hour => AdminManager.Now.AddHours(1),
+            BO.TimeUnit.Day => AdminManager.Now.AddDays(1),
+            BO.TimeUnit.Month => AdminManager.Now.AddMonths(1),
+            BO.TimeUnit.Year => AdminManager.Now.AddYears(1),
             _ => throw new BO.BlFormatException($"Unhandled time unit:{unit}")
         });
 
@@ -41,26 +41,20 @@ internal class AdminImplementation : IAdmin
     /// Returns the maximum range for risk calculations.
     /// </summary>
     /// <returns>Returns a value representing the configured maximum risk range.</returns>
-    public TimeSpan GetMaxRange()
-    {
-        return _dal.Config.RiskRange;
-    }
+    public TimeSpan GetMaxRange() => AdminManager.RiskRange;
     /// <summary>
     /// Sets the maximum range for risk calculations.
     /// </summary>
     /// <param name="range">The  value to set as the maximum risk range.</param>
-    public void SetMaxRange(TimeSpan range)
-    {
-        _dal.Config.RiskRange = range;
-    }
+    public void SetMaxRange(TimeSpan range) => AdminManager.RiskRange = range;
     /// <summary>
     /// Resets the database to its initial state and synchronizes the system clock.
     /// </summary>
     public void ResetDB()
     {
         _dal.ResetDB();
-        ClockManager.UpdateClock(ClockManager.Now);
-
+        AdminManager.UpdateClock(AdminManager.Now);
+        AdminManager.RiskRange = AdminManager.RiskRange;
     }
     /// <summary>
     /// Initializes the database  and synchronizes the system clock.
@@ -68,7 +62,18 @@ internal class AdminImplementation : IAdmin
     public void InitializeDB()
     {
         DalTest.Initialization.Do();
-        ClockManager.UpdateClock(ClockManager.Now);
-
+        AdminManager.UpdateClock(AdminManager.Now);
+        AdminManager.RiskRange = AdminManager.RiskRange;
     }
+
+    #region Stage 5
+    public void AddClockObserver(Action clockObserver) =>
+    AdminManager.ClockUpdatedObservers += clockObserver;
+    public void RemoveClockObserver(Action clockObserver) =>
+    AdminManager.ClockUpdatedObservers -= clockObserver;
+    public void AddConfigObserver(Action configObserver) =>
+   AdminManager.ConfigUpdatedObservers += configObserver;
+    public void RemoveConfigObserver(Action configObserver) =>
+    AdminManager.ConfigUpdatedObservers -= configObserver;
+    #endregion Stage 5
 }

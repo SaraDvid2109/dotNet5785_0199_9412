@@ -1,6 +1,4 @@
 ﻿namespace BlImplementation;
-
-using BL.Helpers;
 using BlApi;
 using BO;
 using DO;
@@ -182,6 +180,10 @@ internal class volunteerImplementation : IVolunteer
             DO.Volunteer volunteerToUpdate= VolunteerManager.ToDOVolunteer(volunteer);
            
             _dal.Volunteer.Update(volunteerToUpdate);
+
+            VolunteerManager.Observers.NotifyItemUpdated(volunteerToUpdate.Id);  //stage 5
+            VolunteerManager.Observers.NotifyListUpdated();  //stage 5
+
         }
         catch (DO.DalDoesNotExistException ex)
         {
@@ -202,7 +204,10 @@ internal class volunteerImplementation : IVolunteer
             DO.Volunteer? volunteerToDelete = _dal.Volunteer.Read(id);
             if (volunteerToDelete == null) throw new BO.BlDoesNotExistException("There is no volunteer with this ID.");
             if (!volunteerToDelete.Active)
+            {
                 _dal.Volunteer.Delete(id);
+                VolunteerManager.Observers.NotifyListUpdated();  //stage 5
+            }
             else
                 throw new BO.BlOperationNotAllowedException("The volunteer cannot be deleted.");
         }
@@ -231,10 +236,21 @@ internal class volunteerImplementation : IVolunteer
             DO.Volunteer volunteerToAdd = VolunteerManager.ToDOVolunteer(volunteer);
 
             _dal.Volunteer.Create(volunteerToAdd);
+            VolunteerManager.Observers.NotifyListUpdated();  //stage 5
         }
         catch (DO.DalAlreadyExistException ex) { throw new BO.BllAlreadyExistException(ex.Message); }
     }
 
+    #region Stage 5
+    public void AddObserver(Action listObserver) =>
+    VolunteerManager.Observers.AddListObserver(listObserver); //stage 5
+    public void AddObserver(int id, Action observer) =>
+    VolunteerManager.Observers.AddObserver(id, observer); //stage 5
+    public void RemoveObserver(Action listObserver) =>
+    VolunteerManager.Observers.RemoveListObserver(listObserver); //stage 5
+    public void RemoveObserver(int id, Action observer) =>
+    VolunteerManager.Observers.RemoveObserver(id, observer); //stage 5
+    #endregion Stage 5
+
 }
 
-   

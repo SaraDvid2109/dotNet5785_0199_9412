@@ -1,5 +1,4 @@
 ﻿namespace BlImplementation;
-using BL.Helpers;
 using BlApi;
 using BO;
 using DO;
@@ -191,6 +190,9 @@ internal class CallImplementation : ICall
            (DO.CallType)call.CarTypeToSend);
 
             _dal.Call.Update(DOCall);
+            CallManager.Observers.NotifyItemUpdated(DOCall.Id);  //stage 5
+            CallManager.Observers.NotifyListUpdated();  //stage 5
+
         }
         catch (DO.DalDoesNotExistException ex)
         {
@@ -217,7 +219,10 @@ internal class CallImplementation : ICall
                                         where assignment.CallId == id
                                         select assignment;
                 if (!assignmentsOfCall.Any() && CallManager.Status(id) == BO.CallStatus.Open)
+                {
                     _dal.Call.Delete(id);
+                    CallManager.Observers.NotifyListUpdated();  //stage 5
+                }
                 else
                     throw new BO.UnauthorizedAccessException("You cannot delete this call.");
             }
@@ -235,7 +240,6 @@ internal class CallImplementation : ICall
     /// <param name="call">The call object containing the details of the call to be added.</param>
     /// <exception cref="BO.BlFormatException">Thrown if the address is invalid.</exception>
     /// <exception cref="BO.BllAlreadyExistException">Thrown if a call with the same ID already exists.</exception>
-
     public void AddCall(BO.Call call)
     {
         if (call.Address == null)
@@ -259,6 +263,7 @@ internal class CallImplementation : ICall
                 (DO.CallType)call.CarTypeToSend);
 
             _dal.Call.Create(callToAdd);
+            CallManager.Observers.NotifyListUpdated();  //stage 5
         }
         catch (DO.DalAlreadyExistException ex)
         { throw new BO.BllAlreadyExistException("Error creating call", ex); }
@@ -383,10 +388,13 @@ internal class CallImplementation : ICall
         if (assignment.TypeEndOfTreatment!= null/*||*/ && assignment.EndTime!= null)
             throw new BO.UnauthorizedAccessException("You cannot update this assignment");
 
-        DO.Assignment assignmentToUpdate = assignment with { EndTime = ClockManager.Now, TypeEndOfTreatment = DO.EndType.Treated };
+        DO.Assignment assignmentToUpdate = assignment with { EndTime = AdminManager.Now, TypeEndOfTreatment = DO.EndType.Treated };
         try
         {
             _dal.Assignment.Update(assignmentToUpdate);
+            AssignmentManager.Observers.NotifyItemUpdated(assignmentToUpdate.Id);  //stage 5
+            AssignmentManager.Observers.NotifyListUpdated();  //stage 5
+
         }
         catch (DO.DalDoesNotExistException ex)
         {
@@ -416,12 +424,14 @@ internal class CallImplementation : ICall
 
         DO.Assignment assignmentToUpdate;
         if (assignment.VolunteerId == volunteerId)
-            assignmentToUpdate = assignment with { EndTime = ClockManager.Now, TypeEndOfTreatment = DO.EndType.SelfCancellation };
+            assignmentToUpdate = assignment with { EndTime = AdminManager.Now, TypeEndOfTreatment = DO.EndType.SelfCancellation };
         else
-            assignmentToUpdate = assignment with { EndTime = ClockManager.Now, TypeEndOfTreatment = DO.EndType.AdminCancellation };
+            assignmentToUpdate = assignment with { EndTime = AdminManager.Now, TypeEndOfTreatment = DO.EndType.AdminCancellation };
         try
         {
             _dal.Assignment.Update(assignmentToUpdate);
+            AssignmentManager.Observers.NotifyItemUpdated(assignmentToUpdate.Id);  //stage 5
+            AssignmentManager.Observers.NotifyListUpdated();  //stage 5
         }
         catch (DO.DalDoesNotExistException ex)
         {
@@ -454,8 +464,21 @@ internal class CallImplementation : ICall
         if (CallManager.Status(callId) != BO.CallStatus.Open && CallManager.Status(callId) != BO.CallStatus.OpenAtRisk)
             throw new BlOperationNotAllowedException($"The call is already being handled by another volunteer.");
 
-        DO.Assignment assignmentToAdd = new DO.Assignment(0, callId, volunteerId, ClockManager.Now, null, null);
+        DO.Assignment assignmentToAdd = new DO.Assignment(0, callId, volunteerId, AdminManager.Now, null, null);
         _dal.Assignment.Create(assignmentToAdd);
+        AssignmentManager.Observers.NotifyListUpdated();  //stage 5
     }
+
+    #region Stage 5
+    public void AddObserver(Action listObserver) =>
+    CallManager.Observers.AddListObserver(listObserver); //stage 5
+    public void AddObserver(int id, Action observer) =>
+    CallManager.Observers.AddObserver(id, observer); //stage 5
+    public void RemoveObserver(Action listObserver) =>
+    CallManager.Observers.RemoveListObserver(listObserver); //stage 5
+    public void RemoveObserver(int id, Action observer) =>
+    CallManager.Observers.RemoveObserver(id, observer); //stage 5
+    #endregion Stage 5
+
 
 }

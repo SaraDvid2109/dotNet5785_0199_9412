@@ -3,7 +3,7 @@
 /// <summary>
 /// Logical service entity interface for managing calls.
 /// </summary>
-public interface ICall
+public interface ICall : IObservable //stage 5 
 {
     /// <summary>
     /// Retrieves the quantities of calls grouped by their status.

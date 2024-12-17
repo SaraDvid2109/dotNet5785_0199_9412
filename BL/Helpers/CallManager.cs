@@ -1,5 +1,4 @@
-﻿using BL.Helpers;
-using BO;
+﻿using BO;
 using DalApi;
 using DO;
 using Microsoft.VisualBasic;
@@ -13,6 +12,8 @@ namespace Helpers;
 internal static class CallManager
 {
     private static IDal s_dal = Factory.Get; //stage 4
+
+    internal static ObserverManager Observers = new(); //stage 5 
 
     /// <summary>
     /// Performs an integrity check on the provided call, validating its fields and ensuring it meets business logic constraints.
@@ -76,7 +77,7 @@ internal static class CallManager
         var assignments = GetAssignmentCall(callId);
         if (assignments == null || !assignments.Any())
         {
-            if (call!.MaxTime - ClockManager.Now <= s_dal.Config.RiskRange)
+            if (call!.MaxTime - AdminManager.Now <= s_dal.Config.RiskRange)
                 return BO.CallStatus.OpenAtRisk;
             else
                 return BO.CallStatus.Open;
@@ -91,7 +92,7 @@ internal static class CallManager
             }
             if (assignment.TypeEndOfTreatment == null)
             {
-                if (call!.MaxTime - ClockManager.Now <= s_dal.Config.RiskRange)
+                if (call!.MaxTime - AdminManager.Now <= s_dal.Config.RiskRange)
                     return BO.CallStatus.TreatmentOfRisk;
                 else
                     return BO.CallStatus.Treatment;
@@ -339,11 +340,11 @@ internal static class CallManager
         var Calls = s_dal.Call.ReadAll();
         var noAssignments = from Call in Calls
                             let assignments = GetAssignmentCall(Call.Id)
-                            where ClockManager.Now >= Call.MaxTime && assignments == null
+                            where AdminManager.Now >= Call.MaxTime && assignments == null
                             select Call;
         var haveAssignments = from Call in Calls
                               let assignments = GetAssignmentCall(Call.Id)
-                              where ClockManager.Now >= Call.MaxTime && assignments != null
+                              where AdminManager.Now >= Call.MaxTime && assignments != null
                               let lastAssignment = GetLastAssignment(assignments)
                               where lastAssignment.EndTime == null
                               select Call;
@@ -357,14 +358,17 @@ internal static class CallManager
                 EndTime = DateTime.Now,
                 TypeEndOfTreatment = DO.EndType.ExpiredCancellation
             });
+            Observers.NotifyListUpdated(); //stage 5
         }
 
         var convertHaveAssignments = haveAssignments.Select(c => GetLastAssignment(GetAssignmentCall(c.Id)!)!);
-        var updatedHaveAssignments = convertHaveAssignments.Select(a => a = a with { EndTime = ClockManager.Now, TypeEndOfTreatment = DO.EndType.ExpiredCancellation });
+        var updatedHaveAssignments = convertHaveAssignments.Select(a => a = a with { EndTime = AdminManager.Now, TypeEndOfTreatment = DO.EndType.ExpiredCancellation });
         foreach (var assignment in updatedHaveAssignments)
         {
             s_dal.Assignment.Update(assignment);
+            Observers.NotifyItemUpdated(assignment.Id); //stage 5
         }
+        Observers.NotifyListUpdated(); //stage 5
     }
 
     /// <summary>
@@ -404,7 +408,7 @@ internal static class CallManager
             CallId = call.Id,
             CallType = (BO.CallType)call.CarTypeToSend,
             OpenTime = call.OpenTime,
-            TimeLeftToFinish = ClockManager.Now - call.MaxTime> TimeSpan.Zero ? ClockManager.Now - call.MaxTime: TimeSpan.Zero,
+            TimeLeftToFinish = AdminManager.Now - call.MaxTime> TimeSpan.Zero ? AdminManager.Now - call.MaxTime: TimeSpan.Zero,
             LastVolunteer = volunteer!.Name,
             TreatmentTimeLeft = time,
             Status = Status(call.Id),
