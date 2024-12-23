@@ -5,8 +5,21 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:PL"
         mc:Ignorable="d"
-        Title="MainWindow" Height="450" Width="800">
-    
+        Title="MainWindow" Height="450" Width="800"
+        DataContext="{Binding RelativeSource={RelativeSource Mode=Self}}" Loaded="InitializeMainWindow" Closed="CleanupOnWindowClose" >
+    <Window.Resources>
+        <Style TargetType="Button">
+            <Setter Property="Background" Value="DeepPink"/>
+            <Setter Property="Foreground" Value="White"/>
+            <Setter Property="FontWeight" Value="Bold"/>
+        </Style>
+        <Style TargetType="Label">
+            <Setter Property="Foreground" Value="#0072CE"/>
+            <Setter Property="FontSize" Value="16"/>
+            <Setter Property="FontWeight" Value="Bold"/>
+        </Style>
+    </Window.Resources>
+
     <Grid>
         <!-- Define rows and columns in the main Grid -->
         <Grid.RowDefinitions>
@@ -30,15 +43,15 @@
             </Grid.ColumnDefinitions>
 
             <!-- Label to display the system clock value -->
-            <Label Grid.Column="0" Content="00:00:00" FontSize="16" VerticalAlignment="Center" />
+            <Label Grid.Column="0" Content="{Binding CurrentTime}" Width="200" FontWeight="Bold" FontSize="20" VerticalAlignment="Center"/>
 
             <!-- Buttons to advance the system clock -->
-            <StackPanel Grid.Column="1" Orientation="Horizontal" HorizontalAlignment="Left" Margin="10,0,0,0">
-                <Button Content="Advance by Minute" Margin="5" Width="Auto"  />
-                <Button Content="Advance by Hour" Margin="5" Width="Auto" />
-                <Button Content="Advance by Day" Margin="5" Width="Auto" />
-                <Button Content="Advance by Month" Margin="5" Width="Auto" />
-                <Button Content="Advance by Year" Margin="5" Width="Auto" />
+            <StackPanel Grid.Column="1" Orientation="Horizontal" HorizontalAlignment="Left" Margin="5,0,0,0">
+                <Button Content="Advance by Minute" Margin="5" Width="Auto" Click="btnAddOneMinute_Click" />
+                <Button Content="Advance by Hour" Margin="5" Width="Auto" Click="btnAddOneHour_Click" />
+                <Button Content="Advance by Day" Margin="5" Width="Auto" Click="btnAddOneDay_Click" />
+                <Button Content="Advance by Month" Margin="5" Width="Auto" Click="btnAddOneMonth_Click" />
+                <Button Content="Advance by Year" Margin="5" Width="Auto" Click="btnAddOneYear_Click" />
             </StackPanel>
         </Grid>
 
@@ -53,18 +66,21 @@
 
             <!-- Edit configuration variables -->
             <StackPanel Grid.Row="0" Orientation="Horizontal" VerticalAlignment="Center">
+                <!-- Label for Risk Range -->
+                <Label Content="Risk Range:" VerticalAlignment="Center" Margin="0,0,10,0"/>
                 <!-- TextBox to edit a configuration variable -->
-                <TextBox Width="200" Margin="5" />
+                <TextBox Text="{Binding MaxRiskRange}" Width="100" Margin="5" />
                 <!-- Button to update the configuration variable in the database -->
-                <Button Content="Update" Margin="5" Width="100" />
+                <Button Content="Update" Margin="5" Width="100" Click="btUpdateRiskRange_Click"/>
             </StackPanel>
 
             <!-- Buttons for database management -->
             <StackPanel Grid.Row="1" Orientation="Horizontal" VerticalAlignment="Center" Margin="0,10,0,0">
-                <Button Content="View List" Margin="5" Width="150" />
-                <Button Content="Initialize Database" Margin="5" Width="150" />
-                <Button Content="Reset Database" Margin="5" Width="150" />
+                <!--To open the volunteer list view screen-->
+                <Button Content="Handle Volunteers" Margin="5" Width="150" Click="btnVolunteers_Click"/>
+                <Button Content="Initialize Database" Margin="5" Width="150" Click="DatabaseInitialization_Click"/>
+                <Button Content="Reset Database" Margin="5" Width="150" Click="DatabaseReset_Click"/>
             </StackPanel>
-            </Grid>
         </Grid>
+    </Grid>
 </Window>
