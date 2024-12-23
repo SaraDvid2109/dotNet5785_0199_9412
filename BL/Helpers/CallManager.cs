@@ -346,7 +346,7 @@ internal static class CallManager
                               let assignments = GetAssignmentCall(Call.Id)
                               where AdminManager.Now >= Call.MaxTime && assignments != null
                               let lastAssignment = GetLastAssignment(assignments)
-                              where lastAssignment.EndTime == null
+                              where lastAssignment != null && lastAssignment.EndTime == null
                               select Call;
 
         foreach (var Call in noAssignments)
