@@ -77,57 +77,57 @@ internal static class AdminManager //stage 4
     }
     #endregion Stage 4
 
-    //#region Stage 7 base
-    //internal static readonly object blMutex = new();
-    //private static Thread? s_thread;
-    //private static int s_interval { get; set; } = 1; //in minutes by second    
-    //private static volatile bool s_stop = false;
-    //private static readonly object mutex = new();
+    #region Stage 7 base
+    internal static readonly object blMutex = new();
+    private static Thread? s_thread;
+    private static int s_interval { get; set; } = 1; //in minutes by second    
+    private static volatile bool s_stop = false;
+    private static readonly object mutex = new();
 
-    //internal static void Start(int interval)
-    //{
-    //    lock (mutex)
-    //        if (s_thread == null)
-    //        {
-    //            s_interval = interval;
-    //            s_stop = false;
-    //            s_thread = new Thread(clockRunner);
-    //            s_thread.Start();
-    //        }
-    //}
+    internal static void Start(int interval)
+    {
+        lock (mutex)
+            if (s_thread == null)
+            {
+                s_interval = interval;
+                s_stop = false;
+                s_thread = new Thread(clockRunner);
+                s_thread.Start();
+            }
+    }
 
-    //internal static void Stop()
-    //{
-    //    lock (mutex)
-    //        if (s_thread != null)
-    //        {
-    //            s_stop = true;
-    //            s_thread?.Interrupt();
-    //            s_thread = null;
-    //        }
-    //}
+    internal static void Stop()
+    {
+        lock (mutex)
+            if (s_thread != null)
+            {
+                s_stop = true;
+                s_thread?.Interrupt();
+                s_thread = null;
+            }
+    }
 
-    //private static void clockRunner()
-    //{
-    //    while (!s_stop)
-    //    {
-    //        UpdateClock(Now.AddMinutes(s_interval));
+    private static void clockRunner()
+    {
+        while (!s_stop)
+        {
+            UpdateClock(Now.AddMinutes(s_interval));
 
-    //        #region Stage 7
-    //        //TO_DO:
-    //        //Add calls here to any logic simulation that was required in stage 7
-    //        //for example: course registration simulation
-    //        CallManager.SimulateCourseRegistrationAndGrade(); //stage 7
+            #region Stage 7
+            //TO_DO:
+            //Add calls here to any logic simulation that was required in stage 7
+            //for example: course registration simulation
+            //CallManager.SimulateCourseRegistrationAndGrade(); //stage 7
 
-    //        //etc...
-    //        #endregion Stage 7
+            //etc...
+            #endregion Stage 7
 
-    //        try
-    //        {
-    //            Thread.Sleep(1000); // 1 second
-    //        }
-    //        catch (ThreadInterruptedException) { }
-    //    }
-    //}
-    //#endregion Stage 7 base
+            try
+            {
+                Thread.Sleep(1000); // 1 second
+            }
+            catch (ThreadInterruptedException) { }
+        }
+    }
+    #endregion Stage 7 base
 }

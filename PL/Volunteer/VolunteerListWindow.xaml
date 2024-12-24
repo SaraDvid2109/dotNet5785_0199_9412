@@ -49,9 +49,16 @@
                 <DataGridTextColumn Binding="{Binding TotalCallsChosenHandleExpired}" Header="TotalCallsChosenHandleExpired" Width="Auto"/>
                 <DataGridTextColumn Binding="{Binding CallHandledId}" Header="CallHandledId" Width="Auto"/>
                 <DataGridTextColumn Binding="{Binding CallHandledType}" Header="CallHandledType" Width="Auto"/>
+                <DataGridTemplateColumn Header="Delete" Width="Auto">
+                    <DataGridTemplateColumn.CellTemplate>
+                        <DataTemplate>
+            <Button Content="Delete" Click="DeleteButton_Click" Tag="{Binding Id}" />
+                        </DataTemplate>
+                    </DataGridTemplateColumn.CellTemplate>
+                </DataGridTemplateColumn>
             </DataGrid.Columns>
         </DataGrid>
-        <Button Content="Add" Grid.Row="2" HorizontalAlignment="Center" Height="50" Width="100"/>
+        <Button  Content="Add" Grid.Row="2" HorizontalAlignment="Center" Height="50" Width="100" Click="DataGrid_MouseDoubleClick"/>
     </Grid>
 
 </Window>

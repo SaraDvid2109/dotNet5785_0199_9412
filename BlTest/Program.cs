@@ -629,7 +629,7 @@ namespace BlTest
             if (!double.TryParse(Console.ReadLine(), out double maxDistance))
                 throw new BO.BlFormatException("Maximum distance is invalid!");
 
-            Console.Write("Enter Volunteer Type (0:Aerial 1:Car 2:Walking): ");
+            Console.Write("Enter Volunteer Distance Type (0:Aerial 1:Car 2:Walking): ");
             if (!Enum.TryParse(Console.ReadLine(), true, out BO.DistanceType type))
                 throw new BO.BlFormatException("Type is invalid!");
 
