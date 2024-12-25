@@ -7,5 +7,31 @@
         <local:VolunteersCollection x:Key="VolunteersCollectionKey"/>
         <local:RolesCollection x:Key="RolesCollectionKey"/>
         <local:DistanceTypeCollection x:Key="DistanceTypeCollectionKey"/>
+        <local:ConvertRoleToColor x:Key="ConvertRoleToColorKey"/>
+
+        <Style TargetType="Button">
+            <Setter Property="Background" Value="#0072CE"/>
+            <Setter Property="Foreground" Value="White"/>
+            <Setter Property="FontWeight" Value="Bold"/>
+        </Style>
+
+        <Style TargetType="Label">
+            <Setter Property="Foreground" Value="#FF0000"/>
+            <Setter Property="FontSize" Value="14"/>
+            <Setter Property="FontWeight" Value="Bold"/>
+        </Style>
+
+        <Style TargetType="ComboBox">
+            <Setter Property="Background" Value="#0072CE"/>
+            <Setter Property="Foreground" Value="#FF0000"/>
+            <Setter Property="FontWeight" Value="Bold"/>
+          </Style>
+        <Style TargetType="DataGrid">
+            <Setter Property="Foreground" Value="#0072CE"/>
+            <Setter Property="FontWeight" Value="Medium"/>
+        </Style>
+        <Style TargetType="CheckBox">
+            <Setter Property="Background" Value="#0072CE"/>
+        </Style>
     </Application.Resources>
 </Application>

@@ -90,7 +90,28 @@ public partial class VolunteerWindow : Window
             MessageBox.Show($"שגיאה בלתי צפויה: {ex.Message}", "שגיאה", MessageBoxButton.OK, MessageBoxImage.Error);
         }
     }
+    /// <summary>
+    /// An observer method that refills the item
+    /// </summary>
+    private void VolunteerObserver() 
+    {
+        int id = CurrentVolunteer!.Id;
+        CurrentVolunteer = null;
+        CurrentVolunteer = s_bl.volunteer.GetVolunteerDetails(id);
+
+    }
+    private void Window_Loaded(object sender, RoutedEventArgs e)
+    {
 
 
+        if (CurrentVolunteer!.Id != 0)
+            s_bl.volunteer.AddObserver(CurrentVolunteer!.Id, VolunteerObserver);
+
+    }
+
+    private void Window_Closed(object sender, EventArgs e)
+    {
+        s_bl.volunteer.RemoveObserver(CurrentVolunteer!.Id, VolunteerObserver);
+    }
 }
 
