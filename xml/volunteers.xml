@@ -210,4 +210,18 @@
     <Role>Volunteer</Role>
     <Type>Aerial</Type>
   </Volunteer>
+  <Volunteer>
+    <Id>213899412</Id>
+    <Name>hila</Name>
+    <Phone>0509931822</Phone>
+    <Mail>hila@gmail.com</Mail>
+    <Password>Hh999ww!!</Password>
+    <Address>Ben Gurion St 5, Ramat Gan, 5222002</Address>
+    <Latitude>32.05636</Latitude>
+    <Longitude>34.835025</Longitude>
+    <Active>true</Active>
+    <MaximumDistance>4</MaximumDistance>
+    <Role>Volunteer</Role>
+    <Type>Walking</Type>
+  </Volunteer>
 </ArrayOfVolunteer>

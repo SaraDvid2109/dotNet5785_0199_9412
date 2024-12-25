@@ -62,10 +62,13 @@ public partial class VolunteerListWindow : Window
 
     private void DataGrid_MouseDoubleClick(object sender, RoutedEventArgs e)
     {
-        if (SelectedVolunteer == null) 
-            new VolunteerWindow().Show();
-        else
+        if (SelectedVolunteer != null) 
             new VolunteerWindow(SelectedVolunteer.Id).Show();
+    }
+
+    private void BtnAdd_Click(object sender, RoutedEventArgs e)
+    {
+        new VolunteerWindow().Show();
     }
 
     private void DeleteButton_Click(object sender, RoutedEventArgs e)
@@ -97,4 +100,5 @@ public partial class VolunteerListWindow : Window
         }
     }
 
+   
 }

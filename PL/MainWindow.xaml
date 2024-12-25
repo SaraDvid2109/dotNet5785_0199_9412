@@ -7,7 +7,7 @@
         mc:Ignorable="d"
         Title="MainWindow" Height="450" Width="800"
         DataContext="{Binding RelativeSource={RelativeSource Mode=Self}}" Loaded="InitializeMainWindow" Closed="CleanupOnWindowClose" >
-    <Window.Resources>
+    <!--<Window.Resources>
         <Style TargetType="Button">
             <Setter Property="Background" Value="DeepPink"/>
             <Setter Property="Foreground" Value="White"/>
@@ -18,7 +18,7 @@
             <Setter Property="FontSize" Value="16"/>
             <Setter Property="FontWeight" Value="Bold"/>
         </Style>
-    </Window.Resources>
+    </Window.Resources>-->
 
     <Grid>
         <!-- Define rows and columns in the main Grid -->
@@ -43,7 +43,7 @@
             </Grid.ColumnDefinitions>
 
             <!-- Label to display the system clock value -->
-            <Label Grid.Column="0" Content="{Binding CurrentTime}" Width="200" FontWeight="Bold" FontSize="20" VerticalAlignment="Center"/>
+            <Label Grid.Column="0" Content="{Binding CurrentTime}" Width="200" FontWeight="Bold" FontSize="16" VerticalAlignment="Center"/>
 
             <!-- Buttons to advance the system clock -->
             <StackPanel Grid.Column="1" Orientation="Horizontal" HorizontalAlignment="Left" Margin="5,0,0,0">
@@ -65,7 +65,7 @@
             </Grid.RowDefinitions>
 
             <!-- Edit configuration variables -->
-            <StackPanel Grid.Row="0" Orientation="Horizontal" VerticalAlignment="Center">
+            <StackPanel Grid.Row="0" Orientation="Horizontal" VerticalAlignment="Top" Margin="0,10,0,0">
                 <!-- Label for Risk Range -->
                 <Label Content="Risk Range:" VerticalAlignment="Center" Margin="0,0,10,0"/>
                 <!-- TextBox to edit a configuration variable -->
@@ -75,7 +75,7 @@
             </StackPanel>
 
             <!-- Buttons for database management -->
-            <StackPanel Grid.Row="1" Orientation="Horizontal" VerticalAlignment="Center" Margin="0,10,0,0">
+            <StackPanel Orientation="Horizontal" VerticalAlignment="Top" Height="86" Margin="26,182,10,0" Grid.RowSpan="2">
                 <!--To open the volunteer list view screen-->
                 <Button Content="Handle Volunteers" Margin="5" Width="150" Click="btnVolunteers_Click"/>
                 <Button Content="Initialize Database" Margin="5" Width="150" Click="DatabaseInitialization_Click"/>
