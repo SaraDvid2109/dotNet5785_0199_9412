@@ -73,8 +73,12 @@ public static class Initialization
         };
 
         // Allowed characters for generating passwords.
-        string allCharacters = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789";
-
+        //string allCharacters = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789!@#$%^&*()";
+        string lowerCaseLetters = "abcdefghijklmnopqrstuvwxyz";
+        string upperCaseLetters = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
+        string digits = "0123456789";
+        string specialCharacters = "!@#$%^&*(),.?\"{}|<>";
+        string allCharacters = lowerCaseLetters + upperCaseLetters + digits + specialCharacters;
         int id;
         string? password = null;
         string email;
@@ -83,10 +87,11 @@ public static class Initialization
         Roles role;
         bool Active = true;
 
-        int i = 0; 
+        int i = 0;
         foreach (string volunteerName in VolunteerNames)
         {
-            id = s_rand.Next(200000000, 400000000);
+            //id = s_rand.Next(200000000, 400000000);
+            id = GenerateValidId();
 
             //We asked the GPT chat: how to remove spaces and convert names to lowercase letters
             email = $"{VolunteerNames[i].Replace(" ", "").ToLower()}@gmail.com";
@@ -97,7 +102,11 @@ public static class Initialization
 
             // We asked the GPT chat: How to build a random password using a StringBuilder object
             StringBuilder passwordBuilder = new StringBuilder();
-            for (int j = 0; j < 7; j++) { passwordBuilder.Append(allCharacters[s_rand.Next(allCharacters.Length)]); }// chat gpt
+            passwordBuilder.Append(lowerCaseLetters[s_rand.Next(lowerCaseLetters.Length)]);
+            passwordBuilder.Append(upperCaseLetters[s_rand.Next(upperCaseLetters.Length)]);
+            passwordBuilder.Append(digits[s_rand.Next(digits.Length)]);
+            passwordBuilder.Append(specialCharacters[s_rand.Next(specialCharacters.Length)]);
+            for (int j = 0; j < 4; j++) { passwordBuilder.Append(allCharacters[s_rand.Next(allCharacters.Length)]); }// chat gpt
             password = passwordBuilder.ToString();
 
             double MaximumDistance = s_rand.Next(0, 10);
@@ -396,6 +405,36 @@ public static class Initialization
         Console.WriteLine("Initializing Assignments list.");
         CreateAssignments();
 
+    }
+    //We asked the GPT chat how to create a valid ID number.
+    static int GenerateValidId()
+    {
+        int baseId = s_rand.Next(10000000, 100000000);
+
+        // Calculate the check digit
+        int checkDigit = CalculateCheckDigit(baseId);
+
+        // append the check digit to the end of the number
+        return baseId * 10 + checkDigit; 
+    }
+    static int CalculateCheckDigit(int baseId)
+    {
+        int sum = 0;
+        string idWithoutCheckDigit = baseId.ToString();
+
+        for (int i = 0; i < idWithoutCheckDigit.Length; i++)
+        {
+            int digit = idWithoutCheckDigit[i] - '0';
+            int weight = (i % 2 == 0) ? 1 : 2; // Digits in odd places are multiplied by 1, even places by 2
+            int product = digit * weight;
+
+            // If the result is 2 digits, add them together (e.g., 14 becomes 5)
+            sum += product > 9 ? product - 9 : product;
+        }
+
+        // The check digit is the 10's complement of the sum
+        int checkDigit = (10 - (sum % 10)) % 10;
+        return checkDigit;
     }
 
 }

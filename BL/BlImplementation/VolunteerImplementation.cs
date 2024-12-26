@@ -91,7 +91,8 @@ internal class volunteerImplementation : IVolunteer
 
         return sortVolunteers.Select(volunteer =>
         {
-            var idCall = assignments.FirstOrDefault(item => item.VolunteerId == volunteer.Id && item.TypeEndOfTreatment == null);
+            var idCall = assignments.LastOrDefault(item => item.VolunteerId == volunteer.Id && (item.TypeEndOfTreatment == null || item.EndTime == null));
+            DO.Call? lastCall = idCall != null ? _dal.Call.Read(idCall.CallId) : null;
             var treated = Helpers.VolunteerManager.GetAssignments(assignments, volunteer, DO.EndType.Treated) ?? Enumerable.Empty<DO.Assignment>();
             var selfCancellation = Helpers.VolunteerManager.GetAssignments(assignments, volunteer, DO.EndType.SelfCancellation) ?? Enumerable.Empty<DO.Assignment>();
             var expiredCancellation = Helpers.VolunteerManager.GetAssignments(assignments, volunteer, DO.EndType.ExpiredCancellation) ?? Enumerable.Empty<DO.Assignment>();
@@ -105,21 +106,13 @@ internal class volunteerImplementation : IVolunteer
                 TotalCallsCanceled = selfCancellation.Count(),
                 TotalCallsChosenHandleExpired = expiredCancellation.Count(),
                 CallHandledId = idCall?.Id,
-                CallHandledType = idCall?.TypeEndOfTreatment.HasValue == true ? (BO.CallType)idCall.TypeEndOfTreatment.Value : BO.CallType.None
+                CallHandledType = lastCall != null ? (BO.CallType)lastCall.CarTypeToSend : BO.CallType.None
+                //idCall?.TypeEndOfTreatment.HasValue == true ? (BO.CallType)idCall.TypeEndOfTreatment.Value : BO.CallType.None
 
             };
         });
 
-        //return sortVolunteers.Select(volunteer => new BO.VolunteerInList
-        //{
-        //    Id = volunteer.Id,
-        //    Name = volunteer.Name,
-        //    Active = volunteer.Active,
-        //    TotalCallsHandled = 0,
-        //    TotalCallsCanceled = 0,
-        //    TotalCallsChosenHandleExpired = 0,
-        //    CallHandledId = 0
-        //});
+       
     }
     /// <summary>
     /// Returns the details of a volunteer by their ID.
@@ -263,7 +256,7 @@ internal class volunteerImplementation : IVolunteer
 
             return volunteers.Select(volunteer =>
             {
-                var idCall = assignments.FirstOrDefault(item => item.VolunteerId == volunteer.Id && item.TypeEndOfTreatment == null);
+                var idCall = assignments.FirstOrDefault(item => item.VolunteerId == volunteer.Id && (item.TypeEndOfTreatment==null || item.EndTime==null));
                 DO.Call? lastCall = idCall != null ? _dal.Call.Read(idCall.CallId) : null;
                 var treated = Helpers.VolunteerManager.GetAssignments(assignments, volunteer, DO.EndType.Treated) ?? Enumerable.Empty<DO.Assignment>();
                 var selfCancellation = Helpers.VolunteerManager.GetAssignments(assignments, volunteer, DO.EndType.SelfCancellation) ?? Enumerable.Empty<DO.Assignment>();

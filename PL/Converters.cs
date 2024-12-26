@@ -15,7 +15,7 @@ class ConvertRoleToColor : IValueConverter
             return role switch
            {
             BO.Roles.Manager => Brushes.Yellow,
-            BO.Roles.Volunteer => Brushes.RoyalBlue,
+            BO.Roles.Volunteer => Brushes.Green,
             _ => Brushes.White,
            };
     }
