@@ -21,6 +21,7 @@ namespace PL.Volunteer;
 /// </summary>
 public partial class VolunteerListWindow : Window
 {
+    // Reference to the business logic layer
     static readonly BlApi.IBl s_bl = BlApi.Factory.Get();
 
     public VolunteerListWindow()
@@ -28,6 +29,7 @@ public partial class VolunteerListWindow : Window
         InitializeComponent();
     }
 
+    // Dependency property for binding volunteer list to UI
     public IEnumerable<VolunteerInList> VolunteerList
     {
         get { return (IEnumerable<VolunteerInList>)GetValue(VolunteerListProperty); }
@@ -38,45 +40,55 @@ public partial class VolunteerListWindow : Window
     public static readonly DependencyProperty VolunteerListProperty =
         DependencyProperty.Register("VolunteerList", typeof(IEnumerable<VolunteerInList>), typeof(VolunteerListWindow), new PropertyMetadata(null));
 
-    public BO.VolunteerField SelectedFiled { get; set; } = BO.VolunteerField.None;
+    // Selected filter from ComboBox
+    public BO.CallType SelectedFiled { get; set; } = BO.CallType.None;
+
+    // Selected volunteer from DataGrid
     public BO.VolunteerInList? SelectedVolunteer { get; set; }
 
+    // Handle ComboBox selection change to filter the volunteer list
     private void ComboBox_SelectionChanged(object sender, SelectionChangedEventArgs e)
     {
-        VolunteerList = (SelectedFiled == BO.VolunteerField.None) ?
-            s_bl?.volunteer.VolunteerList(null, null)! : s_bl?.volunteer.VolunteerList(null, SelectedFiled)!;
+        VolunteerList = (SelectedFiled == BO.CallType.None) ?
+            s_bl?.volunteer.VolunteerList(null, null)! : s_bl?.volunteer.FilterVolunteerListByCallType(SelectedFiled)!;
 
     }
-    private void queryVolunteerList()
-       => VolunteerList = (SelectedFiled == BO.VolunteerField.None) ?
-            s_bl?.volunteer.VolunteerList(null, null)! : s_bl?.volunteer.VolunteerList(null, SelectedFiled)!;
 
+    // Query the volunteer list based on the selected filter
+    private void queryVolunteerList()
+       => VolunteerList = (SelectedFiled == BO.CallType.None) ?
+            s_bl?.volunteer.VolunteerList(null, null)! : s_bl?.volunteer.FilterVolunteerListByCallType(SelectedFiled)!;
+
+    // Observer to update the volunteer list when changes occur
     private void VolunteerListObserver()
         => queryVolunteerList();
 
+    // Add observer when the window loads
     private void Window_Loaded(object sender, RoutedEventArgs e)
      => s_bl.volunteer.AddObserver(VolunteerListObserver);
 
+    // Remove observer when the window is closed
     private void Window_Closed(object sender, EventArgs e)
         => s_bl.volunteer.RemoveObserver(VolunteerListObserver);
 
+    // Open the volunteer details window on double-clicking a row
     private void DataGrid_MouseDoubleClick(object sender, RoutedEventArgs e)
     {
         if (SelectedVolunteer != null) 
             new VolunteerWindow(SelectedVolunteer.Id).Show();
     }
 
+    // Open a new window to add a volunteer
     private void BtnAdd_Click(object sender, RoutedEventArgs e)
     {
         new VolunteerWindow().Show();
     }
 
+    // Handle deletion of a volunteer
     private void DeleteButton_Click(object sender, RoutedEventArgs e)
     {
-        // קבלת ה-Id מתוך ה-Tag של הכפתור
         if (sender is Button button && button.Tag is int volunteerId)
         {
-            // בקשת אישור למחיקה
             var result = MessageBox.Show(
                 "Are you sure you want to delete this volunteer?",
                 "Confirmation",
@@ -87,13 +99,11 @@ public partial class VolunteerListWindow : Window
             {
                 try
                 {
-                    // קריאה למחיקה ב-BL
                     s_bl.volunteer.DeleteVolunteer(volunteerId);
                     MessageBox.Show("Volunteer deleted successfully!", "Success", MessageBoxButton.OK, MessageBoxImage.Information);
                 }
                 catch (Exception ex)
                 {
-                    // טיפול בחריגה
                     MessageBox.Show($"Failed to delete volunteer: {ex.Message}", "Error", MessageBoxButton.OK, MessageBoxImage.Error);
                 }
             }

@@ -19,6 +19,7 @@ namespace PL.Volunteer;
 /// </summary>
 public partial class VolunteerWindow : Window
 {
+    // Reference to the Business Logic layer (BL) for volunteer operations
     static readonly BlApi.IBl s_bl = BlApi.Factory.Get(); // check i add it by myself
 
     private int id;
@@ -26,13 +27,16 @@ public partial class VolunteerWindow : Window
     public VolunteerWindow(int id = 0)
     {
         this.id = id;
-        ButtonText = id == 0 ? "Add" : "Update";
+        ButtonText = id == 0 ? "Add" : "Update"; // Determine button text based on ID
         DataContext = this;
         InitializeComponent();
-        LoadVolunteer(id);
+        LoadVolunteer(id); // Load volunteer data
 
     }
 
+    /// <summary>
+    /// Load a volunteer's data. Creates a new volunteer if ID is 0; otherwise, fetches details from BL.
+    /// </summary>
     private void LoadVolunteer(int id)
     {
         try
@@ -54,6 +58,9 @@ public partial class VolunteerWindow : Window
         }
     }
 
+    /// <summary>
+    /// Current volunteer data, bound to UI controls via DependencyProperty.
+    /// </summary>
     public BO.Volunteer? CurrentVolunteer
     {
         get { return (BO.Volunteer?)GetValue(CurrentVolunteerProperty); }
@@ -63,6 +70,10 @@ public partial class VolunteerWindow : Window
     public static readonly DependencyProperty CurrentVolunteerProperty =
         DependencyProperty.Register("CurrentVolunteer", typeof(BO.Volunteer), typeof(VolunteerWindow), new PropertyMetadata(null));
 
+    /// <summary>
+    /// Handles Add/Update button click.
+    /// Adds a new volunteer or updates existing details.
+    /// </summary>
     private void btnAddUpdate_Click(object sender, RoutedEventArgs e)
     {
         
@@ -70,26 +81,23 @@ public partial class VolunteerWindow : Window
         {
             if (ButtonText == "Add")
             {
-                // ביצוע הוספה
                 s_bl.volunteer.AddVolunteer(CurrentVolunteer!);
-                MessageBox.Show("הסטודנט נוסף בהצלחה!");
+                MessageBox.Show("The volunteer was added successfully!", "Success", MessageBoxButton.OK, MessageBoxImage.Information);
             }
             else if (ButtonText == "Update")
             {
-                // ביצוע עדכון
                 s_bl.volunteer.UpdatingVolunteerDetails(id,CurrentVolunteer!);
-                MessageBox.Show("הסטודנט עודכן בהצלחה!");
+                MessageBox.Show("The volunteer was updated successfully!", "Success", MessageBoxButton.OK, MessageBoxImage.Information);
             }
 
-            // לאחר ההוספה/עדכון, סגור את החלון
             this.Close();
         }
         catch (Exception ex)
         {
-            // כל חריגה אחרת
             MessageBox.Show($"שגיאה בלתי צפויה: {ex.Message}", "שגיאה", MessageBoxButton.OK, MessageBoxImage.Error);
         }
     }
+
     /// <summary>
     /// An observer method that refills the item
     /// </summary>
@@ -100,6 +108,8 @@ public partial class VolunteerWindow : Window
         CurrentVolunteer = s_bl.volunteer.GetVolunteerDetails(id);
 
     }
+
+    // Adds an observer to monitor changes to the volunteer data.
     private void Window_Loaded(object sender, RoutedEventArgs e)
     {
 
@@ -109,6 +119,7 @@ public partial class VolunteerWindow : Window
 
     }
 
+    // Removes the observer when the window is closed.
     private void Window_Closed(object sender, EventArgs e)
     {
         s_bl.volunteer.RemoveObserver(CurrentVolunteer!.Id, VolunteerObserver);

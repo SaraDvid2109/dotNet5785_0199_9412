@@ -5,6 +5,7 @@ using DO;
 using Helpers;
 using System;
 using System.Diagnostics;
+using System.Xml.Linq;
 
 /// <summary>
 /// Implementation of the logical service entity interface for volunteer management
@@ -239,6 +240,50 @@ internal class volunteerImplementation : IVolunteer
             VolunteerManager.Observers.NotifyListUpdated();  //stage 5
         }
         catch (DO.DalAlreadyExistException ex) { throw new BO.BllAlreadyExistException(ex.Message); }
+    }
+
+    /// <summary>
+    /// Filters the list of volunteers based on the specified call type.
+    /// </summary>
+    /// <param name="type">The <see cref="BO.CallType"/> used to filter the volunteers.</param>
+    /// <returns>
+    /// If no volunteers are found, returns an empty collection.
+    /// </returns>
+    public IEnumerable<BO.VolunteerInList> FilterVolunteerListByCallType(BO.CallType type)
+    {
+        var volunteers = _dal.Volunteer.ReadAll();
+
+        if (!volunteers.Any())
+        {
+            return Enumerable.Empty<BO.VolunteerInList>();
+        }
+        else
+        {
+            List<DO.Assignment> assignments = _dal.Assignment.ReadAll().ToList();
+
+            return volunteers.Select(volunteer =>
+            {
+                var idCall = assignments.FirstOrDefault(item => item.VolunteerId == volunteer.Id && item.TypeEndOfTreatment == null);
+                DO.Call? lastCall = idCall != null ? _dal.Call.Read(idCall.CallId) : null;
+                var treated = Helpers.VolunteerManager.GetAssignments(assignments, volunteer, DO.EndType.Treated) ?? Enumerable.Empty<DO.Assignment>();
+                var selfCancellation = Helpers.VolunteerManager.GetAssignments(assignments, volunteer, DO.EndType.SelfCancellation) ?? Enumerable.Empty<DO.Assignment>();
+                var expiredCancellation = Helpers.VolunteerManager.GetAssignments(assignments, volunteer, DO.EndType.ExpiredCancellation) ?? Enumerable.Empty<DO.Assignment>();
+
+                return new BO.VolunteerInList
+                {
+                    Id = volunteer.Id,
+                    Name = volunteer.Name,
+                    Active = volunteer.Active,
+                    TotalCallsHandled = treated.Count(),
+                    TotalCallsCanceled = selfCancellation.Count(),
+                    TotalCallsChosenHandleExpired = expiredCancellation.Count(),
+                    CallHandledId = idCall?.Id,
+                    CallHandledType = lastCall != null ? (BO.CallType)lastCall.CarTypeToSend : BO.CallType.None
+
+                };
+
+            }).Where(volunteer => volunteer.CallHandledType == type);
+        }
     }
 
     #region Stage 5

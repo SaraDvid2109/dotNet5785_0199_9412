@@ -21,6 +21,7 @@
     </Window.Resources>-->
 
     <Grid>
+        
         <!-- Define rows and columns in the main Grid -->
         <Grid.RowDefinitions>
             <RowDefinition Height="Auto" />

@@ -8,7 +8,7 @@
         Title="VolunteerWindow" Height="500" Width="450"
         DataContext="{Binding RelativeSource={RelativeSource Mode=Self}}" Loaded="Window_Loaded" Closed="Window_Closed">
 
-
+    <!-- Define global styles for controls -->
     <Window.Resources>
         <!-- Global style for labels -->
         <Style TargetType="Label">
@@ -43,30 +43,34 @@
         </Style>
     </Window.Resources>
 
+    <!-- Scrollable content area -->
     <ScrollViewer VerticalScrollBarVisibility="Auto" HorizontalScrollBarVisibility="Auto">
         <Grid Margin="10">
+            <!-- Define grid layout -->
             <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="Auto" />
                 <ColumnDefinition Width="*" />
             </Grid.ColumnDefinitions>
 
             <Grid.RowDefinitions>
-                <RowDefinition Height="Auto" />
-                <RowDefinition Height="Auto" />
-                <RowDefinition Height="Auto" />
-                <RowDefinition Height="Auto" />
-                <RowDefinition Height="Auto" />
-                <RowDefinition Height="Auto" />
-                <RowDefinition Height="Auto" />
-                <RowDefinition Height="Auto" />
-                <RowDefinition Height="Auto" />
-                <RowDefinition Height="Auto" />
-                <RowDefinition Height="Auto" />
-                <RowDefinition Height="Auto" />
                 <!-- Distance Type row -->
+                <RowDefinition Height="Auto" />
+                <RowDefinition Height="Auto" />
+                <RowDefinition Height="Auto" />
+                <RowDefinition Height="Auto" />
+                <RowDefinition Height="Auto" />
+                <RowDefinition Height="Auto" />
+                <RowDefinition Height="Auto" />
+                <RowDefinition Height="Auto" />
+                <RowDefinition Height="Auto" />
+                <RowDefinition Height="Auto" />
+                <RowDefinition Height="Auto" />
+                <RowDefinition Height="Auto" />
                 <RowDefinition Height="Auto" />
                 <!-- Row for Add/Update Button -->
             </Grid.RowDefinitions>
+
+            <!-- Distance Type row -->
 
             <!-- ID -->
             <Label Grid.Row="0" Grid.Column="0" Content="ID:" />

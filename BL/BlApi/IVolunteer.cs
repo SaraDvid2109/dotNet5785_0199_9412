@@ -41,4 +41,6 @@ public interface IVolunteer : IObservable //stage 5
     /// </summary>
     /// <param name="volunteer">The volunteer details to be added.</param>
     public void AddVolunteer(BO.Volunteer volunteer);
+
+    public IEnumerable<BO.VolunteerInList> FilterVolunteerListByCallType(BO.CallType type);
 }
