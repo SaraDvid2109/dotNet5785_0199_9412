@@ -12,6 +12,7 @@ internal class CallTypeCollection : IEnumerable
     public IEnumerator GetEnumerator() => s_enums.GetEnumerator();
 }
 
+// next stage
 //internal class VolunteersCollection : IEnumerable
 //{
 //    static readonly IEnumerable<BO.VolunteerField> s_fields =
