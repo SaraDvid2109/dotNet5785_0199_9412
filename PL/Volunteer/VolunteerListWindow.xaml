@@ -24,7 +24,7 @@
                 <ColumnDefinition Width="*"/>
             </Grid.ColumnDefinitions>
 
-            <Label Content="Sort By" HorizontalAlignment="Center" VerticalAlignment="Top" Grid.Column="0"/>
+            <Label Content="Filter By" HorizontalAlignment="Center" VerticalAlignment="Top" Grid.Column="0"/>
             <ComboBox Grid.Column="1" SelectedValue="{Binding SelectedFiled,Mode=TwoWay}" ItemsSource="{Binding Source={StaticResource CallTypeCollectionKey}}"
                             HorizontalAlignment="Stretch" VerticalAlignment="Stretch" SelectionChanged="ComboBox_SelectionChanged"/>
 
