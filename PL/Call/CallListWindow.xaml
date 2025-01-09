@@ -6,7 +6,54 @@
         xmlns:local="clr-namespace:PL.Call"
         mc:Ignorable="d"
         Title="CallListWindow" Height="450" Width="800">
-    <Grid>
-        
+    <!-- Main Grid structure -->
+
+    <Grid.RowDefinitions>
+        <RowDefinition Height="40*"/>
+        <RowDefinition Height="500*"/>
+        <RowDefinition Height="Auto"/>
+    </Grid.RowDefinitions>
+
+    <!-- Filter section -->
+    <Grid HorizontalAlignment="Stretch" Height="auto" Grid.Row="0" VerticalAlignment="Stretch" Width="auto">
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="*"/>
+            <ColumnDefinition Width="*"/>
+        </Grid.ColumnDefinitions>
+
+        <Label Content="Filter By" HorizontalAlignment="Center" VerticalAlignment="Top" Grid.Column="0"/>
+        <ComboBox Grid.Column="1" SelectedValue="{Binding SelectedFiled,Mode=TwoWay}" ItemsSource="{Binding Source={StaticResource CallTypeCollectionKey}}"
+                    HorizontalAlignment="Stretch" VerticalAlignment="Stretch" SelectionChanged="ComboBox_SelectionChanged"/>
+
     </Grid>
-</Window>
+    
+    <!-- סינון סטטוס -->
+            <ComboBox Grid.Row="0" Width="200" Margin="10" SelectedItem="{Binding FilterStatus}">
+                <ComboBoxItem>פתוחה</ComboBoxItem>
+                <ComboBoxItem>סגורה</ComboBoxItem>
+                <ComboBoxItem>בטיפול</ComboBoxItem>
+                <!-- הוספת עוד אפשרויות סינון -->
+            </ComboBox>
+
+            <!-- רשימת הקריאות -->
+            <ListView Grid.Row="1" ItemsSource="{Binding Calls}" Margin="10">
+                <ListView.View>
+                    <GridView>
+                        <GridViewColumn Header="סטטוס" DisplayMemberBinding="{Binding Status}" Width="100"/>
+                        <GridViewColumn Header="זמן נשאר" DisplayMemberBinding="{Binding RemainingTime}" Width="100"/>
+                        <GridViewColumn Header="זמן טיפול" DisplayMemberBinding="{Binding CompletionTime}" Width="100"/>
+                        <GridViewColumn Header="מתנדב אחרון" DisplayMemberBinding="{Binding LastVolunteer}" Width="150"/>
+                        <GridViewColumn Header="הקצאות" DisplayMemberBinding="{Binding AllocationCount}" Width="100"/>
+                    </GridView>
+                </ListView.View>
+            </ListView>
+
+            <!-- כפתורים לפעולות -->
+            <StackPanel Grid.Row="2" Orientation="Horizontal" HorizontalAlignment="Center" Margin="10">
+                <Button Content="הוספת קריאה" Width="100" Margin="5" Height="47"/>
+                <Button Content="מחיקת קריאה" Width="100" Margin="5" Command="{Binding DeleteCommand}" Height="46" />
+            </StackPanel>
+            
+        </Grid>
+    
+    </Window>
