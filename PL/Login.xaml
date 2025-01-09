@@ -1,0 +1,30 @@
+﻿<Window x:Class="PL.Login"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:PL"
+        mc:Ignorable="d"
+        Title="Login" Height="470" Width="400"  DataContext="{Binding RelativeSource={RelativeSource Mode=Self}}" 
+        Loaded="Window_Loaded" Closed="Window_Closed">
+    <Window.Resources>
+        <Style TargetType="Button"
+          BasedOn="{StaticResource ButtonStyle}">
+            <Setter Property="Height" Value="40"/>
+            <Setter Property="Width" Value="153"/>
+        </Style>
+    </Window.Resources>
+    <Grid>
+        <Label Content="id:" HorizontalAlignment="Left" Margin="46,83,0,0" VerticalAlignment="Top" Width="51" Height="30"/>
+        <TextBox Text="{Binding VolunteerId}" HorizontalAlignment="Left" Margin="127,89,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="120"/>
+        <Label Content="password:"  HorizontalAlignment="Left" Margin="46,135,0,0" VerticalAlignment="Top"/>
+        <TextBox Text="{Binding Password}" HorizontalAlignment="Left" Margin="127,140,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="120"/>
+        <Button Content="Login" HorizontalAlignment="Left" Margin="46,196,0,0" VerticalAlignment="Top" Height="25" Width="201" Click="Login_Click"/>
+        <!-- אפשרויות למנהל -->
+        <StackPanel Orientation="Horizontal" HorizontalAlignment="Center" VerticalAlignment="Top" Margin="0,250,0,0"
+               Visibility="{Binding IsManager, Converter={StaticResource ConvertboolToVisibiltyKey}}" Width="354">
+            <Button Content="Volunteer Screen" Click="VolunteerScreen_Click" Margin="10,0,10,0"/>
+         <Button Content="Main management Screen" Click="MainManagementScreen_Click"/>
+        </StackPanel>
+    </Grid>
+</Window>

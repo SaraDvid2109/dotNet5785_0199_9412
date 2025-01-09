@@ -112,8 +112,6 @@ public partial class VolunteerWindow : Window
     // Adds an observer to monitor changes to the volunteer data.
     private void Window_Loaded(object sender, RoutedEventArgs e)
     {
-
-
         if (CurrentVolunteer!.Id != 0)
             s_bl.volunteer.AddObserver(CurrentVolunteer!.Id, VolunteerObserver);
 
