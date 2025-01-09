@@ -7,6 +7,11 @@
         mc:Ignorable="d"
         Title="MainWindow" Height="450" Width="800"
         DataContext="{Binding RelativeSource={RelativeSource Mode=Self}}" Loaded="InitializeMainWindow" Closed="CleanupOnWindowClose" >
+    <Window.Resources>
+        <Style TargetType="Button"
+          BasedOn="{StaticResource ButtonStyle}">
+        </Style>
+    </Window.Resources>
     <!--<Window.Resources>
         <Style TargetType="Button">
             <Setter Property="Background" Value="DeepPink"/>
