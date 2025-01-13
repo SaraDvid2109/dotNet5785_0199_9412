@@ -94,7 +94,7 @@ public partial class VolunteerWindow : Window
         }
         catch (Exception ex)
         {
-            MessageBox.Show($"שגיאה בלתי צפויה: {ex.Message}", "שגיאה", MessageBoxButton.OK, MessageBoxImage.Error);
+            MessageBox.Show($"Unexpected error: {ex.Message}", "error", MessageBoxButton.OK, MessageBoxImage.Error);
         }
     }
 

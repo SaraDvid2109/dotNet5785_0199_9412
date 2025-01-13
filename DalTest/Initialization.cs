@@ -77,7 +77,7 @@ public static class Initialization
         string lowerCaseLetters = "abcdefghijklmnopqrstuvwxyz";
         string upperCaseLetters = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
         string digits = "0123456789";
-        string specialCharacters = "!@#$%^&*(),.?\"{}|<>";
+        string specialCharacters = "!@#$%^*(),.?\"{}|";
         string allCharacters = lowerCaseLetters + upperCaseLetters + digits + specialCharacters;
         int id;
         string? password = null;

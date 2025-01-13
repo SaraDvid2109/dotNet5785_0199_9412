@@ -61,21 +61,27 @@ namespace PL
        
         private void Login_Click(object sender, RoutedEventArgs e)
         {
-            BO.Roles role = new BO.Roles();
-            string name= s_bl.volunteer.GetVolunteerDetails(VolunteerId).Name??"";   
-            role = s_bl.volunteer.Login(name, Password);
-            if (role == BO.Roles.Volunteer)
+            if (IsManager == true)
             {
-                IsManager = false;
-                //string id = s_bl.volunteer.GetVolunteerDetails();
-                VolunteerProfile volunteerWindow = new VolunteerProfile(VolunteerId);
-                volunteerWindow.Show();
+                MessageBox.Show("Administrator already logged in", "error", MessageBoxButton.OK, MessageBoxImage.Warning);
             }
             else
             {
-                IsManager=true;
+                BO.Roles role = new BO.Roles();
+                string name = s_bl.volunteer.GetVolunteerDetails(VolunteerId).Name ?? "";
+                role = s_bl.volunteer.Login(name, Password);
+                if (role == BO.Roles.Volunteer)
+                {
+                    IsManager = false;
+                    //string id = s_bl.volunteer.GetVolunteerDetails();
+                    VolunteerProfile volunteerWindow = new VolunteerProfile(VolunteerId);
+                    volunteerWindow.Show();
+                }
+                else
+                {
+                    IsManager = true;
+                }
             }
-
         }
         private void VolunteerScreen_Click(object sender, RoutedEventArgs e)
         {
@@ -87,11 +93,11 @@ namespace PL
             MainWindow mainWindow = new MainWindow();
             mainWindow.Show();
         }
-        private void LoginObserver()
-        {
+        //private void LoginObserver()
+        //{
           
 
-        }
+        //}
         private void Window_Loaded(object sender, RoutedEventArgs e)
         {
             IsManager = false;
