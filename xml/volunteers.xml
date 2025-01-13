@@ -208,6 +208,6 @@
     <Active>false</Active>
     <MaximumDistance>2</MaximumDistance>
     <Role>Volunteer</Role>
-    <Type>Walking</Type>
+    <Type>Aerial</Type>
   </Volunteer>
 </ArrayOfVolunteer>

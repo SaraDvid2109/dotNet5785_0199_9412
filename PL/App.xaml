@@ -9,11 +9,13 @@
 
         <!--<local:VolunteersCollection x:Key="VolunteersCollectionKey"/>-->
         <local:CallTypeCollection x:Key="CallTypeCollectionKey"/>
+        <local:CallStatusCollection x:Key="CallStatusCollectionKey"/>
         <local:RolesCollection x:Key="RolesCollectionKey"/>
         <local:DistanceTypeCollection x:Key="DistanceTypeCollectionKey"/>
         <local:ConvertRoleToColor x:Key="ConvertRoleToColorKey"/>
         <local:ConvertboolToVisibilty x:Key="ConvertboolToVisibiltyKey"/>
         <local:ConvertHaveCallToVisibilty x:Key="ConvertHaveCallToVisibiltyKey"/>
+        <local:BooleanToVisibilityConverter x:Key="BooleanToVisibilityConverter" />
         <!-- Global styles for buttons -->
         <Style x:Key="ButtonStyle" TargetType="Button">
             <Setter Property="Background" Value="#0072CE"/>

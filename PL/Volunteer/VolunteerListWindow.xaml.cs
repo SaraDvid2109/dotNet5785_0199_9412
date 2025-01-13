@@ -2,7 +2,9 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.Linq;
+using System.Runtime.CompilerServices;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows;
@@ -110,5 +112,48 @@ public partial class VolunteerListWindow : Window
         }
     }
 
+    private bool _isDeleteButtonVisible;
+    public bool IsDeleteButtonVisible
+    {
+        get => _isDeleteButtonVisible;
+        set
+        {
+            if (_isDeleteButtonVisible != value)
+            {
+                _isDeleteButtonVisible = value;
+                OnPropertyChanged();
+            }
+        }
+    }
+
+    public void UpdateDeleteButtonVisibility(int id)
+    {
+        try
+        {
+            var volunteerToCheck = s_bl.volunteer.GetVolunteerDetails(id);
+            IsDeleteButtonVisible = volunteerToCheck != null && !volunteerToCheck.Active;
+        }
+        catch
+        {
+            IsDeleteButtonVisible = false; // הסתרה אם יש שגיאה
+        }
+    }
+
+    public event PropertyChangedEventHandler? PropertyChanged;
+
+    protected virtual void OnPropertyChanged([CallerMemberName] string propertyName = "")
+    {
+        PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
+    }
+
+    private void DataGrid_SelectionChanged(object sender, SelectionChangedEventArgs e)
+    {
+        if (SelectedVolunteer != null)
+        {
+            UpdateDeleteButtonVisibility(SelectedVolunteer.Id);
+        }
+    }
+
    
+
 }
