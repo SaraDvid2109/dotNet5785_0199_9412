@@ -210,4 +210,46 @@
     <Role>Volunteer</Role>
     <Type>Aerial</Type>
   </Volunteer>
+  <Volunteer>
+    <Id>112533245</Id>
+    <Name>Amit Cohen</Name>
+    <Phone>0538595347</Phone>
+    <Mail>amitcohen@gmail.com</Mail>
+    <Password>jK2{!%W7</Password>
+    <Address>Herzl St 10, Tel Aviv, 6523701</Address>
+    <Latitude>31.797499</Latitude>
+    <Longitude>34.645104</Longitude>
+    <Active>true</Active>
+    <MaximumDistance>4</MaximumDistance>
+    <Role>Manager</Role>
+    <Type>Car</Type>
+  </Volunteer>
+  <Volunteer>
+    <Id>916302797</Id>
+    <Name>Shira Hadad</Name>
+    <Phone>0505293517</Phone>
+    <Mail>shirahadad@gmail.com</Mail>
+    <Password>dQ5#Yn#b</Password>
+    <Address>Ben Yehuda St 100, Tel Aviv, 6347511</Address>
+    <Latitude>32.087066</Latitude>
+    <Longitude>34.773227</Longitude>
+    <Active>true</Active>
+    <MaximumDistance>1</MaximumDistance>
+    <Role>Volunteer</Role>
+    <Type>Walking</Type>
+  </Volunteer>
+  <Volunteer>
+    <Id>108617234</Id>
+    <Name>Roni Peretz</Name>
+    <Phone>0544188027</Phone>
+    <Mail>roniperetz@gmail.com</Mail>
+    <Password>oR4)moIa</Password>
+    <Address>Herzliya St 15, Netanya, 4241102</Address>
+    <Latitude>32.061606</Latitude>
+    <Longitude>34.766415</Longitude>
+    <Active>false</Active>
+    <MaximumDistance>2</MaximumDistance>
+    <Role>Volunteer</Role>
+    <Type>Walking</Type>
+  </Volunteer>
 </ArrayOfVolunteer>
