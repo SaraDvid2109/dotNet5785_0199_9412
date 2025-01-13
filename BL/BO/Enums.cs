@@ -12,4 +12,4 @@ public enum CallField { Id, Address, CarTypeToSend }
 public enum ClosedCallInListField { Id , CallType, Address, OpenTime, EnterTime, EndTime,TypeEndOfTreatment }
 public enum OpenCallInListField { Id, CallType, Destination, Address, OpenTime, MaxTime, Distance }
 
-public enum CallInListFields { Id, CallId, CallType, OpenTime, TimeLeftToFinish, LastVolunteer, TreatmentTimeLeft, Status, TotalAssignments };
+public enum CallInListFields { Id, CallId, CallType, OpenTime, TimeLeftToFinish, LastVolunteer, TreatmentTimeLeft, Status, TotalAssignments, None };

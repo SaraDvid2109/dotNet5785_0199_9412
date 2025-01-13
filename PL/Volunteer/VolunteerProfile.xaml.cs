@@ -87,7 +87,7 @@ namespace PL.Volunteer
                 int callId = call.CallId;
                 VolunteerCall = s_bl.call.GetCallDetails(callId);
             }
-            VolunteerCall = null;
+            VolunteerCall = new BO.Call();
         }
         private void Window_Loaded(object sender, RoutedEventArgs e)
         {
