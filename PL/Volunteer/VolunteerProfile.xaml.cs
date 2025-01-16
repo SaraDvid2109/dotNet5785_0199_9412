@@ -29,7 +29,7 @@ namespace PL.Volunteer
             this.id = id;
             InitializeComponent();
             DataContext = this;
-            CurrentVolunteer= s_bl.volunteer.GetVolunteerDetails(id);
+            CurrentVolunteer = s_bl.volunteer.GetVolunteerDetails(id);
             VolunteerName = CurrentVolunteer.Name!;
         }
 
@@ -81,8 +81,8 @@ namespace PL.Volunteer
             int id = CurrentVolunteer!.Id;
             CurrentVolunteer = null;
             CurrentVolunteer = s_bl.volunteer.GetVolunteerDetails(id);
-            BO.CallInProgress? call= s_bl.volunteer.GetVolunteerDetails(id).Progress;
-            if (call != null) 
+            BO.CallInProgress? call = s_bl.volunteer.GetVolunteerDetails(id).Progress;
+            if (call != null)
             {
                 int callId = call.CallId;
                 VolunteerCall = s_bl.call.GetCallDetails(callId);
@@ -94,58 +94,88 @@ namespace PL.Volunteer
             if (CurrentVolunteer != null && CurrentVolunteer.Id != 0)
             {
                 s_bl.volunteer.AddObserver(CurrentVolunteer.Id, VolunteerObserver);
-               
+
             }
             //if (CurrentVolunteer!.Id != 0)
             //    s_bl.volunteer.AddObserver(CurrentVolunteer!.Id, VolunteerObserver);
 
-            string latitude = CurrentVolunteer.Latitude.ToString();  
-            string longitude = CurrentVolunteer.Longitude.ToString();  
+            var latitudeVolunteer = CurrentVolunteer?.Latitude??0;
+            var longitudeVolunteer = CurrentVolunteer?.Longitude??0;
+           
+
+            var latitudeCall = VolunteerCall?.Latitude??0; // אם אין מיקום לקריאה, נציב null
+            var longitudeCall = VolunteerCall?.Longitude??0;
 
             // יצירת תוכן HTML עם מפה מבוססת Leaflet
             string htmlContent = $@"<!DOCTYPE html>
-             <html>
-             <head>
-             <meta charset='utf-8' />
-             <title>Leaflet Map</title>
-             <link rel='stylesheet' href='https://unpkg.com/leaflet@1.7.1/dist/leaflet.css' />
-             <script src='https://unpkg.com/leaflet@1.7.1/dist/leaflet.js'></script>
-             <style>
-              #map {{
-              width: 100%;
-              height: 500px; /* קבע גובה לדוגמה */
-                }}
-             </style>
-             </head>
-              <body>
-              <div id='map'></div>
-              <script>
-                var latitude = 32.0853; // קואורדינטות של תל אביב
-                var longitude = 34.7818;
+      <html>
+       <head>
+        <meta charset='utf-8' />
+        <title>Leaflet Map</title>
+      <link rel='stylesheet' href='https://unpkg.com/leaflet@1.7.1/dist/leaflet.css' />
+ <script src='https://unpkg.com/leaflet@1.7.1/dist/leaflet.js'></script>
+       <style>
+         #map 
+         {{
+           width: 100%;
+           height: 500px; /* קבע גובה לדוגמה */
+         }}
+      </style>
+     </head>
+     <body>
+        <div id='map'></div>
+        <script>
+        // קואורדינטות המתנדב
+        var latitudeVolunteer = parseFloat({latitudeVolunteer});
+        var longitudeVolunteer = parseFloat({longitudeVolunteer});
+  
+       // קואורדינטות הקריאה
+        var latitudeCall = parseFloat({latitudeCall});
+        var longitudeCall = parseFloat({longitudeCall});
 
-                 var map = L.map('map').setView([latitude, longitude], 13);
-                 L.tileLayer('https://{{s}}.tile.openstreetmap.org/{{z}}/{{x}}/{{y}}.png', {{
-                   attribution: '&copy; <a href=""https://www.openstreetmap.org/copyright"">OpenStreetMap</a> contributors'
-                  }}).addTo(map);
+         // יצירת מפה
+         if (latitudeVolunteer!==0 && latitudeVolunteer!==0) 
+           {{
+              var map = L.map('map').setView([latitudeVolunteer, longitudeVolunteer], 13);
+              L.tileLayer('https://{{s}}.tile.openstreetmap.org/{{z}}/{{x}}/{{y}}.png', {{
+              attribution: '&copy; <a href=""https://www.openstreetmap.org/copyright"">OpenStreetMap</a> contributors'
+              }}).addTo(map);
 
-                    L.marker([latitude, longitude]).addTo(map)
-                .bindPopup('Here is Tel Aviv')
-                  .openPopup();
-              </script>
-              </body>
-            </html>";
+           }}
 
+
+        // הוספת סמן למתנדב
+        L.marker([latitudeVolunteer, longitudeVolunteer]).addTo(map)
+        .bindPopup('מיקום המתנדב')
+        .openPopup();
+        
+       // בדיקה אם יש מיקומים לקריאה
+           if (parseFloat(latitudeCall)!==0 && parseFloat(longitudeCall)!==0) 
             
+        {{  
+          L.marker([latitudeCall, longitudeCall]).addTo(map).bindPopup('מיקום הקריאה')
+           // התאמת המפה כך שתראה את שני המיקומים
+           var bounds = L.latLngBounds(
+           [latitudeVolunteer, longitudeVolunteer],
+           [latitudeCall, longitudeCall]
+           );
+        }}
+            
+            map.fitBounds(bounds);
+           </script>
+         </body>
+        </html>";
+
             // הצגת תוכן ה-HTML ב-WebBrowser
             mapWebBrowser.NavigateToString(htmlContent);
         }
 
-        private void Window_Closed(object sender, EventArgs e)
+    private void Window_Closed(object sender, EventArgs e)
         {
             s_bl.volunteer.RemoveObserver(CurrentVolunteer!.Id, VolunteerObserver);
-            if(VolunteerCall!=null)
+            if (VolunteerCall != null)
             {
-                HaveCall= true;
+                HaveCall = true;
             }
         }
 
@@ -155,18 +185,19 @@ namespace PL.Volunteer
             {
                 s_bl.volunteer.UpdatingVolunteerDetails(id, CurrentVolunteer!);
                 MessageBox.Show("The volunteer was updated successfully!", "Success", MessageBoxButton.OK, MessageBoxImage.Information);
-               
+
             }
             catch (Exception ex)
             {
                 MessageBox.Show($"Unexpected error: {ex.Message}", "error", MessageBoxButton.OK, MessageBoxImage.Error);
             }
-           
+
         }
 
         private void ViewCallHistory_Click(object sender, RoutedEventArgs e)
         {
-
+            ClosedCallsWindow closedCallsWindow= new ClosedCallsWindow(id);
+            closedCallsWindow.Show();
         }
         private void ChooseCall_Click(object sender, RoutedEventArgs e)
         {

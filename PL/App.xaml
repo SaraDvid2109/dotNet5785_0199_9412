@@ -15,7 +15,10 @@
         <local:ConvertRoleToColor x:Key="ConvertRoleToColorKey"/>
         <local:ConvertboolToVisibilty x:Key="ConvertboolToVisibiltyKey"/>
         <local:ConvertHaveCallToVisibilty x:Key="ConvertHaveCallToVisibiltyKey"/>
-        <local:BooleanToVisibilityConverter x:Key="BooleanToVisibilityConverter" />
+        <local:PasswordToMaskConverter x:Key="PasswordToMaskConverterKey"/>
+
+        <!--<local:BooleanToVisibilityConverter x:Key="BooleanToVisibilityConverter" />-->
+
         <!-- Global styles for buttons -->
         <Style x:Key="ButtonStyle" TargetType="Button">
             <Setter Property="Background" Value="#0072CE"/>

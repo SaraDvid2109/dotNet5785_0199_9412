@@ -27,7 +27,7 @@ namespace PL.Call
         {
             this.id = id;
             InitializeComponent();
-            VolunteerAddrees = s_bl.volunteer.GetVolunteerDetails(id).Address??"";
+            VolunteerAddrees = s_bl.volunteer.GetVolunteerDetails(id).Address ?? "";
         }
 
         public IEnumerable<OpenCallInList> OpenCallList
@@ -56,8 +56,22 @@ namespace PL.Call
         // Selected filter from ComboBox
         public BO.CallType SelectedFiled { get; set; } = BO.CallType.None;
 
-        // Selected call from DataGrid
-        //public BO.OpenCallInList? SelectedCall { get; set; }
+        ////Selected call from DataGrid
+        public BO.OpenCallInList? SelectedCall { get; set; }
+        //public BO.Call? CallDetails { get; set; }
+
+        
+
+        public BO.Call CallDetails
+        {
+            get { return (BO.Call)GetValue(CallDetailsProperty); }
+            set { SetValue(CallDetailsProperty, value); }
+        }
+
+        // Using a DependencyProperty as the backing store for CallDetails.  This enables animation, styling, binding, etc...
+        public static readonly DependencyProperty CallDetailsProperty =
+            DependencyProperty.Register("CallDetails", typeof(BO.Call), typeof(OpenCallsWindow), new PropertyMetadata(null));
+
 
         private void ComboBox_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
@@ -75,13 +89,21 @@ namespace PL.Call
 
         private void ChangeAddressButton_Click(object sender, RoutedEventArgs e)
         {
-            if (sender is Button button && button.Tag is string address) {
-                BO.Volunteer currentVolunteer = s_bl.volunteer.GetVolunteerDetails(id);
-                currentVolunteer.Address = address;
-                BO.Volunteer updateVolunteer = currentVolunteer;
+
+            BO.Volunteer currentVolunteer = s_bl.volunteer.GetVolunteerDetails(id);
+            currentVolunteer.Address = VolunteerAddrees;
+            BO.Volunteer updateVolunteer = currentVolunteer;
+            try
+            {
                 s_bl.volunteer.UpdatingVolunteerDetails(id, updateVolunteer);
+                MessageBox.Show("address update successfully", "Success", MessageBoxButton.OK, MessageBoxImage.Information);
+            }
+            catch (Exception ex) 
+            {
+                MessageBox.Show($"Failed to update address: {ex.Message}", "Error", MessageBoxButton.OK, MessageBoxImage.Error);
 
             }
+
 
         }
         /// <summary>
@@ -108,7 +130,10 @@ namespace PL.Call
             s_bl.call.RemoveObserver(VolunteerCallsListObserver);
         }
 
-        
+        private void DataGrid_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        {
+            if(SelectedCall != null)
+                CallDetails = s_bl.call.GetCallDetails(SelectedCall.Id);
+        }
     }
-
 }
