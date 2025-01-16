@@ -25,6 +25,8 @@ namespace PL
         {
             InitializeComponent();
             DataContext = this;
+           
+
         }
 
         public int VolunteerId
@@ -57,6 +59,30 @@ namespace PL
         // Using a DependencyProperty as the backing store for IsManager.  This enables animation, styling, binding, etc...
         public static readonly DependencyProperty IsManagerProperty =
             DependencyProperty.Register("IsManager", typeof(bool), typeof(Login), new PropertyMetadata(false));
+
+
+
+        public bool IsPasswordVisible
+        {
+            get { return (bool)GetValue(IsPasswordVisibleProperty); }
+            set { SetValue(IsPasswordVisibleProperty, value); }
+        }
+
+        // Using a DependencyProperty as the backing store for IsPasswordVisible.  This enables animation, styling, binding, etc...
+        public static readonly DependencyProperty IsPasswordVisibleProperty =
+            DependencyProperty.Register("IsPasswordVisible", typeof(bool), typeof(Login), new PropertyMetadata(false));
+
+
+        public bool IsPasswordVisible1
+        {
+            get { return (bool)GetValue(IsPasswordVisible1Property); }
+            set { SetValue(IsPasswordVisible1Property, value); }
+        }
+
+        // Using a DependencyProperty as the backing store for IsPasswordVisible1.  This enables animation, styling, binding, etc...
+        public static readonly DependencyProperty IsPasswordVisible1Property =
+            DependencyProperty.Register("IsPasswordVisible1", typeof(bool), typeof(Login), new PropertyMetadata(true));
+
 
        
         private void Login_Click(object sender, RoutedEventArgs e)
@@ -106,6 +132,21 @@ namespace PL
         private void Window_Closed(object sender, EventArgs e)
         {
 
+        }
+
+        private void EyeButton_Click(object sender, RoutedEventArgs e)
+        {
+            //IsPasswordVisible = !IsPasswordVisible;
+            MessageBox.Show($"The password entered is: {Password}");
+
+        }
+
+        private void PasswordBox_PasswordChanged(object sender, RoutedEventArgs e)
+        {
+            if (sender is PasswordBox passwordBox)
+            {
+                Password = passwordBox.Password; ;
+            }
         }
     }
 

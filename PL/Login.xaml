@@ -13,18 +13,31 @@
             <Setter Property="Height" Value="40"/>
             <Setter Property="Width" Value="153"/>
         </Style>
+        <Style TargetType="PasswordBox">
+            <Setter Property="BorderBrush" Value="#FF0000"/>
+            <Setter Property="BorderThickness" Value="2"/>
+        </Style>
+
     </Window.Resources>
     <Grid>
         <Label Content="id:" HorizontalAlignment="Left" Margin="46,83,0,0" VerticalAlignment="Top" Width="51" Height="30"/>
-        <TextBox Text="{Binding VolunteerId}" HorizontalAlignment="Left" Margin="127,89,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="120"/>
-        <Label Content="password:"  HorizontalAlignment="Left" Margin="46,135,0,0" VerticalAlignment="Top"/>
-        <TextBox Text="{Binding Password}" HorizontalAlignment="Left" Margin="127,140,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="120"/>
+        <TextBox Text="{Binding VolunteerId}" HorizontalAlignment="Left" Margin="127,89,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="150"/>
+        <!-- Password Field with Eye Icon -->
+        <Label Content="Password:" HorizontalAlignment="Left" Margin="46,135,0,0" VerticalAlignment="Top"/>
+        <Grid HorizontalAlignment="Left" Margin="127,135,0,0" VerticalAlignment="Top" Width="150" Height="25">
+            <PasswordBox  Width="130" Height="20" HorizontalAlignment="Left" VerticalAlignment="Center" PasswordChanged="PasswordBox_PasswordChanged"/>
+            <Button Width="20" Height="20" HorizontalAlignment="Right" VerticalAlignment="Center" Margin="0,0,0,0" Click="EyeButton_Click" >
+                👁 </Button>
+        </Grid>
+
+        <!--<Label Content="password:"  HorizontalAlignment="Left" Margin="46,135,0,0" VerticalAlignment="Top"/>-->
+        <!--<TextBox Text="{Binding Password}" HorizontalAlignment="Left" Margin="127,140,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="120"/>-->
         <Button Content="Login" HorizontalAlignment="Left" Margin="46,196,0,0" VerticalAlignment="Top" Height="25" Width="201" Click="Login_Click"/>
-        <!-- אפשרויות למנהל -->
+        <!--אפשרויות למנהל-->
         <StackPanel Orientation="Horizontal" HorizontalAlignment="Center" VerticalAlignment="Top" Margin="0,250,0,0"
                Visibility="{Binding IsManager, Converter={StaticResource ConvertboolToVisibiltyKey}}" Width="354">
-            <Button Content="Volunteer Screen" Click="VolunteerScreen_Click" Margin="10,0,10,0"/>
-         <Button Content="Main management Screen" Click="MainManagementScreen_Click"/>
+            <Button Content="Volunteer Screen" Click="VolunteerScreen_Click" Margin="10,0,10,0" />
+            <Button Content="Main management Screen" Click="MainManagementScreen_Click"/>
         </StackPanel>
     </Grid>
 </Window>

@@ -20,6 +20,10 @@
         <local:BooleanToVisibilityConverter x:Key="BooleanToVisibilityConverter" />
         <local:InverseBooleanConverter x:Key="InverseBooleanConverter"/>
         <local:CountToVisibilityConverter x:Key="CountToVisibilityConverter" />
+        <local:PasswordToMaskConverter x:Key="PasswordToMaskConverterKey"/>
+
+        <!--<local:BooleanToVisibilityConverter x:Key="BooleanToVisibilityConverter" />-->
+
         <!-- Global styles for buttons -->
         <Style x:Key="ButtonStyle" TargetType="Button">
             <Setter Property="Background" Value="#0072CE"/>

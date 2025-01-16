@@ -34,7 +34,7 @@
 
             </Grid>
             <DataGrid Grid.Row="1" ItemsSource="{Binding Path=OpenCallList}" IsReadOnly ="True" AutoGenerateColumns="False"
-   	        EnableRowVirtualization="True" RowDetailsVisibilityMode="VisibleWhenSelected" >
+   	        EnableRowVirtualization="True" RowDetailsVisibilityMode="VisibleWhenSelected" SelectionChanged="DataGrid_SelectionChanged" SelectedItem="{Binding SelectedCall, Mode=TwoWay}">
                 <DataGrid.Columns>
                     <!-- Volunteer details columns -->
                     <DataGridTextColumn Binding="{Binding Id}" Header="Id"/>
@@ -53,6 +53,8 @@
                     </DataGridTemplateColumn>
                 </DataGrid.Columns>
             </DataGrid>
+            <TextBlock Text="{Binding CallDetails.Description}" FontSize="16" Margin="10" />
+
             <Label Grid.Row="2" Content="Change your address:"/>
             <TextBox Text="{Binding VolunteerAddrees}" Width="NaN" Margin="164,5,376,5" Grid.Row="2" RenderTransformOrigin="0.853,0.342" />
             <Button Content="Update address" Grid.Row="2" HorizontalAlignment="Left" Click="ChangeAddressButton_Click"  
