@@ -1,4 +1,5 @@
 ﻿using PL.Volunteer;
+using PL.Call;
 using System.Text;
 using System.Windows;
 using System.Windows.Controls;
@@ -89,6 +90,9 @@ namespace PL
 
         // Button click handler to open the Volunteer List Window
         private void btnVolunteers_Click(object sender, RoutedEventArgs e) => new VolunteerListWindow().Show();
+
+        // Button click handler to open the Call List Window
+        private void btnCalls_Click(object sender, RoutedEventArgs e) => new CallListWindow().Show();
 
         // Button click handler to initialize the database
         private void DatabaseInitialization_Click(object sender, RoutedEventArgs e)

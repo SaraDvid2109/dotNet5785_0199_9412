@@ -46,21 +46,63 @@ public partial class CallListWindow : Window, INotifyPropertyChanged
 
     // Selected filter from ComboBox
     public BO.CallInListFields SelectedFiled { get; set; } = BO.CallInListFields.None;
+    public BO.CallInListFields SelectedSort { get; set; } = BO.CallInListFields.None;
+    public object SelectedFilterValue { get; set; } = new object();
 
     // Selected volunteer from DataGrid
     public BO.CallInList? SelectedCall { get; set; }
 
-    // Handle ComboBox selection change to filter the volunteer list
+    //Handle ComboBox selection change to filter the call list
+
     private void ComboBox_SelectionChanged(object sender, SelectionChangedEventArgs e)
     {
-        CallList = (SelectedFiled == BO.CallInListFields.None) ?
-            s_bl?.call.CallInLists(null, null, null)! : s_bl?.call.CallInLists(SelectedFiled, null, null)!;
+        // וודאי שהערך שנבחר מהקומבו בוקס נשמר
+        var comboBox = sender as ComboBox;
+        var selectedValue = comboBox?.SelectedItem;
+
+        // עדכון קריאה לפונקציה CallInLists
+        CallList = (SelectedFiled == BO.CallInListFields.None)
+            ? s_bl?.call.CallInLists(null, null, SelectedSort) ?? Enumerable.Empty<CallInList>()
+            : s_bl?.call.CallInLists(SelectedFiled, selectedValue, SelectedSort) ?? Enumerable.Empty<CallInList>();
     }
 
-    // Query the volunteer list based on the selected filter
     private void queryCallList()
-       => CallList = (SelectedFiled == BO.CallInListFields.None) ?
-            s_bl?.call.CallInLists(null, null, null)! : s_bl?.call.CallInLists(SelectedFiled, null, null)!;
+    {
+        var filterField = SelectedFiled != BO.CallInListFields.None
+            ? (BO.CallInListFields?)SelectedFiled
+            : null;
+
+        var filterValue = !string.IsNullOrEmpty(SelectedFilterValue?.ToString())
+            ? SelectedFilterValue
+            : null;
+
+        var sortField = SelectedSort != BO.CallInListFields.None
+            ? (BO.CallInListFields?)SelectedSort
+            : null;
+
+        // קריאה לפונקציה עם הפרמטרים המסוננים
+        CallList = s_bl?.call.CallInLists(filterField, filterValue, sortField) ?? Enumerable.Empty<CallInList>();
+    }
+
+
+
+    //private void ComboBox_SelectionChanged(object sender, SelectionChangedEventArgs e)
+    //{
+    //    CallList = (SelectedFiled == BO.CallInListFields.None) ?
+    //        s_bl?.call.CallInLists(null, null, null)! : s_bl?.call.CallInLists(SelectedFiled, sender, SelectedSort)!;
+    //}
+
+    ////Query the call list based on the selected filter
+    //private void queryCallList()
+    //{
+    //    // הגדרה של פרמטרים למיון וסינון
+    //    var filterField = SelectedFiled != BO.CallInListFields.None ? (BO.CallInListFields?)SelectedFiled : null;
+    //    var sortField = BO.CallInListFields.OpenTime; // דוגמה לשדה ברירת מחדל למיון
+
+    //    // קריאה לפונקציה עם פרמטרים מתאימים
+    //    CallList = s_bl?.call.CallInLists(filterField, null, SelectedSort);
+
+    //}
 
 
     // Observer to update the volunteer list when changes occur
@@ -87,7 +129,7 @@ public partial class CallListWindow : Window, INotifyPropertyChanged
     private void DataGrid_MouseDoubleClick(object sender, RoutedEventArgs e)
     {
         if (SelectedCall != null)
-            new VolunteerWindow(SelectedCall.CallId).Show();
+            new CallWindow(SelectedCall.CallId).Show();
     }
 
     private void BtnAdd_Click(object sender, RoutedEventArgs e)
@@ -98,7 +140,7 @@ public partial class CallListWindow : Window, INotifyPropertyChanged
     // Handle deletion of a volunteer
     private void DeleteButton_Click(object sender, RoutedEventArgs e)
     {
-        if (sender is Button button && button.Tag is int CallId)
+        if (sender is Button button && button.Tag is int callId)
         {
             var result = MessageBox.Show(
                 "Are you sure you want to delete this call?",
@@ -110,8 +152,9 @@ public partial class CallListWindow : Window, INotifyPropertyChanged
             {
                 try
                 {
-                    s_bl.volunteer.DeleteVolunteer(CallId);
-                    MessageBox.Show("call deleted successfully!", "Success", MessageBoxButton.OK, MessageBoxImage.Information);
+                    s_bl.call.DeleteCall(callId);
+                    MessageBox.Show("Call deleted successfully!", "Success", MessageBoxButton.OK, MessageBoxImage.Information);
+                    queryCallList(); // Refresh the call list after deletion
                 }
                 catch (Exception ex)
                 {
@@ -120,6 +163,7 @@ public partial class CallListWindow : Window, INotifyPropertyChanged
             }
         }
     }
+
 
     private bool _isDeleteButtonVisible;
     public bool IsDeleteButtonVisible
@@ -160,4 +204,36 @@ public partial class CallListWindow : Window, INotifyPropertyChanged
             IsDeleteButtonVisible = false; // הסתרה במקרים של בעיה
         }
     }
+
+    private void ApplyFilterButton_Click(object sender, RoutedEventArgs e)
+    {
+        queryCallList();
+    }
+
+    //public IEnumerable<string> FilterOptions { get; set; } = Enum.GetNames(typeof(BO.CallInListFields));
+    //public IEnumerable<string> SortOptions { get; set; } = Enum.GetNames(typeof(BO.CallInListFields));
+    //public IEnumerable<string> GroupOptions { get; set; } = Enum.GetNames(typeof(BO.CallInListFields));
+
+    //public BO.CallInListFields? SelectedFilter { get; set; }
+    //public string FilterValue { get; set; } = string.Empty;
+    //public BO.CallInListFields? SelectedSort { get; set; }
+    //public BO.CallInListFields? SelectedGroup { get; set; }
+
+    //// עדכון נתונים בהתבסס על בחירות המשתמש
+    //private void UpdateCallList()
+    //{
+    //    var filter = SelectedFilter;
+    //    var value = string.IsNullOrEmpty(FilterValue) ? null : (object)FilterValue;
+    //    var sort = SelectedSort;
+    //    var groupBy = SelectedGroup;
+
+    //    CallList = s_bl.call.CallInLists(filter, value, sort, groupBy).SelectMany(g => g); // ביטול הקיבוץ להצגה בדאטהגריד
+    //}
+
+    //private void ComboBox_SelectionChanged(object sender, SelectionChangedEventArgs e)
+    //{
+    //    UpdateCallList();
+    //}
+
+
 }

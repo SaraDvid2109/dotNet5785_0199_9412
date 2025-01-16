@@ -91,16 +91,26 @@ namespace PL.Volunteer
         }
         private void Window_Loaded(object sender, RoutedEventArgs e)
         {
+            //if (CurrentVolunteer != null && CurrentVolunteer.Id != 0)
+            //{
+            //    s_bl.volunteer.AddObserver(CurrentVolunteer.Id, VolunteerObserver);
+
+            //}
+            ////if (CurrentVolunteer!.Id != 0)
+            ////    s_bl.volunteer.AddObserver(CurrentVolunteer!.Id, VolunteerObserver);
+
+            //string latitude = CurrentVolunteer.Latitude.ToString();  
+            //string longitude = CurrentVolunteer.Longitude.ToString();  
             if (CurrentVolunteer != null && CurrentVolunteer.Id != 0)
             {
                 s_bl.volunteer.AddObserver(CurrentVolunteer.Id, VolunteerObserver);
-               
             }
-            //if (CurrentVolunteer!.Id != 0)
-            //    s_bl.volunteer.AddObserver(CurrentVolunteer!.Id, VolunteerObserver);
 
-            string latitude = CurrentVolunteer.Latitude.ToString();  
-            string longitude = CurrentVolunteer.Longitude.ToString();  
+            if (CurrentVolunteer?.Latitude != null && CurrentVolunteer?.Longitude != null)
+            {
+                string latitude = CurrentVolunteer.Latitude?.ToString() ?? string.Empty;
+                string longitude = CurrentVolunteer.Longitude?.ToString() ?? string.Empty;
+            }
 
             // יצירת תוכן HTML עם מפה מבוססת Leaflet
             string htmlContent = $@"<!DOCTYPE html>

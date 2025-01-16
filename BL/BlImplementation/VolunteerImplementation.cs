@@ -279,6 +279,17 @@ internal class volunteerImplementation : IVolunteer
         }
     }
 
+    public bool CanVolunteerAttendCall(BO.Volunteer volunteer, BO.Call call)
+    {
+        if (volunteer.Address == null || call.Address == null)
+        {
+            return false;
+        }
+
+        double distance = Helpers.Tools.CalculateDistanceBetweenAddresses(volunteer.Address, call.Address);
+        return volunteer.MaximumDistance.HasValue && distance <= volunteer.MaximumDistance.Value;
+    }
+
     #region Stage 5
     public void AddObserver(Action listObserver) =>
     VolunteerManager.Observers.AddListObserver(listObserver); //stage 5
