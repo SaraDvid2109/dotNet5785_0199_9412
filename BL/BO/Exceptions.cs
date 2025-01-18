@@ -97,6 +97,11 @@ public class BlInvalidData : Exception
     public BlInvalidData(string? message) : base(message) { }
 }
 
+public class BlDeletionImpossible : Exception
+{
+    public BlDeletionImpossible(string? message) : base(message) { }
+}
+
 
 
 

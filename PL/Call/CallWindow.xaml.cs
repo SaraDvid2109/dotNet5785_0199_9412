@@ -31,7 +31,10 @@ namespace PL.Call
             {
                 if (id == 0)
                 {
-                    CurrentCall = new BO.Call();
+                    CurrentCall = new BO.Call
+                    {
+                        OpenTime = DateTime.Now 
+                    };
                 }
                 else
                 {
@@ -184,6 +187,7 @@ namespace PL.Call
         }
 
 
+
         public event PropertyChangedEventHandler? PropertyChanged;
 
         protected void OnPropertyChanged(string propertyName)
@@ -304,4 +308,7 @@ namespace PL.Call
             MessageBox.Show(message, "Error", MessageBoxButton.OK, MessageBoxImage.Error);
         }
     }
+
+
 }
+

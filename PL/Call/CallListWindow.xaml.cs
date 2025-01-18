@@ -140,27 +140,28 @@ public partial class CallListWindow : Window, INotifyPropertyChanged
     // Handle deletion of a volunteer
     private void DeleteButton_Click(object sender, RoutedEventArgs e)
     {
-        if (sender is Button button && button.Tag is int callId)
-        {
-            var result = MessageBox.Show(
-                "Are you sure you want to delete this call?",
-                "Confirmation",
-                MessageBoxButton.YesNo,
-                MessageBoxImage.Question);
+        MessageBoxResult mbResult =
+                            MessageBox.Show("Are you sure you want to delete this call?", "Delete",
+                            MessageBoxButton.YesNo, MessageBoxImage.Question, MessageBoxResult.Yes);
 
-            if (result == MessageBoxResult.Yes)
-            {
-                try
-                {
-                    s_bl.call.DeleteCall(callId);
-                    MessageBox.Show("Call deleted successfully!", "Success", MessageBoxButton.OK, MessageBoxImage.Information);
-                    queryCallList(); // Refresh the call list after deletion
-                }
-                catch (Exception ex)
-                {
-                    MessageBox.Show($"Failed to delete call: {ex.Message}", "Error", MessageBoxButton.OK, MessageBoxImage.Error);
-                }
-            }
+        if (mbResult != MessageBoxResult.Yes)
+        {
+            return;
+        }
+
+        try
+        {
+            if (SelectedCall != null)
+                s_bl.call.DeleteCall(SelectedCall.CallId);
+            MessageBox.Show("Call deleted successfully", "Delete", MessageBoxButton.OK, MessageBoxImage.Information);
+        }
+        catch (BO.BlDoesNotExistException ex)
+        {
+            MessageBox.Show(ex.Message, "ERROR", MessageBoxButton.OK, MessageBoxImage.Error);
+        }
+        catch (BO.BlDeletionImpossible ex)
+        {
+            MessageBox.Show(ex.Message, "ERROR", MessageBoxButton.OK, MessageBoxImage.Error);
         }
     }
 
@@ -209,6 +210,8 @@ public partial class CallListWindow : Window, INotifyPropertyChanged
     {
         queryCallList();
     }
+
+
 
     //public IEnumerable<string> FilterOptions { get; set; } = Enum.GetNames(typeof(BO.CallInListFields));
     //public IEnumerable<string> SortOptions { get; set; } = Enum.GetNames(typeof(BO.CallInListFields));

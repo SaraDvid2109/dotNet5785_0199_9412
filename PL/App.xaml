@@ -20,7 +20,9 @@
         <local:BooleanToVisibilityConverter x:Key="BooleanToVisibilityConverter" />
         <local:InverseBooleanConverter x:Key="InverseBooleanConverter"/>
         <local:CountToVisibilityConverter x:Key="CountToVisibilityConverter" />
-        <local:PasswordToMaskConverter x:Key="PasswordToMaskConverterKey"/>
+        <local:ConvertStatusToVisibility x:Key="ConvertStatusToVisibilityKey" />
+
+        <!--<local:PasswordToMaskConverter x:Key="PasswordToMaskConverterKey"/>-->
 
         <!--<local:BooleanToVisibilityConverter x:Key="BooleanToVisibilityConverter" />-->
 

@@ -11,6 +11,7 @@
 
     <Window.Resources>
         <BooleanToVisibilityConverter x:Key="BooleanToVisibilityConverter"/>
+        <Style TargetType="Button" BasedOn="{StaticResource ButtonStyle}"> </Style>
     </Window.Resources>
 
     <!-- Main Grid structure -->
@@ -72,10 +73,11 @@
                 <DataGridTemplateColumn Header="Delete" Width="Auto">
                     <DataGridTemplateColumn.CellTemplate>
                         <DataTemplate>
-                            <Button Content="Delete" Click="DeleteButton_Click" Tag="{Binding Id}" Visibility="{Binding IsDeletable, Converter={StaticResource BooleanToVisibilityConverter}}" Command="{Binding DeleteCommand}" />
+                            <Button Content="Delete" Click="DeleteButton_Click" Tag="{Binding Id}"  Visibility="{Binding Status, Converter={StaticResource ConvertStatusToVisibilityKey}}" />
                         </DataTemplate>
                     </DataGridTemplateColumn.CellTemplate>
                 </DataGridTemplateColumn>
+
 
             </DataGrid.Columns>
         </DataGrid>

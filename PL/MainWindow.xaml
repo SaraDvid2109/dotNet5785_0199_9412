@@ -11,22 +11,10 @@
         <Style TargetType="Button"
           BasedOn="{StaticResource ButtonStyle}">
         </Style>
+        <ImageBrush x:Key="BackgroundImageBrush" ImageSource="C:\Users\PC\Downloads\WhatsApp Image 2025-01-17 at 03.31.23.jpg" Stretch="UniformToFill"/>
     </Window.Resources>
-    <!--<Window.Resources>
-        <Style TargetType="Button">
-            <Setter Property="Background" Value="DeepPink"/>
-            <Setter Property="Foreground" Value="White"/>
-            <Setter Property="FontWeight" Value="Bold"/>
-        </Style>
-        <Style TargetType="Label">
-            <Setter Property="Foreground" Value="#0072CE"/>
-            <Setter Property="FontSize" Value="16"/>
-            <Setter Property="FontWeight" Value="Bold"/>
-        </Style>
-    </Window.Resources>-->
 
-    <Grid>
-        
+    <Grid Background="{StaticResource BackgroundImageBrush}">
         <!-- Define rows and columns in the main Grid -->
         <Grid.RowDefinitions>
             <RowDefinition Height="Auto" />
@@ -87,7 +75,6 @@
                 <Button Content="Initialize Database" Margin="5" Width="150" Click="DatabaseInitialization_Click"/>
                 <Button Content="Reset Database" Margin="5" Width="150" Click="DatabaseReset_Click"/>
                 <Button Content="Handle Calls" Margin="5" Width="150" Click="btnCalls_Click"/>
-
             </StackPanel>
         </Grid>
     </Grid>

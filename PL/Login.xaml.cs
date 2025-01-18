@@ -87,28 +87,52 @@ namespace PL
        
         private void Login_Click(object sender, RoutedEventArgs e)
         {
-            if (IsManager == true)
+            try
             {
-                MessageBox.Show("Administrator already logged in", "error", MessageBoxButton.OK, MessageBoxImage.Warning);
-            }
-            else
-            {
-                BO.Roles role = new BO.Roles();
-                string name = s_bl.volunteer.GetVolunteerDetails(VolunteerId).Name ?? "";
-                role = s_bl.volunteer.Login(name, Password);
+                if (IsManager == true)
+                {
+                    MessageBox.Show("Administrator already logged in", "Error", MessageBoxButton.OK, MessageBoxImage.Warning);
+                    return;
+                }
+
+                if (VolunteerId == 0 || string.IsNullOrWhiteSpace(Password))
+                {
+                    MessageBox.Show("Please enter both ID and password.", "Input Error", MessageBoxButton.OK, MessageBoxImage.Error);
+                    return;
+                }
+
+                var volunteerDetails = s_bl.volunteer.GetVolunteerDetails(VolunteerId);
+
+                if (volunteerDetails == null)
+                {
+                    MessageBox.Show("Volunteer with the provided ID does not exist.", "Error", MessageBoxButton.OK, MessageBoxImage.Error);
+                    return;
+                }
+
+                string name = volunteerDetails.Name ?? "";
+                BO.Roles role = s_bl.volunteer.Login(name, Password);
+
                 if (role == BO.Roles.Volunteer)
                 {
                     IsManager = false;
-                    //string id = s_bl.volunteer.GetVolunteerDetails();
                     VolunteerProfile volunteerWindow = new VolunteerProfile(VolunteerId);
                     volunteerWindow.Show();
                 }
-                else
+                else if (role == BO.Roles.Manager)
                 {
                     IsManager = true;
                 }
+                else
+                {
+                    MessageBox.Show("Invalid password. Please try again.", "Login Failed", MessageBoxButton.OK, MessageBoxImage.Error);
+                }
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show($"An error occurred: {ex.Message}", "Error", MessageBoxButton.OK, MessageBoxImage.Error);
             }
         }
+
         private void VolunteerScreen_Click(object sender, RoutedEventArgs e)
         {
             VolunteerProfile volunteerWindow = new VolunteerProfile(VolunteerId);

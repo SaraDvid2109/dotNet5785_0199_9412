@@ -218,7 +218,7 @@ internal class CallImplementation : ICall
                 var assignmentsOfCall = from assignment in assignments
                                         where assignment.CallId == id
                                         select assignment;
-                if (!assignmentsOfCall.Any() && CallManager.Status(id) == BO.CallStatus.Open)
+                if (!assignmentsOfCall.Any() && (CallManager.Status(id) == BO.CallStatus.Open || CallManager.Status(id) == BO.CallStatus.OpenAtRisk))
                 {
                     _dal.Call.Delete(id);
                     CallManager.Observers.NotifyListUpdated();  //stage 5

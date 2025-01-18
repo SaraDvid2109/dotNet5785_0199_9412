@@ -1,20 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <ArrayOfVolunteer xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
   <Volunteer>
-    <Id>356884007</Id>
-    <Name>Amit Cohen</Name>
-    <Phone>0552575563</Phone>
-    <Mail>amitcohen@gmail.com</Mail>
-    <Password>mE2$iA)s</Password>
-    <Address>Herzl St 10, Tel Aviv, 6523701</Address>
-    <Latitude>32.066158</Latitude>
-    <Longitude>34.779808</Longitude>
-    <Active>true</Active>
-    <MaximumDistance>4</MaximumDistance>
-    <Role>Manager</Role>
-    <Type>Aerial</Type>
-  </Volunteer>
-  <Volunteer>
     <Id>197192420</Id>
     <Name>Noa Levi</Name>
     <Phone>0508654550</Phone>
@@ -250,6 +236,20 @@
     <Active>false</Active>
     <MaximumDistance>2</MaximumDistance>
     <Role>Volunteer</Role>
+    <Type>Aerial</Type>
+  </Volunteer>
+  <Volunteer>
+    <Id>356884007</Id>
+    <Name>Amit Cohen</Name>
+    <Phone>0552575563</Phone>
+    <Mail>amitcohen@gmail.com</Mail>
+    <Password>mE2$iA)s</Password>
+    <Address>Herzl St 10, Tel Aviv, 6523701</Address>
+    <Latitude>31.797499</Latitude>
+    <Longitude>34.645104</Longitude>
+    <Active>true</Active>
+    <MaximumDistance>4</MaximumDistance>
+    <Role>Manager</Role>
     <Type>Aerial</Type>
   </Volunteer>
 </ArrayOfVolunteer>
