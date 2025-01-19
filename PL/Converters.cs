@@ -76,7 +76,7 @@ class PasswordToMaskConverter : IValueConverter
             case false:
                 return new string('●', 8);
         }
-       
+
     }
     public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture)
     {

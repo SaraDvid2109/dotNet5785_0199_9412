@@ -1,6 +1,7 @@
 ﻿using BO;
 using PL.Volunteer;
 using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Linq;
@@ -31,6 +32,8 @@ public partial class CallListWindow : Window, INotifyPropertyChanged
 
     public CallListWindow()
     {
+        DataContext = this;
+
         InitializeComponent();
     }
 
@@ -44,10 +47,13 @@ public partial class CallListWindow : Window, INotifyPropertyChanged
     public static readonly DependencyProperty CallListProperty =
         DependencyProperty.Register("CallList", typeof(IEnumerable<CallInList>), typeof(CallListWindow), new PropertyMetadata(null));
 
+
     // Selected filter from ComboBox
     public BO.CallInListFields SelectedFiled { get; set; } = BO.CallInListFields.None;
     public BO.CallInListFields SelectedSort { get; set; } = BO.CallInListFields.None;
     public object SelectedFilterValue { get; set; } = new object();
+
+    public BO.CallInListFields SelectedGroup { get; set; }=BO.CallInListFields.None;
 
     // Selected volunteer from DataGrid
     public BO.CallInList? SelectedCall { get; set; }
@@ -56,14 +62,15 @@ public partial class CallListWindow : Window, INotifyPropertyChanged
 
     private void ComboBox_SelectionChanged(object sender, SelectionChangedEventArgs e)
     {
-        // וודאי שהערך שנבחר מהקומבו בוקס נשמר
-        var comboBox = sender as ComboBox;
-        var selectedValue = comboBox?.SelectedItem;
+        //// וודאי שהערך שנבחר מהקומבו בוקס נשמר
+        //var comboBox = sender as ComboBox;
+        //var selectedValue = comboBox?.SelectedItem;
 
-        // עדכון קריאה לפונקציה CallInLists
+        //עדכון קריאה לפונקציה CallInLists
         CallList = (SelectedFiled == BO.CallInListFields.None)
             ? s_bl?.call.CallInLists(null, null, SelectedSort) ?? Enumerable.Empty<CallInList>()
-            : s_bl?.call.CallInLists(SelectedFiled, selectedValue, SelectedSort) ?? Enumerable.Empty<CallInList>();
+            : s_bl?.call.CallInLists(SelectedFiled, SelectedFilterValue, SelectedSort) ?? Enumerable.Empty<CallInList>();
+
     }
 
     private void queryCallList()
@@ -209,6 +216,43 @@ public partial class CallListWindow : Window, INotifyPropertyChanged
     private void ApplyFilterButton_Click(object sender, RoutedEventArgs e)
     {
         queryCallList();
+    }
+
+    //Handles ComboBox selection change to group the call list
+    private void ComboBox_GroupBySelectionChanged(object sender, SelectionChangedEventArgs e)
+    {
+        var filterField = SelectedFiled != BO.CallInListFields.None
+           ? (BO.CallInListFields?)SelectedFiled
+           : null;
+
+        var filterValue = !string.IsNullOrEmpty(SelectedFilterValue?.ToString())
+            ? SelectedFilterValue
+            : null;
+
+        var sortField = SelectedSort != BO.CallInListFields.None
+            ? (BO.CallInListFields?)SelectedSort
+            : null;
+
+        var comboBox = sender as ComboBox;
+        if (comboBox?.SelectedItem is GroupBy selectedField)
+        {
+            if (selectedField == GroupBy.CallType)
+            {
+                IEnumerable<CallInList> Calls = s_bl?.call.CallInLists(filterField, filterValue, sortField) ?? Enumerable.Empty<CallInList>();
+                IEnumerable<IGrouping<CallType, CallInList>> GroupCalls = Calls.GroupBy(call => call.CallType) ?? Enumerable.Empty<IGrouping<CallType, CallInList>>();
+                IEnumerable<CallInList> GroupList = GroupCalls.SelectMany(group => group) ?? Enumerable.Empty<CallInList>();
+                CallList = GroupList;
+               
+            }
+            else if (selectedField == GroupBy.Status)
+            {
+                IEnumerable<CallInList> Calls = s_bl?.call.CallInLists(filterField, filterValue, sortField) ?? Enumerable.Empty<CallInList>();
+                IEnumerable<IGrouping<BO.CallStatus, CallInList>> GroupCalls = Calls.GroupBy(call => call.Status) ?? Enumerable.Empty<IGrouping<BO.CallStatus, CallInList>>();
+                IEnumerable<CallInList> GroupList = GroupCalls.SelectMany(group => group) ?? Enumerable.Empty<CallInList>();
+                CallList = GroupList;
+                
+            }
+        }     
     }
 
 

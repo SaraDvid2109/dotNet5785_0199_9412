@@ -45,4 +45,6 @@ public interface IVolunteer : IObservable //stage 5
     public IEnumerable<BO.VolunteerInList> FilterVolunteerListByCallType(BO.CallType type);
 
     public bool CanVolunteerAttendCall(BO.Volunteer volunteer, BO.Call call);
+    public bool VolunteerHaveCall(int id);
+
 }

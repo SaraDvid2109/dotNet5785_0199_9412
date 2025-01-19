@@ -27,7 +27,7 @@ namespace PL
 
         private void SetWindowSizeToImage()
         {
-            string imagePath = "C:\\Users\\PC\\Downloads\\WhatsApp Image 2025-01-17 at 03.31.23.jpg";
+            string imagePath = "Images/starOfDavid.jpg";
             BitmapImage bitmap = new BitmapImage(new Uri(imagePath, UriKind.Absolute));
 
             this.Width = bitmap.PixelWidth;

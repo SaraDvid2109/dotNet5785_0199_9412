@@ -31,6 +31,9 @@ namespace PL.Volunteer
             DataContext = this;
             CurrentVolunteer = s_bl.volunteer.GetVolunteerDetails(id);
             VolunteerName = CurrentVolunteer.Name!;
+            HaveCall = s_bl.volunteer.VolunteerHaveCall(id);
+            BO.CallInProgress call = s_bl.volunteer.GetVolunteerDetails(id).Progress??new BO.CallInProgress();
+            VolunteerCall = s_bl.call.GetCallDetails(call.CallId)?? new BO.Call();
         }
 
         public BO.Volunteer? CurrentVolunteer

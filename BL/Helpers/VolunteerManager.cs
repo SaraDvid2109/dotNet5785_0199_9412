@@ -203,13 +203,14 @@ internal static class VolunteerManager
     public static BO.Volunteer ToBOVolunteer(DO.Volunteer volunteer)
     {
         List<DO.Assignment> assignments = s_dal.Assignment.ReadAll().ToList();
-        var idCall = assignments.FirstOrDefault(item => item.VolunteerId == volunteer.Id && item.TypeEndOfTreatment == null);
+        var idCall = assignments.LastOrDefault(item => item.VolunteerId == volunteer.Id && (item.TypeEndOfTreatment == null|| item.EndTime == null));
         var treated = Helpers.VolunteerManager.GetAssignments(assignments, volunteer, DO.EndType.Treated) ?? Enumerable.Empty<DO.Assignment>();
         var selfCancellation = Helpers.VolunteerManager.GetAssignments(assignments, volunteer, DO.EndType.SelfCancellation) ?? Enumerable.Empty<DO.Assignment>();
         var expiredCancellation = Helpers.VolunteerManager.GetAssignments(assignments, volunteer, DO.EndType.ExpiredCancellation) ?? Enumerable.Empty<DO.Assignment>();
         BO.CallInProgress? progress = null;
         if (idCall != null)
         {
+           
             var call = s_dal.Call.Read(idCall.CallId);
 
             if (call != null)

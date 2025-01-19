@@ -646,8 +646,7 @@ namespace BlTest
                 Type = type,
                 Role = role,
                 Active = active,
-                MaximumDistance = maxDistance
-
+                MaximumDistance = maxDistance 
                 //TotalCallsHandled = totalCallsHandled,
                 //TotalCallsCanceled = totalCallsCanceled,
                 //TotalCallsChosenHandleExpired = totalCallsExpired

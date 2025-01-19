@@ -5,13 +5,14 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:PL.Call"
         mc:Ignorable="d"
-        Title="CallListWindow" Height="450" Width="820" DataContext="{Binding RelativeSource={RelativeSource Mode=Self}}" 
+        Title="CallListWindow" Height="450" Width="1000" DataContext="{Binding RelativeSource={RelativeSource Mode=Self}}" 
 
        Loaded="Window_Loaded" Closed="Window_Closed">
 
     <Window.Resources>
         <BooleanToVisibilityConverter x:Key="BooleanToVisibilityConverter"/>
-        <Style TargetType="Button" BasedOn="{StaticResource ButtonStyle}"> </Style>
+        <Style TargetType="Button" BasedOn="{StaticResource ButtonStyle}"></Style>
+
     </Window.Resources>
 
     <!-- Main Grid structure -->
@@ -47,16 +48,17 @@
             <Label Content="Sort By" HorizontalAlignment="Center" VerticalAlignment="Top" Grid.Column="0" Margin="5"/>
             <ComboBox Grid.Column="1" SelectedValue="{Binding SelectedSort, Mode=TwoWay}" ItemsSource="{Binding Source={StaticResource CallInListsCollectionKey}}" VerticalAlignment="Stretch" SelectionChanged="ComboBox_SelectionChanged" Height="22" Width="149"/>
 
-            <!-- Group By -->
-            <!--<Label Content="Group By" HorizontalAlignment="Center" VerticalAlignment="Top" Grid.Column="0" Margin="5"/>
-            <ComboBox Grid.Column="1" SelectedValue="{Binding SelectedFiled, Mode=TwoWay}" ItemsSource="{Binding Source={StaticResource CallInListsCollectionKey}}"
-            HorizontalAlignment="Stretch" VerticalAlignment="Stretch" SelectionChanged="ComboBox_SelectionChanged"/>-->
+            <!--Group By-->
+            <Label Content="Group By" HorizontalAlignment="Center" VerticalAlignment="Top" Grid.Column="0" Margin="5"/>
+            <ComboBox Grid.Column="1" SelectedValue="{Binding SelectedGroup, Mode=TwoWay}" ItemsSource="{Binding Source={StaticResource GroupByCollectionKey}}" 
+                      VerticalAlignment="Stretch" SelectionChanged="ComboBox_GroupBySelectionChanged" Width="118" Height="22"/>
         </StackPanel>
 
         <!-- DataGrid to display calls -->
-        <DataGrid Grid.Row="1" ItemsSource="{Binding Path=CallList}" IsReadOnly ="True" AutoGenerateColumns="False"
+        <DataGrid Grid.Row="1" ItemsSource="{Binding CallList}" IsReadOnly ="True" AutoGenerateColumns="False"
   	    EnableRowVirtualization="True" RowDetailsVisibilityMode="VisibleWhenSelected"
   	    MouseDoubleClick="DataGrid_MouseDoubleClick" SelectedItem="{Binding SelectedCall}" >
+
             <DataGrid.Columns>
                 <!-- call details columns -->
                 <DataGridTextColumn Binding="{Binding Id}" Header="Id" Width="Auto"/>

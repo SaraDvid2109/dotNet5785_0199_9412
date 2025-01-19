@@ -11,10 +11,10 @@
         <Style TargetType="Button"
           BasedOn="{StaticResource ButtonStyle}">
         </Style>
-        <ImageBrush x:Key="BackgroundImageBrush" ImageSource="C:\Users\PC\Downloads\WhatsApp Image 2025-01-17 at 03.31.23.jpg" Stretch="UniformToFill"/>
+        <!--<ImageBrush x:Key="BackgroundImageBrush" ImageSource="Images/starOfDavid.jpg" Stretch="UniformToFill"/>-->
     </Window.Resources>
 
-    <Grid Background="{StaticResource BackgroundImageBrush}">
+    <Grid>
         <!-- Define rows and columns in the main Grid -->
         <Grid.RowDefinitions>
             <RowDefinition Height="Auto" />

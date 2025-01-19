@@ -64,6 +64,16 @@ internal class EndTypeCollection : IEnumerable
 
     public IEnumerator GetEnumerator() => s_enums.GetEnumerator();
 }
+//for grouping call list
+internal class GroupByCollection : IEnumerable
+{
+    static readonly IEnumerable<BO.GroupBy> s_enums =
+                     (Enum.GetValues(typeof(BO.GroupBy)) as IEnumerable<BO.GroupBy>)!;
+
+    public IEnumerator GetEnumerator() => s_enums.GetEnumerator();
+}
+
+
 
 
 

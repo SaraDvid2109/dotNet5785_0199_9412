@@ -289,6 +289,19 @@ internal class volunteerImplementation : IVolunteer
         double distance = Helpers.Tools.CalculateDistanceBetweenAddresses(volunteer.Address, call.Address);
         return volunteer.MaximumDistance.HasValue && distance <= volunteer.MaximumDistance.Value;
     }
+    public bool VolunteerHaveCall(int id)
+    {
+       Assignment? assignment =_dal.Assignment.Read(a => a.VolunteerId == id);
+        if (assignment == null)
+            return false;
+        else
+        {
+            if (assignment.EndTime != null)
+                return true;
+        }
+        return false;
+       
+    }
 
     #region Stage 5
     public void AddObserver(Action listObserver) =>

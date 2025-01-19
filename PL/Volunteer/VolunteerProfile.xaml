@@ -7,7 +7,7 @@
         mc:Ignorable="d"
         Title="VolunteerProfile" Height="1000" Width="450"  DataContext="{Binding RelativeSource={RelativeSource Mode=Self}}" 
         Loaded="Window_Loaded" Closed="Window_Closed">
-   
+
     <Window.Resources>
         <Style TargetType="Button"
             BasedOn="{StaticResource ButtonStyle}">
@@ -27,18 +27,18 @@
 
         </Style>
     </Window.Resources>
-    
+
     <ScrollViewer VerticalScrollBarVisibility="Auto" HorizontalScrollBarVisibility="Auto">
-            
-        <Grid RenderTransformOrigin="0.906,0.537">
-        <Grid.RowDefinitions>
-             <RowDefinition Height="Auto"/>
-             <RowDefinition Height="Auto"/>
-            <RowDefinition Height="Auto"/>
-            <RowDefinition Height="Auto"/>
-            <RowDefinition Height="Auto"/>
-             <RowDefinition Height="Auto"/>
-        </Grid.RowDefinitions>
+
+        <Grid RenderTransformOrigin="0.906,0.537" Width="400">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="Auto"/>
+            </Grid.RowDefinitions>
             <!--<Label Grid.Row="0" Content="Hello" FontWeight="Bold" FontSize="20"/>
             <Label Grid.Row="0" Content="{Binding VolunteerName}" FontWeight="Bold" FontSize="20"/>-->
 
@@ -47,7 +47,7 @@
                     <RowDefinition Height="100"/>
                     <RowDefinition Height="50"/>
                 </Grid.RowDefinitions>
-                <WebBrowser Grid.Row="0" Name="mapWebBrowser" HorizontalAlignment="Stretch" VerticalAlignment="Stretch"/>
+                <WebBrowser Grid.Row="0" Name="mapWebBrowser" />
 
                 <TextBlock Grid.Row="1"  FontWeight="Bold" FontSize="20" Foreground="#FF0000" Margin="10,10,0,10" FontFamily="Cooper Black">
                     <TextBlock.Effect>
@@ -57,143 +57,158 @@
                       <Run Text="{Binding VolunteerName}" />
                       <Run Text="!" />
                 </TextBlock>
-               
-            </Grid>
-            <Grid Grid.Row="1">
-            <Grid.RowDefinitions>
-                <RowDefinition Height="Auto"/>
-                <RowDefinition Height="Auto"/>
-                <RowDefinition Height="Auto"/>
-                <RowDefinition Height="Auto"/>
-                <RowDefinition Height="Auto"/>
-                <RowDefinition Height="Auto"/>
-                <RowDefinition Height="Auto"/>
-                <RowDefinition Height="Auto"/>
-                <RowDefinition Height="Auto"/>
-                <RowDefinition Height="Auto"/>
-                <RowDefinition Height="Auto"/>
-            </Grid.RowDefinitions>
 
-            <Grid.ColumnDefinitions>
+            </Grid>
+            <Grid Grid.Row="1" Margin="0,0,10,5" >
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="Auto"/>
+                </Grid.RowDefinitions>
+
+                <Grid.ColumnDefinitions>
                     <ColumnDefinition Width="Auto"/>
                     <ColumnDefinition Width="*"/>
-             </Grid.ColumnDefinitions>
-               
+                </Grid.ColumnDefinitions>
+
                 <!-- ID -->
-            <Label Grid.Row="0" Grid.Column="0" Content="ID:" />
+                <Label Grid.Row="0" Grid.Column="0" Content="ID:" />
                 <TextBox Grid.Row="0" Grid.Column="1" IsEnabled="False" Text="{Binding CurrentVolunteer.Id, Mode=TwoWay, NotifyOnValidationError=true,  ValidatesOnExceptions=true}" />
 
-            <!-- Name -->
-            <Label Grid.Row="1" Grid.Column="0" Content="Name:" />
-            <TextBox Grid.Row="1" Grid.Column="1" Text="{Binding CurrentVolunteer.Name, Mode=TwoWay, NotifyOnValidationError=true,  ValidatesOnExceptions=true}"/>
+                <!-- Name -->
+                <Label Grid.Row="1" Grid.Column="0" Content="Name:" />
+                <TextBox Grid.Row="1" Grid.Column="1" Text="{Binding CurrentVolunteer.Name, Mode=TwoWay, NotifyOnValidationError=true,  ValidatesOnExceptions=true}"/>
 
-            <!-- Phone -->
-            <Label Grid.Row="2" Grid.Column="0" Content="Phone:" />
-            <TextBox Grid.Row="2" Grid.Column="1" Text="{Binding CurrentVolunteer.Phone, Mode=TwoWay, NotifyOnValidationError=true,  ValidatesOnExceptions=true}" />
+                <!-- Phone -->
+                <Label Grid.Row="2" Grid.Column="0" Content="Phone:" />
+                <TextBox Grid.Row="2" Grid.Column="1" Text="{Binding CurrentVolunteer.Phone, Mode=TwoWay, NotifyOnValidationError=true,  ValidatesOnExceptions=true}" />
 
-            <!-- Mail -->
-            <Label Grid.Row="3" Grid.Column="0" Content="Mail:" />
-            <TextBox Grid.Row="3" Grid.Column="1" Text="{Binding CurrentVolunteer.Mail, Mode=TwoWay, NotifyOnValidationError=true,  ValidatesOnExceptions=true}" />
+                <!-- Mail -->
+                <Label Grid.Row="3" Grid.Column="0" Content="Mail:" />
+                <TextBox Grid.Row="3" Grid.Column="1" Text="{Binding CurrentVolunteer.Mail, Mode=TwoWay, NotifyOnValidationError=true,  ValidatesOnExceptions=true}" />
 
-            <!-- Password -->
-            <Label Grid.Row="4" Grid.Column="0" Content="Password:" />
-            <TextBox Grid.Row="4" Grid.Column="1" Text="{Binding CurrentVolunteer.Password, Mode=TwoWay, NotifyOnValidationError=true,  ValidatesOnExceptions=true}" />
+                <!-- Password -->
+                <Label Grid.Row="4" Grid.Column="0" Content="Password:" />
+                <TextBox Grid.Row="4" Grid.Column="1" Text="{Binding CurrentVolunteer.Password, Mode=TwoWay, NotifyOnValidationError=true,  ValidatesOnExceptions=true}" />
 
-            <!-- Address -->
-            <Label Grid.Row="5" Grid.Column="0" Content="Address:" />
-            <TextBox Grid.Row="5" Grid.Column="1" Text="{Binding CurrentVolunteer.Address, Mode=TwoWay, NotifyOnValidationError=true,  ValidatesOnExceptions=true}" />
+                <!-- Address -->
+                <Label Grid.Row="5" Grid.Column="0" Content="Address:" />
+                <TextBox Grid.Row="5" Grid.Column="1" Text="{Binding CurrentVolunteer.Address, Mode=TwoWay, NotifyOnValidationError=true,  ValidatesOnExceptions=true}" />
 
-            <!-- Role -->
-            <Label Grid.Row="6" Grid.Column="0" Content="Role:" />
-            <ComboBox Grid.Row="6" Grid.Column="1" ItemsSource="{Binding Source={StaticResource RolesCollectionKey}}" SelectedItem="{Binding CurrentVolunteer.Role}"  />
+                <!-- Role -->
+                <Label Grid.Row="6" Grid.Column="0" Content="Role:" />
+                <ComboBox Grid.Row="6" Grid.Column="1" ItemsSource="{Binding Source={StaticResource RolesCollectionKey}}" SelectedItem="{Binding CurrentVolunteer.Role}"  />
 
 
-            <!-- Active -->
-            <Label Grid.Row="7" Grid.Column="0" Content="Active:" />
-            <CheckBox Grid.Row="7" IsChecked="{Binding CurrentVolunteer.Active}" HorizontalAlignment="Left"  
+                <!-- Active -->
+                <Label Grid.Row="7" Grid.Column="0" Content="Active:" />
+                <CheckBox Grid.Row="7" IsChecked="{Binding CurrentVolunteer.Active}" HorizontalAlignment="Left"  
             Margin="39,11,0,11" Grid.Column="1" RenderTransformOrigin="-1.482,0.545"  />
 
-            <!-- Maximum Distance -->
-            <Label Grid.Row="8" Grid.Column="0" Content="Maximum Distance:" />
-            <TextBox Grid.Row="8" Grid.Column="1" Text="{Binding CurrentVolunteer.MaximumDistance, Mode=TwoWay, NotifyOnValidationError=true,  ValidatesOnExceptions=true}" />
+                <!-- Maximum Distance -->
+                <Label Grid.Row="8" Grid.Column="0" Content="Maximum Distance:" />
+                <TextBox Grid.Row="8" Grid.Column="1" Text="{Binding CurrentVolunteer.MaximumDistance, Mode=TwoWay, NotifyOnValidationError=true,  ValidatesOnExceptions=true}" />
 
-            <!-- Distance Type -->
-            <Label Grid.Row="9" Grid.Column="0" Content="Distance Type:" />
-            <ComboBox Grid.Row="9" Grid.Column="1" ItemsSource="{Binding Source={StaticResource DistanceTypeCollectionKey}}"  
+                <!-- Distance Type -->
+                <Label Grid.Row="9" Grid.Column="0" Content="Distance Type:" />
+                <ComboBox Grid.Row="9" Grid.Column="1" ItemsSource="{Binding Source={StaticResource DistanceTypeCollectionKey}}"  
            SelectedItem="{Binding CurrentVolunteer.Type}" />
-        </Grid>
+            </Grid>
 
-        <Grid Grid.Row="2" Margin="10">
-            <Grid.ColumnDefinitions>
-                <ColumnDefinition Width="400"/>
-                <ColumnDefinition Width="Auto"/>
-                <ColumnDefinition Width="*"/>
-            </Grid.ColumnDefinitions>
-                <StackPanel Margin="70,0,0,0">
+            <Grid Grid.Row="2" >
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="400"/>
+                    <ColumnDefinition Width="Auto"/>
+                    <ColumnDefinition Width="*"/>
+                </Grid.ColumnDefinitions>
+                <StackPanel>
                     <Button Content="Update" Click="Update_Click" />
                     <Button Content="View Call History" Click="ViewCallHistory_Click" />
                     <Button Content="Choose Call" Click="ChooseCall_Click" Visibility="{Binding CurrentVolunteer.Active , Converter={StaticResource ConvertboolToVisibiltyKey}}"/>
                 </StackPanel>
                 <!--<Button Grid.Row="0" Grid.Column="0" Content="Update" Click="Update_Click" HorizontalAlignment="Center" Margin="0,0,10,0" />
             <Button Grid.Row="0" Grid.Column="1" Content="View Call History" Click="ViewCallHistory_Click" HorizontalAlignment="Center"/>-->
-        </Grid>
+            </Grid>
 
-            <Grid Grid.Row="3" Margin="20" Visibility="{Binding HaveCall, Converter={StaticResource ConvertHaveCallToVisibiltyKey}}">
+            <Grid Grid.Row="3"  Visibility="{Binding HaveCall, Converter={StaticResource ConvertHaveCallToVisibiltyKey}}">
                 <Grid.RowDefinitions>
-                <RowDefinition Height="Auto"/>
-                <RowDefinition Height="Auto"/>
-                <RowDefinition Height="Auto"/>
-                <RowDefinition Height="Auto"/>
-                <RowDefinition Height="Auto"/>
-                <RowDefinition Height="Auto"/>
-                <RowDefinition Height="Auto"/>
-                <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="Auto"/>
                 </Grid.RowDefinitions>
 
-            <Grid.ColumnDefinitions>
-                <ColumnDefinition Width="Auto"/>
-                <ColumnDefinition Width="*"/>
-            </Grid.ColumnDefinitions>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="Auto"/>
+                    <ColumnDefinition Width="*"/>
+                </Grid.ColumnDefinitions>
 
 
-            <Label Grid.Row="0" Grid.Column="0" Content="Call ID:"/>
-            <Label Grid.Row="0" Grid.Column="1" Content="{Binding VolunteerCall.Id}" Margin="20,5,0,10"/>
+                <Label Grid.Row="0" Grid.Column="0" Content="Call ID:"/>
+                <Label Grid.Row="0" Grid.Column="1" Content="{Binding VolunteerCall.Id}" Margin="0,5,0,10"/>
 
-            <Label Grid.Row="1" Grid.Column="0" Content="CarTypeToSend:"/>
-            <Label Grid.Row="1" Grid.Column="1" Content="{Binding VolunteerCall.CarTypeToSend}" Margin="0,5,0,10"/>
+                <Label Grid.Row="1" Grid.Column="0" Content="CarTypeToSend:"/>
+                <Label Grid.Row="1" Grid.Column="1" Content="{Binding VolunteerCall.CarTypeToSend}" Margin="0,5,0,10"/>
 
-            <Label Grid.Row="2" Grid.Column="0" Content="Description:"/>
-            <Label Grid.Row="2" Grid.Column="1" Content="{Binding VolunteerCall.Description}" Margin="0,5,0,10"/>
+                <Label Grid.Row="2" Grid.Column="0" Content="Description:"/>
+                <Label Grid.Row="2" Grid.Column="1" Content="{Binding VolunteerCall.Description}" Margin="0,5,0,10"/>
 
-            <Label Grid.Row="3" Grid.Column="0" Content="Address:"/>
-            <Label Grid.Row="3" Grid.Column="1" Content="{Binding VolunteerCall.Address}" Margin="0,5,0,10"/>
+                <Label Grid.Row="3" Grid.Column="0" Content="Address:"/>
+                <Label Grid.Row="3" Grid.Column="1" Content="{Binding VolunteerCall.Address}" Margin="0,5,0,10"/>
 
-            <Label Grid.Row="4" Grid.Column="0" Content="OpenTime:"/>
-            <Label Grid.Row="4" Grid.Column="1" Content="{Binding VolunteerCall.OpenTime}" Margin="0,5,0,10"/>
+                <Label Grid.Row="4" Grid.Column="0" Content="OpenTime:"/>
+                <Label Grid.Row="4" Grid.Column="1" Content="{Binding VolunteerCall.OpenTime}" Margin="0,5,0,10"/>
 
-            <Label Grid.Row="5" Grid.Column="0" Content="MaxTime:"/>
-            <Label Grid.Row="5" Grid.Column="1" Content="{Binding VolunteerCall.MaxTime}" Margin="0,5,0,10"/>
+                <Label Grid.Row="5" Grid.Column="0" Content="MaxTime:"/>
+                <Label Grid.Row="5" Grid.Column="1" Content="{Binding VolunteerCall.MaxTime}" Margin="0,5,0,10"/>
 
-            <Label Grid.Row="6" Grid.Column="0" Content="Status:"/>
-            <Label Grid.Row="6" Grid.Column="1" Content="{Binding VolunteerCall.Status}" Margin="0,5,0,10"/>
+                <Label Grid.Row="6" Grid.Column="0" Content="Status:"/>
+                <Label Grid.Row="6" Grid.Column="1" Content="{Binding VolunteerCall.Status}" Margin="0,5,0,10"/>
 
-            <Label Grid.Row="7" Grid.Column="0" Content="List Assignment :"/>
-            <Label Grid.Row="7" Grid.Column="1" Content="{Binding VolunteerCall.ListAssignmentsForCalls}" Margin="0,5,0,10"/>
+                <!--<Label Grid.Row="7" Grid.Column="0" Content="List Assignment :"/>
+                <Label Grid.Row="7" Grid.Column="1" Content="{Binding VolunteerCall.ListAssignmentsForCalls}" Margin="0,5,0,10"/>-->
+                <!-- List Assignments -->
+                <StackPanel Grid.Row="7" Grid.Column="0" Grid.ColumnSpan="2" >
+                    <Label Grid.Row="7" Grid.Column="0" Content="List Assignment:"/>
+                    <DataGrid ItemsSource="{Binding VolunteerCall.ListAssignmentsForCalls}" Margin="0,5,0,5">
+                        <DataGrid.Columns>
+                            <DataGridTextColumn Header="Volunteer ID" Binding="{Binding VolunteerId}"/>
+                            <DataGridTextColumn Header="Volunteer Name" Binding="{Binding Name}"/>
+                            <DataGridTextColumn Header="Assignment Time" Binding="{Binding EnterTime, StringFormat={}{0:dd/MM/yyyy HH:mm}}" />
+                            <DataGridTextColumn Header="Completion Time" Binding="{Binding EndTime, StringFormat={}{0:dd/MM/yyyy HH:mm}}" />
+                            <DataGridTextColumn Header="Type End Of Treatment" Binding="{Binding TypeEndOfTreatment}"/>
+                        </DataGrid.Columns>
+                    </DataGrid>
+                </StackPanel>
             </Grid>
-            <Grid Grid.Row="4" Visibility="{Binding HaveCall, Converter={StaticResource ConvertHaveCallToVisibiltyKey}}">
-            <Grid.ColumnDefinitions>
-                <ColumnDefinition Width="400"/>
-                <ColumnDefinition Width="Auto"/>
-                <ColumnDefinition Width="*"/>
-            </Grid.ColumnDefinitions>
-                <StackPanel Margin="70,0,0,0">
-                    <Button Content="End of treatment" Click="EndOfTreatment_Click" />
+            <Grid Grid.Row="4" Visibility="{Binding HaveCall, Converter={StaticResource ConvertHaveCallToVisibiltyKey}}" >
+
+                <!--<Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="0"/>
+                    <ColumnDefinition Width="400"/>
+                    <ColumnDefinition Width="Auto"/>
+                    <ColumnDefinition Width="0*"/>
+                </Grid.ColumnDefinitions>-->
+                <StackPanel>
                     <Button  Content="Cancel treatment" Click="CancelTreatment_Click" />
+                    <Button Content="End of treatment" Click="EndOfTreatment_Click" />
                 </StackPanel>
                 <!--<Button Grid.Row="0" Grid.Column="0" Content="End of treatment" Click="EndOfTreatment_Click" HorizontalAlignment="Center" Margin="0,0,10,0" />
             <Button Grid.Row="0" Grid.Column="1" Content="Cancel treatment" Click="CancelTreatment_Click" HorizontalAlignment="Center"/>-->
-        </Grid>
+            </Grid>
 
-      </Grid>
+        </Grid>
     </ScrollViewer>
 </Window>

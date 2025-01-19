@@ -13,3 +13,5 @@ public enum ClosedCallInListField { Id , CallType, Address, OpenTime, EnterTime,
 public enum OpenCallInListField { Id, CallType, Destination, Address, OpenTime, MaxTime, Distance }
 
 public enum CallInListFields { Id, CallId, CallType, OpenTime, TimeLeftToFinish, LastVolunteer, TreatmentTimeLeft, Status, TotalAssignments, None };
+public enum GroupBy { CallType,Status, None };
+

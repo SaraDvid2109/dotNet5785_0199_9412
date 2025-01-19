@@ -81,9 +81,18 @@ namespace PL.Call
 
         private void ButtonChoose_Click(object sender, RoutedEventArgs e)
         {
-            if (sender is Button button && button.Tag is int callId)
+            try
             {
-                s_bl.call.ChooseCallForHandling(id, callId);
+                if (sender is Button button && button.Tag is int callId)
+                {
+                    s_bl.call.ChooseCallForHandling(id, callId);
+                    MessageBox.Show("You have successfully registered for the call", "Success", MessageBoxButton.OK, MessageBoxImage.Information);
+                }
+            } 
+            catch (Exception ex) 
+            {
+                MessageBox.Show($"Failed to register for call : {ex.Message}", "Error", MessageBoxButton.OK, MessageBoxImage.Error);
+
             }
         }
 
