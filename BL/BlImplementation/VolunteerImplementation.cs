@@ -296,7 +296,8 @@ internal class volunteerImplementation : IVolunteer
             return false;
         else
         {
-            if (assignment.EndTime != null)
+            if (!(assignment.TypeEndOfTreatment.Equals(BO.CallStatus.Close)
+                               || assignment.TypeEndOfTreatment.Equals(BO.CallStatus.Expired)))
                 return true;
         }
         return false;

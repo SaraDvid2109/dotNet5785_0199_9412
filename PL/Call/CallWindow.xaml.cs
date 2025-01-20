@@ -33,7 +33,7 @@ namespace PL.Call
                 {
                     CurrentCall = new BO.Call
                     {
-                        OpenTime = DateTime.Now 
+                        OpenTime = s_bl.Admin.GetClock()
                     };
                 }
                 else
@@ -170,7 +170,7 @@ namespace PL.Call
                 if (ButtonText == "Add")
                 {
                     s_bl.call.AddCall(CurrentCall!);
-                    SendEmailsToVolunteers();
+                    //SendEmailsToVolunteers();
                     MessageBox.Show("The call was added successfully!", "Success", MessageBoxButton.OK, MessageBoxImage.Information);
                 }
                 else if (ButtonText == "Update")

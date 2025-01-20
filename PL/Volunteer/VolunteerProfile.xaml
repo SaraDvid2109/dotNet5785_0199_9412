@@ -182,7 +182,7 @@
                 <!-- List Assignments -->
                 <StackPanel Grid.Row="7" Grid.Column="0" Grid.ColumnSpan="2" >
                     <Label Grid.Row="7" Grid.Column="0" Content="List Assignment:"/>
-                    <DataGrid ItemsSource="{Binding VolunteerCall.ListAssignmentsForCalls}" Margin="0,5,0,5">
+                    <DataGrid ItemsSource="{Binding VolunteerCall.ListAssignmentsForCalls}" Margin="0,5,0,5" AutoGenerateColumns="False">
                         <DataGrid.Columns>
                             <DataGridTextColumn Header="Volunteer ID" Binding="{Binding VolunteerId}"/>
                             <DataGridTextColumn Header="Volunteer Name" Binding="{Binding Name}"/>

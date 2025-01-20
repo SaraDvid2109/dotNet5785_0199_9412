@@ -90,9 +90,9 @@ internal static class CallManager
                 // Handle the null case appropriately
                 throw new BO.BlNullReferenceException("Assignment does not exist");
             }
-            if (assignment.TypeEndOfTreatment == null)
+            if (assignment.TypeEndOfTreatment == null || assignment.EndTime == null)
             {
-                if (call!.MaxTime - AdminManager.Now <= s_dal.Config.RiskRange)
+                if ((call!.MaxTime - AdminManager.Now) <= s_dal.Config.RiskRange)
                     return BO.CallStatus.TreatmentOfRisk;
                 else
                     return BO.CallStatus.Treatment;
@@ -354,8 +354,8 @@ internal static class CallManager
             s_dal.Assignment.Create(new Assignment
             {
                 CallId = Call.Id,
-                EnterTime = DateTime.Now,
-                EndTime = DateTime.Now,
+                EnterTime = AdminManager.Now,
+                EndTime = AdminManager.Now,
                 TypeEndOfTreatment = DO.EndType.ExpiredCancellation
             });
             Observers.NotifyListUpdated(); //stage 5

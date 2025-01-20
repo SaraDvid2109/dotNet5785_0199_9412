@@ -26,14 +26,22 @@ namespace PL.Volunteer
         private int id;
         public VolunteerProfile(int id)
         {
-            this.id = id;
-            InitializeComponent();
-            DataContext = this;
-            CurrentVolunteer = s_bl.volunteer.GetVolunteerDetails(id);
-            VolunteerName = CurrentVolunteer.Name!;
-            HaveCall = s_bl.volunteer.VolunteerHaveCall(id);
-            BO.CallInProgress call = s_bl.volunteer.GetVolunteerDetails(id).Progress??new BO.CallInProgress();
-            VolunteerCall = s_bl.call.GetCallDetails(call.CallId)?? new BO.Call();
+            try
+            {
+                this.id = id;
+                InitializeComponent();
+                DataContext = this;
+                CurrentVolunteer = s_bl.volunteer.GetVolunteerDetails(id);
+                VolunteerName = CurrentVolunteer.Name!;
+                HaveCall = s_bl.volunteer.VolunteerHaveCall(id);
+                BO.CallInProgress call = s_bl.volunteer.GetVolunteerDetails(id).Progress ?? new BO.CallInProgress();
+                VolunteerCall = s_bl.call.GetCallDetails(call.CallId)??new BO.Call();
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show($"Unexpected error: {ex.Message}", "error", MessageBoxButton.OK, MessageBoxImage.Error);
+
+            }
         }
 
         public BO.Volunteer? CurrentVolunteer
@@ -219,12 +227,31 @@ namespace PL.Volunteer
         }
         private void EndOfTreatment_Click(object sender, RoutedEventArgs e)
         {
-            s_bl.call.UpdateEndOfTreatmentCall(id, VolunteerCall.Id);
+            try
+            {
+                s_bl.call.UpdateEndOfTreatmentCall(id, VolunteerCall.Id);
+                MessageBox.Show("The call completion has been successfully updated!", "Success", MessageBoxButton.OK, MessageBoxImage.Information);
+
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show($"Unexpected error: {ex.Message}", "error", MessageBoxButton.OK, MessageBoxImage.Error);
+
+            }
         }
 
         private void CancelTreatment_Click(object sender, RoutedEventArgs e)
         {
-            s_bl.call.CancelCallHandling(id, VolunteerCall.Id);
+            try
+            {
+                s_bl.call.CancelCallHandling(id, VolunteerCall.Id);
+                MessageBox.Show("Your registration for the call has been successfully canceled!", "Success", MessageBoxButton.OK, MessageBoxImage.Information);
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show($"Unexpected error: {ex.Message}", "error", MessageBoxButton.OK, MessageBoxImage.Error);
+
+            }
         }
 
 
