@@ -6,6 +6,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
 using System.Text;
+using System.Text.Json;
 using System.Threading.Tasks;
 
 namespace Helpers;
@@ -159,6 +160,12 @@ internal static class Tools
         public string? lon { get; set; }
     }
 
+     public class Location
+        {
+            public double? Lat { get; set; }
+            public double? Lon { get; set; }
+        }
+
     /// <summary>
     /// function that checks if the coordinates of a volunteer match the coordinates based on his address. 
     /// we use the function GetAddressCoordinates to compare the expected coordinates with the received , allowing a small tolerance
@@ -244,128 +251,55 @@ internal static class Tools
     /// </summary>
     public static class DistanceCalculator
     {
-        public static double CalculateDistance(string address1, string address2, DO.DistanceType distanceType)
+       
+
+        public static double CalculateDistanceOSRMSync(Location locSource, Location locDest, DO.DistanceType Mode) //(double lat1, double lon1, double lat2, double lon2) //(string origin, string destination)
         {
-            if (string.IsNullOrWhiteSpace(address1) || string.IsNullOrWhiteSpace(address2))
+            string mode;
+            if (Mode == DO.DistanceType.Walking)
+                mode = "walking";
+            else
+                mode = "driving";
+
+            string requestUrl = $"http://router.project-osrm.org/route/v1/{mode}/{locSource.Lon},{locSource.Lat};{locDest.Lon},{locDest.Lat}?overview=false";
+
+            using HttpClient client = new();
+            HttpResponseMessage response = client.GetAsync(requestUrl).Result;
+            if (response.IsSuccessStatusCode)
             {
-                throw new BlNullPropertyException("Addresses cannot be null or empty.");
+                string responseContent = response.Content.ReadAsStringAsync().Result;
+                using JsonDocument doc = JsonDocument.Parse(responseContent);
+                JsonElement root = doc.RootElement;
+
+                if (root.GetProperty("code").GetString() == "Ok")
+                {
+                    JsonElement route = root.GetProperty("routes")[0];
+                    double distance = route.GetProperty("distance").GetDouble(); // במטרים
+                    return distance / 1000; // המרחק בקילומטרים
+                }
+                else
+                {
+                    throw new BO.BlDistance($"Error while calc {Mode} distance: {root.GetProperty("code").GetString()}");
+                }
+            }
+            else
+            {
+                throw new BO.BlDistance($"Error while calc {Mode} distance");
             }
 
-            switch (distanceType)
-            {
-                case DO.DistanceType.Aerial:
-                    return CalculateAirDistance(address1, address2);
-
-                case DO.DistanceType.Walking:
-                    return CalculateWalkingDistance(address1, address2);
-
-                case DO.DistanceType.Car:
-                    return CalculateDrivingDistance(address1, address2);
-
-                default:
-                    throw new ArgumentOutOfRangeException(nameof(distanceType), "Invalid distance type.");
-            }
         }
 
         /// <summary>
         /// calulate the air distance with the coordinates
         /// </summary>
-        private static double CalculateAirDistance(string address1, string address2)
+        public static double CalculateAirDistance(string address1, string address2)
         {
             var (latitude1, longitude1) = GetAddressCoordinates(address1);
             var (latitude2, longitude2) = GetAddressCoordinates(address2);
 
             return CalculateDistanceBetweenCoordinates(latitude1, longitude1, latitude2, longitude2);
         }
-        private static double CalculateWalkingDistance(string address1, string address2)
-        {
-            return CalculateTravelDistance(address1, address2, "foot");
-        }
-
-        private static double CalculateDrivingDistance(string address1, string address2)
-        {
-            return CalculateTravelDistance(address1, address2, "driving");
-        }
-
-
-        /// <summary>
-        /// calculate driving and walking distance
-        /// </summary>=
-
-        private static double CalculateTravelDistance(string address1, string address2, string mode)
-        {
-            const string LocationIqApiKey = "pk.a0941b60144dc7fe0b85814d99ab3be7";
-            const string BaseUrl = "https://us1.locationiq.com/v1/directions/";
-            // מקבל את הקואורדינטות של הכתובות
-            var (latitude1, longitude1) = GetAddressCoordinates(address1);
-            var (latitude2, longitude2) = GetAddressCoordinates(address2);
-
-            // בונה את ה-URL לבקשה עם סדר קואורדינטות נכון
-            //string requestUrl = $"{BaseUrl}{mode}/{latitude1},{longitude1};{latitude2},{longitude2}?key={LocationIqApiKey}&overview=false";
-            string requestUrl = $"{BaseUrl}driving/{latitude1},{longitude1};{latitude2},{longitude2}?key={LocationIqApiKey}&overview=false";
-
-            // Console.WriteLine($"Request URL: {requestUrl}");
-
-            using (var client = new HttpClient())
-            {
-                HttpResponseMessage response;
-
-                try
-                {
-                    // שליחת בקשה
-                    response = client.GetAsync(requestUrl).Result;
-
-                    //  Console.WriteLine($"HTTP Status Code: {response.StatusCode} ({(int)response.StatusCode})");
-
-                    // בדיקת סטטוס הקוד של התגובה
-                    if (!response.IsSuccessStatusCode)
-                    {
-                        string errorContent = response.Content.ReadAsStringAsync().Result;
-                        //      Console.WriteLine($"Error Response: {response.StatusCode} - {response.ReasonPhrase}");
-                        //      Console.WriteLine($"Error Content: {errorContent}");
-                        throw new Exception($"Error fetching route data: {response.ReasonPhrase} (HTTP {response.StatusCode})\n{errorContent}");
-                    }
-
-                    // קריאה לתוכן התגובה
-                    string responseContent = response.Content.ReadAsStringAsync().Result;
-                    //      Console.WriteLine($"Response Content: {responseContent}");
-
-                    // פירוש תגובת ה-JSON
-                    var routeData = System.Text.Json.JsonSerializer.Deserialize<RouteResponse>(responseContent);
-
-                    if (routeData == null || routeData.Routes == null || routeData.Routes.Length == 0)
-                    {
-                        throw new Exception("No route data found for the provided addresses.");
-                    }
-
-                    // חישוב המרחק בקילומטרים
-                    return routeData.Routes[0].Distance / 1000.0;
-                    //if (routeData != null && routeData.Routes != null && routeData.Routes.Length != 0)
-                    //{
-                    //    return routeData.Routes[0].Distance / 1000.0;
-                    //    //throw new Exception("No route data found for the provided addresses.");
-                    //}
-
-                    //throw new Exception("No route data found for the provided addresses.");
-                }
-                catch (HttpRequestException)
-                {
-                    //         Console.WriteLine($"HTTP Request Exception: {httpEx.Message}");
-                    throw;
-                }
-                catch (AggregateException)
-                {
-                    //        Console.WriteLine($"Aggregate Exception: {aggEx.InnerException?.Message ?? aggEx.Message}");
-                    throw;
-                }
-                catch (Exception)
-                {
-                    //          Console.WriteLine($"General Exception: {ex.Message}");
-                    throw;
-                }
-            }
-        }
-
+       
         public class RouteResponse
         {
             public Route[]? Routes { get; set; }
@@ -375,6 +309,7 @@ internal static class Tools
         {
             public double Distance { get; set; }
         }
+
         /// <summary>
         /// calculate the distances between coordinates
         /// </summary>

@@ -102,6 +102,12 @@ public class BlDeletionImpossible : Exception
     public BlDeletionImpossible(string? message) : base(message) { }
 }
 
+public class BlDistance : Exception
+{
+    public BlDistance(string? message) : base(message) { }
+}
+
+
 
 
 

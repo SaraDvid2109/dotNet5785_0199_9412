@@ -287,7 +287,13 @@ internal class volunteerImplementation : IVolunteer
             return false;
         }
 
-        double distance = Helpers.Tools.CalculateDistanceBetweenAddresses(volunteer.Address, call.Address);
+
+        double distance = volunteer.Type == BO.DistanceType.Aerial
+                     ? Tools.DistanceCalculator.CalculateAirDistance(call.Address, volunteer.Address)
+                     : Tools.DistanceCalculator.CalculateDistanceOSRMSync(
+                         new Tools.Location { Lat = call.Latitude, Lon = call.Longitude },
+                         new Tools.Location { Lat = volunteer.Latitude, Lon = volunteer.Longitude },
+                         (DO.DistanceType)volunteer.Type);
         return volunteer.MaximumDistance.HasValue && distance <= volunteer.MaximumDistance.Value;
     }
     /// <summary>

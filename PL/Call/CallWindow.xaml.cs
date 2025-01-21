@@ -9,13 +9,21 @@ using System.Windows.Controls;
 
 namespace PL.Call
 {
+    /// <summary>
+    /// Interaction logic for CallWindow.xaml
+    /// </summary>
     public partial class CallWindow : Window
     {
+        // Reference to the business logic layer
         static readonly BlApi.IBl s_bl = BlApi.Factory.Get();
 
         private int id;
         public string ButtonText { get; set; }
 
+        /// <summary>
+        /// Initializes a new instance of the CallWindow class.
+        /// </summary>
+        /// <param name="id">The ID of the call to load. If 0, a new call will be created.</param>
         public CallWindow(int id = 0)
         {
             this.id = id;
@@ -25,6 +33,10 @@ namespace PL.Call
             LoadCall(id);
         }
 
+        /// <summary>
+        /// Loads the call details based on the provided ID.
+        /// </summary>
+        /// <param name="id">The ID of the call to load.</param>
         private void LoadCall(int id)
         {
             try
@@ -48,6 +60,9 @@ namespace PL.Call
             }
         }
 
+        /// <summary>
+        /// Updates the UI access based on the call's status.
+        /// </summary>
         private void UpdateUIAccess()
         {
             if (CurrentCall == null) return;
@@ -69,6 +84,9 @@ namespace PL.Call
             }
         }
 
+        /// <summary>
+        /// Makes all fields read-only.
+        /// </summary>
         private void MakeAllFieldsReadOnly()
         {
             IsDescriptionReadOnly = true;
@@ -77,6 +95,9 @@ namespace PL.Call
             IsCarTypeReadOnly = true;
         }
 
+        /// <summary>
+        /// Enables fields for max time only.
+        /// </summary>
         private void EnableFieldsForMaxTimeOnly()
         {
             IsDescriptionReadOnly = true;
@@ -85,6 +106,9 @@ namespace PL.Call
             IsCarTypeReadOnly = true;
         }
 
+        /// <summary>
+        /// Enables all fields.
+        /// </summary>
         private void EnableAllFields()
         {
             IsDescriptionReadOnly = false;
@@ -133,6 +157,9 @@ namespace PL.Call
             set => SetValue(IsCarTypeReadOnlyProperty, value);
         }
 
+        /// <summary>
+        /// Gets or sets the current call.
+        /// </summary>
         public BO.Call? CurrentCall
         {
             get { return (BO.Call?)GetValue(CurrentCallProperty); }
@@ -143,6 +170,9 @@ namespace PL.Call
             }
         }
 
+        /// <summary>
+        /// Gets a value indicating whether the call is being updated and has assignments.
+        /// </summary>
         public bool IsUpdatingAndHasAssignments
         {
             get
@@ -151,9 +181,7 @@ namespace PL.Call
             }
         }
 
-        //public static readonly DependencyProperty CurrentCallProperty =
-        //    DependencyProperty.Register("CurrentCall", typeof(BO.Call), typeof(CallWindow), new PropertyMetadata(null));
-
+        // Define DependencyProperty for CurrentCall
         public static readonly DependencyProperty CurrentCallProperty =
             DependencyProperty.Register("CurrentCall", typeof(BO.Call), typeof(CallWindow), new PropertyMetadata(null, OnCurrentCallChanged));
 
@@ -163,6 +191,9 @@ namespace PL.Call
             window?.UpdateUIAccess();
         }
 
+        /// <summary>
+        /// Handles the Add/Update button click event.
+        /// </summary>
         private void btnAddUpdate_Click(object sender, RoutedEventArgs e)
         {
             try
@@ -186,8 +217,6 @@ namespace PL.Call
             }
         }
 
-
-
         public event PropertyChangedEventHandler? PropertyChanged;
 
         protected void OnPropertyChanged(string propertyName)
@@ -195,6 +224,9 @@ namespace PL.Call
             PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
         }
 
+        /// <summary>
+        /// Sends emails to volunteers about the new call.
+        /// </summary>
         private async void SendEmailsToVolunteers()
         {
             try
@@ -250,6 +282,12 @@ namespace PL.Call
             }
         }
 
+        /// <summary>
+        /// Sends an email.
+        /// </summary>
+        /// <param name="toEmail">The recipient's email address.</param>
+        /// <param name="subject">The subject of the email.</param>
+        /// <param name="body">The body of the email.</param>
         public static void SendEmail(string toEmail, string subject, string body)
         {
             try
@@ -291,7 +329,12 @@ namespace PL.Call
             }
         }
 
-
+        /// <summary>
+        /// Sends an email asynchronously.
+        /// </summary>
+        /// <param name="recipientEmail">The recipient's email address.</param>
+        /// <param name="subject">The subject of the email.</param>
+        /// <param name="body">The body of the email.</param>
         private async Task SendEmailAsync(string recipientEmail, string subject, string body)
         {
             try
@@ -322,18 +365,27 @@ namespace PL.Call
 
         public ObservableCollection<CallAssignInList> Assignments { get; set; } = new ObservableCollection<CallAssignInList>();
 
+        /// <summary>
+        /// Adds the observer when the window loads.
+        /// </summary>
         private void Window_Loaded(object sender, RoutedEventArgs e)
         {
             if (CurrentCall != null && CurrentCall.Id != 0)
                 s_bl.call.AddObserver(CurrentCall.Id, RefreshCall);
         }
 
+        /// <summary>
+        /// Removes the observer when the window is closed.
+        /// </summary>
         private void Window_Closed(object sender, EventArgs e)
         {
             if (CurrentCall != null && CurrentCall.Id != 0)
                 s_bl.call.RemoveObserver(CurrentCall.Id, RefreshCall);
         }
 
+        /// <summary>
+        /// Refreshes the call details.
+        /// </summary>
         private void RefreshCall()
         {
             if (CurrentCall == null) return;
@@ -344,13 +396,16 @@ namespace PL.Call
             UpdateUIAccess();
         }
 
+        /// <summary>
+        /// Handles errors by displaying a message box.
+        /// </summary>
+        /// <param name="message">The error message.</param>
+        /// <param name="ex">The exception that occurred.</param>
         private void HandleError(string message, Exception ex)
         {
             Console.WriteLine($"Error: {message} - {ex.Message}");
             MessageBox.Show(message, "Error", MessageBoxButton.OK, MessageBoxImage.Error);
         }
     }
-
-
 }
 

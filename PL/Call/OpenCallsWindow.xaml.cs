@@ -105,6 +105,10 @@ namespace PL.Call
                     MessageBox.Show("You have successfully registered for the call", "Success", MessageBoxButton.OK, MessageBoxImage.Information);
                 }
             }
+            catch (BO.BlFileLoadCreateException ex)
+            {
+                MessageBox.Show(ex.Message, "Error", MessageBoxButton.OK, MessageBoxImage.Error);
+            }
             catch (BO.BlFormatException ex)
             {
                 MessageBox.Show(ex.Message, "Error", MessageBoxButton.OK, MessageBoxImage.Error);

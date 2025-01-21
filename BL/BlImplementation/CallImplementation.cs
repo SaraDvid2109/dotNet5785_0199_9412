@@ -358,7 +358,13 @@ internal class CallImplementation : ICall
                 BO.OpenCallInListField.Address => filterCalls.OrderBy(c => c.Address),
                 BO.OpenCallInListField.OpenTime => filterCalls.OrderBy(c => c.OpenTime),
                 BO.OpenCallInListField.MaxTime => filterCalls.OrderBy(c => c.MaxTime),
-                BO.OpenCallInListField.Distance => filterCalls.OrderBy(c => Tools.DistanceCalculator.CalculateDistance(c.Address, volunteer.Address, volunteer.Type)),
+                BO.OpenCallInListField.Distance => filterCalls.OrderBy(c =>
+                    volunteer.Type == DO.DistanceType.Aerial
+                    ? Tools.DistanceCalculator.CalculateAirDistance(c.Address, volunteer.Address)
+                    : Tools.DistanceCalculator.CalculateDistanceOSRMSync(
+                        new Tools.Location { Lat = c.Latitude, Lon = c.Longitude },
+                        new Tools.Location { Lat = volunteer.Latitude, Lon = volunteer.Longitude },
+                        volunteer.Type)),
                 _ => filterCalls.OrderBy(c => c.Id)
             };
         }

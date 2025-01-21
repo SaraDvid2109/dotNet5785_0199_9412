@@ -49,13 +49,16 @@ internal static class CallManager
             throw new BO.BlFormatException("Invalid CallStatus format.");
         }
 
-        var coordinate = Tools.CheckAddressCall;
-        if (coordinate == null || call.Address == null)
+        if (string.IsNullOrEmpty(call.Address))
         {
-            throw new BO.BlFormatException("Invalid address.");
+            throw new BO.BlFormatException("Address cannot be null or empty.");
         }
 
         var coordinates = Helpers.Tools.GetAddressCoordinates(call.Address);
+        if (coordinates == (0, 0))
+        {
+            throw new BO.BlFormatException("Invalid address.");
+        }
         if (call.Latitude != coordinates.Latitude)
         {
             throw new BO.BlFormatException("Invalid Latitude.");
@@ -318,7 +321,13 @@ internal static class CallManager
             Address = call.Address,
             OpenTime = call.OpenTime,
             MaxTime=call.MaxTime,
-            Distance= Tools.DistanceCalculator.CalculateDistance(call.Address, volunteer.Address, volunteer.Type)
+            Distance = 
+                     volunteer.Type == DO.DistanceType.Aerial
+                     ? Tools.DistanceCalculator.CalculateAirDistance(call.Address, volunteer.Address)
+                     : Tools.DistanceCalculator.CalculateDistanceOSRMSync(
+                         new Tools.Location { Lat = call.Latitude, Lon = call.Longitude },
+                         new Tools.Location { Lat = volunteer.Latitude, Lon = volunteer.Longitude },
+                         volunteer.Type),
         };
     }
 
