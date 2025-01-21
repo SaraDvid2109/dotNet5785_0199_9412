@@ -252,6 +252,9 @@ public partial class CallListWindow : Window, INotifyPropertyChanged
                 CallList = GroupList;
                 
             }
+            else {
+                CallList=s_bl?.call.CallInLists(filterField, filterValue, sortField) ?? Enumerable.Empty<CallInList>();
+            }
         }     
     }
 
