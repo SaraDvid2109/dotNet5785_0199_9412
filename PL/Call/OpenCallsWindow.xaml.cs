@@ -104,7 +104,11 @@ namespace PL.Call
                     QueryVolunteerCalls();
                     MessageBox.Show("You have successfully registered for the call", "Success", MessageBoxButton.OK, MessageBoxImage.Information);
                 }
-            } 
+            }
+            catch (BO.BlFormatException ex)
+            {
+                MessageBox.Show(ex.Message, "Error", MessageBoxButton.OK, MessageBoxImage.Error);
+            }
             catch (Exception ex) 
             {
                 MessageBox.Show($"Failed to register for call : {ex.Message}", "Error", MessageBoxButton.OK, MessageBoxImage.Error);
