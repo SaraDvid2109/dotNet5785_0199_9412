@@ -488,4 +488,28 @@
     <EndTime>2025-01-20T18:10:54</EndTime>
     <TypeEndOfTreatment>ExpiredCancellation</TypeEndOfTreatment>
   </assignment>
+  <assignment>
+    <Id>66</Id>
+    <CallId>62</CallId>
+    <VolunteerId>377680350</VolunteerId>
+    <EnterTime>2025-01-20T18:10:54</EnterTime>
+    <EndTime>2025-01-20T18:11:54</EndTime>
+    <TypeEndOfTreatment>Treated</TypeEndOfTreatment>
+  </assignment>
+  <assignment>
+    <Id>67</Id>
+    <CallId>61</CallId>
+    <VolunteerId>213899412</VolunteerId>
+    <EnterTime>2025-01-20T18:11:54</EnterTime>
+    <EndTime>2025-01-20T18:11:54</EndTime>
+    <TypeEndOfTreatment>Treated</TypeEndOfTreatment>
+  </assignment>
+  <assignment>
+    <Id>68</Id>
+    <CallId>63</CallId>
+    <VolunteerId>213899412</VolunteerId>
+    <EnterTime>2025-01-20T18:11:54</EnterTime>
+    <EndTime>2025-01-20T18:11:54</EndTime>
+    <TypeEndOfTreatment>Treated</TypeEndOfTreatment>
+  </assignment>
 </ArrayOfAssignment>
