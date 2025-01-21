@@ -385,7 +385,7 @@ internal class CallImplementation : ICall
 
         if (assignment.VolunteerId != volunteerId)
             throw new BO.UnauthorizedAccessException("You do not have access permission to update the assignment");
-        if (assignment.TypeEndOfTreatment!= null/*||*/ && assignment.EndTime!= null)
+        if (assignment.TypeEndOfTreatment != null  /*||*/ && assignment.EndTime!= null)
             throw new BO.UnauthorizedAccessException("You cannot update this assignment");
 
         DO.Assignment assignmentToUpdate = assignment with { EndTime = AdminManager.Now, TypeEndOfTreatment = DO.EndType.Treated };

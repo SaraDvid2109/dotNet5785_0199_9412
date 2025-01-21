@@ -210,4 +210,18 @@
     <Role>Manager</Role>
     <Type>Aerial</Type>
   </Volunteer>
+  <Volunteer>
+    <Id>213899412</Id>
+    <Name>Hila</Name>
+    <Phone>0508821677</Phone>
+    <Mail>hila@gmail.com</Mail>
+    <Password>Hh00!@20</Password>
+    <Address>Herzl St 10, Tel Aviv, 6523701</Address>
+    <Latitude>31.797499</Latitude>
+    <Longitude>34.645104</Longitude>
+    <Active>true</Active>
+    <MaximumDistance>4</MaximumDistance>
+    <Role>Manager</Role>
+    <Type>Aerial</Type>
+  </Volunteer>
 </ArrayOfVolunteer>

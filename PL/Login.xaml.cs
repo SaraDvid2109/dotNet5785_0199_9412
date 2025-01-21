@@ -73,10 +73,21 @@ namespace PL
         {
             try
             {
-                if (IsManager == true)
+                foreach (Window window in Application.Current.Windows)
                 {
-                    MessageBox.Show("Administrator already logged in", "Error", MessageBoxButton.OK, MessageBoxImage.Warning);
-                    return;
+                    if (window is MainWindow) 
+                    {
+                        MessageBox.Show("Administrator already logged in", "Error", MessageBoxButton.OK, MessageBoxImage.Warning);
+                        return;
+                    }
+                    if(window is VolunteerProfile volunteerWindow && volunteerWindow.CurrentVolunteer!=null)
+                    {
+                        if (volunteerWindow.CurrentVolunteer.Role==BO.Roles.Manager && volunteerWindow.CurrentVolunteer.Id != this.VolunteerId)
+                        {
+                            MessageBox.Show("Administrator already logged in", "Error", MessageBoxButton.OK, MessageBoxImage.Warning);
+                            return;
+                        }
+                    }
                 }
 
                 if (VolunteerId == 0 || string.IsNullOrWhiteSpace(Password))
