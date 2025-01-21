@@ -170,7 +170,7 @@ namespace PL.Call
                 if (ButtonText == "Add")
                 {
                     s_bl.call.AddCall(CurrentCall!);
-                    //SendEmailsToVolunteers();
+                    SendEmailsToVolunteers();
                     MessageBox.Show("The call was added successfully!", "Success", MessageBoxButton.OK, MessageBoxImage.Information);
                 }
                 else if (ButtonText == "Update")
@@ -249,6 +249,48 @@ namespace PL.Call
                 });
             }
         }
+
+        public static void SendEmail(string toEmail, string subject, string body)
+        {
+            try
+            {
+                using (SmtpClient smtpClient = new SmtpClient("smtp.gmail.com", 587)) // השתמשי בפורט 587
+                {
+                    // שימוש בסיסמת אפליקציה (אם את ב-Gmail)
+                    smtpClient.Credentials = new NetworkCredential("hadasshor10@gmail.com", "bqdd enut suql kbsh");
+                    smtpClient.EnableSsl = true; // הפעלת SSL
+
+                    // יצירת הודעת מייל
+                    MailMessage mailMessage = new MailMessage
+                    {
+                        From = new MailAddress("hadasshor10@gmail.com"),
+                        Subject = subject,
+                        Body = body,
+                        IsBodyHtml = true
+                    };
+
+                    mailMessage.To.Add(toEmail);
+                    // mailMessage.To.Add("yedidia2004@gmail.com");
+
+                    // שליחת המייל
+                    smtpClient.Send(mailMessage);
+                    Console.WriteLine($"Email sent successfully to {toEmail}");
+                }
+            }
+            catch (SmtpException smtpEx)
+            {
+                Console.WriteLine($"SMTP Error: {smtpEx.Message}");
+                if (smtpEx.InnerException != null)
+                {
+                    Console.WriteLine($"Inner exception: {smtpEx.InnerException.Message}");
+                }
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"General Error: {ex.Message}");
+            }
+        }
+
 
         private async Task SendEmailAsync(string recipientEmail, string subject, string body)
         {
