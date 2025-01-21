@@ -33,7 +33,7 @@ namespace PL.Call
                 {
                     CurrentCall = new BO.Call
                     {
-                        OpenTime = DateTime.Now 
+                        OpenTime = s_bl.Admin.GetClock()
                     };
                 }
                 else

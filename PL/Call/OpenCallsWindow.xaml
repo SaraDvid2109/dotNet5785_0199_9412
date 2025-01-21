@@ -36,6 +36,7 @@
             <DataGrid Grid.Row="1" ItemsSource="{Binding Path=OpenCallList}" IsReadOnly ="True" AutoGenerateColumns="False"
    	        EnableRowVirtualization="True" RowDetailsVisibilityMode="VisibleWhenSelected" SelectionChanged="DataGrid_SelectionChanged" SelectedItem="{Binding SelectedCall, Mode=TwoWay}">
                 <DataGrid.Columns>
+                    
                     <!-- Volunteer details columns -->
                     <DataGridTextColumn Binding="{Binding Id}" Header="Id"/>
                     <DataGridTextColumn Binding="{Binding CallType}" Header="CallType" />

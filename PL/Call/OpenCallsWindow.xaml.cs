@@ -40,8 +40,6 @@ namespace PL.Call
         public static readonly DependencyProperty OpenCallListProperty =
             DependencyProperty.Register("OpenCallList", typeof(IEnumerable<OpenCallInList>), typeof(OpenCallsWindow), new PropertyMetadata(null));
 
-
-
         public string VolunteerAddrees
         {
             get { return (string)GetValue(VolunteerAddreesProperty); }
@@ -59,7 +57,6 @@ namespace PL.Call
         ////Selected call from DataGrid
         public BO.OpenCallInList? SelectedCall { get; set; }
         //public BO.Call? CallDetails { get; set; }
-
         
 
         public BO.Call CallDetails
@@ -88,7 +85,11 @@ namespace PL.Call
                     s_bl.call.ChooseCallForHandling(id, callId);
                     MessageBox.Show("You have successfully registered for the call", "Success", MessageBoxButton.OK, MessageBoxImage.Information);
                 }
-            } 
+            }
+            catch (BO.BlFormatException ex)
+            {
+                MessageBox.Show(ex.Message, "Error", MessageBoxButton.OK, MessageBoxImage.Error);
+            }
             catch (Exception ex) 
             {
                 MessageBox.Show($"Failed to register for call : {ex.Message}", "Error", MessageBoxButton.OK, MessageBoxImage.Error);
