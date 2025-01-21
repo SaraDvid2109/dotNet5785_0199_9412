@@ -465,6 +465,7 @@ internal class CallImplementation : ICall
             throw new BlOperationNotAllowedException($"The call is already being handled by another volunteer.");
 
         DO.Assignment assignmentToAdd = new DO.Assignment(0, callId, volunteerId, AdminManager.Now, null, null);
+        _dal.Volunteer.Update(volunteer with { Active = true});//////
         _dal.Assignment.Create(assignmentToAdd);
         AssignmentManager.Observers.NotifyListUpdated();  //stage 5
     }

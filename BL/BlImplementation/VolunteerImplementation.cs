@@ -5,6 +5,7 @@ using DO;
 using Helpers;
 using System;
 using System.Diagnostics;
+using System.Linq;
 using System.Xml.Linq;
 
 /// <summary>
@@ -289,19 +290,22 @@ internal class volunteerImplementation : IVolunteer
         double distance = Helpers.Tools.CalculateDistanceBetweenAddresses(volunteer.Address, call.Address);
         return volunteer.MaximumDistance.HasValue && distance <= volunteer.MaximumDistance.Value;
     }
+    /// <summary>
+    /// Checks if a volunteer currently has an active assignment.
+    /// </summary>
+    /// <param name="id">The unique ID of the volunteer.</param>
+    /// <returns>True if the volunteer has an assignment that is in "Treatment" or "TreatmentOfRisk" status.
+    /// False if the volunteer has no assignment or the assignment is in any other status.</returns>
     public bool VolunteerHaveCall(int id)
     {
-       Assignment? assignment =_dal.Assignment.Read(a => a.VolunteerId == id);
+       Assignment? assignment =_dal.Assignment.ReadAll(a => a.VolunteerId == id).LastOrDefault();
         if (assignment == null)
             return false;
+        if (assignment.TypeEndOfTreatment.Equals(BO.CallStatus.Treatment)
+                                  || assignment.TypeEndOfTreatment.Equals(BO.CallStatus.TreatmentOfRisk)||assignment.EndTime==null)
+            return true;
         else
-        {
-            if (!(assignment.TypeEndOfTreatment.Equals(BO.CallStatus.Close)
-                               || assignment.TypeEndOfTreatment.Equals(BO.CallStatus.Expired)))
-                return true;
-        }
-        return false;
-       
+             return false;
     }
 
     #region Stage 5

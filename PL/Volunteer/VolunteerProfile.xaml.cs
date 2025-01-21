@@ -24,6 +24,11 @@ namespace PL.Volunteer
     {
         static readonly BlApi.IBl s_bl = BlApi.Factory.Get();
         private int id;
+        /// <summary>
+        /// Initializes the VolunteerProfile window, displaying the volunteer's details and current call (if any).
+        /// Handles errors during setup.
+        /// </summary>
+        /// <param name="id">The volunteer ID.</param>
         public VolunteerProfile(int id)
         {
             try
@@ -33,9 +38,11 @@ namespace PL.Volunteer
                 DataContext = this;
                 CurrentVolunteer = s_bl.volunteer.GetVolunteerDetails(id);
                 VolunteerName = CurrentVolunteer.Name!;
-                HaveCall = s_bl.volunteer.VolunteerHaveCall(id);
+
+                HaveCall = s_bl.volunteer.VolunteerHaveCall(id); //Checks if a volunteer currently has a call they are handling.
+
                 BO.CallInProgress call = s_bl.volunteer.GetVolunteerDetails(id).Progress ?? new BO.CallInProgress();
-                VolunteerCall = s_bl.call.GetCallDetails(call.CallId)??new BO.Call();
+                VolunteerCall = s_bl.call.GetCallDetails(call.CallId)??new BO.Call(); //The call the volunteer is currently handling
             }
             catch (Exception ex)
             {
@@ -43,7 +50,9 @@ namespace PL.Volunteer
 
             }
         }
-
+        /// <summary>
+        /// Current volunteer data, bound to UI controls via DependencyProperty.
+        /// </summary>
         public BO.Volunteer? CurrentVolunteer
         {
             get { return (BO.Volunteer?)GetValue(CurrentVolunteerProperty); }
@@ -53,8 +62,9 @@ namespace PL.Volunteer
         public static readonly DependencyProperty CurrentVolunteerProperty =
             DependencyProperty.Register("CurrentVolunteer", typeof(BO.Volunteer), typeof(VolunteerProfile), new PropertyMetadata(null));
 
-
-        //public BO.Call VolunteerCall { get; set; }
+        /// <summary>
+        /// The volunteer's current call data, bound to the UI controls via DependencyProperty.
+        /// </summary>
         public BO.Call VolunteerCall
         {
             get { return (BO.Call)GetValue(VolunteerCallProperty); }
@@ -64,6 +74,9 @@ namespace PL.Volunteer
         public static readonly DependencyProperty VolunteerCallProperty =
             DependencyProperty.Register("VolunteerCall", typeof(BO.Call), typeof(VolunteerProfile), new PropertyMetadata(null));
 
+        /// <summary>
+        /// Volunteer name to display on screen
+        /// </summary>
         public string VolunteerName
         {
             get { return (string)GetValue(VolunteerNameProperty); }
@@ -74,8 +87,9 @@ namespace PL.Volunteer
         public static readonly DependencyProperty VolunteerNameProperty =
             DependencyProperty.Register("VolunteerName", typeof(string), typeof(VolunteerProfile), new PropertyMetadata(""));
 
-
-
+        /// <summary>
+        /// Indicates whether the volunteer is currently handling a call.
+        /// </summary>
         public bool HaveCall
         {
             get { return (bool)GetValue(HaveCallProperty); }
@@ -86,120 +100,131 @@ namespace PL.Volunteer
         public static readonly DependencyProperty HaveCallProperty =
             DependencyProperty.Register("HaveCall", typeof(bool), typeof(VolunteerProfile), new PropertyMetadata(false));
 
-
+        /// <summary>
+        /// Observer method that updates the volunteer or their current call upon any changes.
+        /// </summary>
         private void VolunteerObserver()
         {
             int id = CurrentVolunteer!.Id;
-            CurrentVolunteer = null;
+            //CurrentVolunteer = null;
             CurrentVolunteer = s_bl.volunteer.GetVolunteerDetails(id);
             BO.CallInProgress? call = s_bl.volunteer.GetVolunteerDetails(id).Progress;
             if (call != null)
             {
                 int callId = call.CallId;
                 VolunteerCall = s_bl.call.GetCallDetails(callId);
+                HaveCall = true;
             }
-            VolunteerCall = new BO.Call();
+            else
+            {
+                VolunteerCall = new BO.Call();
+                HaveCall = false;
+            }
+
         }
+        /// <summary>
+        /// Adds observers to monitor changes in volunteer data and their current call,
+        /// and creates a map showing the volunteer's location and the call they are handling.
+        /// </summary>
         private void Window_Loaded(object sender, RoutedEventArgs e)
         {
-            //if (CurrentVolunteer != null && CurrentVolunteer.Id != 0)
-            //{
-            //    s_bl.volunteer.AddObserver(CurrentVolunteer.Id, VolunteerObserver);
-
-            //}
-            ////if (CurrentVolunteer!.Id != 0)
-            ////    s_bl.volunteer.AddObserver(CurrentVolunteer!.Id, VolunteerObserver);
-
-            //string latitude = CurrentVolunteer.Latitude.ToString();  
-            //string longitude = CurrentVolunteer.Longitude.ToString();  
+            
             if (CurrentVolunteer != null && CurrentVolunteer.Id != 0)
             {
                 s_bl.volunteer.AddObserver(CurrentVolunteer.Id, VolunteerObserver);
 
             }
-            //if (CurrentVolunteer!.Id != 0)
-            //    s_bl.volunteer.AddObserver(CurrentVolunteer!.Id, VolunteerObserver);
+            if (VolunteerCall != null)
+            {
+                s_bl.call.AddObserver(VolunteerCall.Id, VolunteerObserver);
+            }
 
+            
             var latitudeVolunteer = CurrentVolunteer?.Latitude??0;
             var longitudeVolunteer = CurrentVolunteer?.Longitude??0;
            
 
-            var latitudeCall = VolunteerCall?.Latitude??0; // אם אין מיקום לקריאה, נציב null
+            var latitudeCall = VolunteerCall?.Latitude??0; 
             var longitudeCall = VolunteerCall?.Longitude??0;
 
-            // יצירת תוכן HTML עם מפה מבוססת Leaflet
+            // Creating HTML content with a Leaflet-based map
             string htmlContent = $@"<!DOCTYPE html>
-      <html>
-       <head>
-        <meta charset='utf-8' />
-        <title>Leaflet Map</title>
-      <link rel='stylesheet' href='https://unpkg.com/leaflet@1.7.1/dist/leaflet.css' />
- <script src='https://unpkg.com/leaflet@1.7.1/dist/leaflet.js'></script>
-       <style>
-         #map 
-         {{
-           width: 100%;
-           height: 500px; /* קבע גובה לדוגמה */
-         }}
-      </style>
-     </head>
-     <body>
-        <div id='map'></div>
-        <script>
-        // קואורדינטות המתנדב
-        var latitudeVolunteer = parseFloat({latitudeVolunteer});
-        var longitudeVolunteer = parseFloat({longitudeVolunteer});
+            <html>
+              <head>
+               <meta charset='utf-8' />
+                <title>Leaflet Map</title>
+                  <link rel='stylesheet' href='https://unpkg.com/leaflet@1.7.1/dist/leaflet.css' />
+                  <script src='https://unpkg.com/leaflet@1.7.1/dist/leaflet.js'></script>
+                  <style>
+                     #map 
+                     {{
+                        width: 100%;
+                        height: 500px; 
+                     }}
+                 </style>
+               </head>
+              <body>
+               <div id='map'></div>
+               <script>
+                 // Volunteer coordinates
+                  var latitudeVolunteer = parseFloat({latitudeVolunteer});
+                  var longitudeVolunteer = parseFloat({longitudeVolunteer});
   
-       // קואורדינטות הקריאה
-        var latitudeCall = parseFloat({latitudeCall});
-        var longitudeCall = parseFloat({longitudeCall});
+                  // Call coordinates
+                  var latitudeCall = parseFloat({latitudeCall});
+                  var longitudeCall = parseFloat({longitudeCall});
 
-         // יצירת מפה
-         if (latitudeVolunteer!==0 && latitudeVolunteer!==0) 
-           {{
-              var map = L.map('map').setView([latitudeVolunteer, longitudeVolunteer], 13);
-              L.tileLayer('https://{{s}}.tile.openstreetmap.org/{{z}}/{{x}}/{{y}}.png', {{
-              attribution: '&copy; <a href=""https://www.openstreetmap.org/copyright"">OpenStreetMap</a> contributors'
-              }}).addTo(map);
+                 // Creating a map
+                 if (latitudeVolunteer!==0 && latitudeVolunteer!==0) 
+                 {{
+                    var map = L.map('map').setView([latitudeVolunteer, longitudeVolunteer], 13);
+                    L.tileLayer('https://{{s}}.tile.openstreetmap.org/{{z}}/{{x}}/{{y}}.png', {{
+                    attribution: '&copy; <a href=""https://www.openstreetmap.org/copyright"">OpenStreetMap</a> contributors'
+                     }}).addTo(map);
+                  }}
 
-           }}
 
-
-        // הוספת סמן למתנדב
-        L.marker([latitudeVolunteer, longitudeVolunteer]).addTo(map)
-        .bindPopup('מיקום המתנדב')
-        .openPopup();
+                 //Add a marker for the volunteer
+                 L.marker([latitudeVolunteer, longitudeVolunteer]).addTo(map)
+                .bindPopup('Volunteer location')
+                .openPopup();
         
-       // בדיקה אם יש מיקומים לקריאה
-           if (parseFloat(latitudeCall)!==0 && parseFloat(longitudeCall)!==0) 
+                //Checking if there are locations for the call.
+                if (parseFloat(latitudeCall)!==0 && parseFloat(longitudeCall)!==0) 
+                 {{  
+                     L.marker([latitudeCall, longitudeCall]).addTo(map).bindPopup('Call location')
+                     // Adjusting the map to display both locations
+                     var bounds = L.latLngBounds(
+                     [latitudeVolunteer, longitudeVolunteer],
+                     [latitudeCall, longitudeCall] );
+                 }}
             
-        {{  
-          L.marker([latitudeCall, longitudeCall]).addTo(map).bindPopup('מיקום הקריאה')
-           // התאמת המפה כך שתראה את שני המיקומים
-           var bounds = L.latLngBounds(
-           [latitudeVolunteer, longitudeVolunteer],
-           [latitudeCall, longitudeCall]
-           );
-        }}
-            
-            map.fitBounds(bounds);
-           </script>
-         </body>
-        </html>";
+                   map.fitBounds(bounds);
+                </script>
+               </body>
+            </html>";
 
-            // הצגת תוכן ה-HTML ב-WebBrowser
+            // Display the HTML content in the WebBrowser
             mapWebBrowser.NavigateToString(htmlContent);
         }
 
-    private void Window_Closed(object sender, EventArgs e)
+        /// <summary>
+        /// Removes the observer when the window is closed.
+        /// </summary>
+        private void Window_Closed(object sender, EventArgs e)
         {
             s_bl.volunteer.RemoveObserver(CurrentVolunteer!.Id, VolunteerObserver);
             if (VolunteerCall != null)
             {
+                s_bl.call.RemoveObserver(VolunteerCall.Id, VolunteerObserver);
                 HaveCall = true;
             }
+
         }
 
+        /// <summary>
+        /// Handles the Update button click to update the volunteer's details.
+        /// </summary>
         private void Update_Click(object sender, RoutedEventArgs e)
         {
             try
@@ -215,6 +240,9 @@ namespace PL.Volunteer
 
         }
 
+        /// <summary>
+        /// Opens the "Volunteer Call History" screen when the "View Call History" button is clicked.
+        /// </summary>
         private void ViewCallHistory_Click(object sender, RoutedEventArgs e)
         {
             ClosedCallsWindow closedCallsWindow= new ClosedCallsWindow(id);
@@ -222,9 +250,21 @@ namespace PL.Volunteer
         }
         private void ChooseCall_Click(object sender, RoutedEventArgs e)
         {
-            OpenCallsWindow openCallsWindow = new OpenCallsWindow(id);
-            openCallsWindow.Show();
+            if (VolunteerCall.Status == BO.CallStatus.Treatment || VolunteerCall.Status == BO.CallStatus.TreatmentOfRisk)
+            {
+                MessageBox.Show("You cannot select a new call because you are already handling another call!", "error", MessageBoxButton.OK, MessageBoxImage.Error);
+
+            }
+            else
+            {
+                OpenCallsWindow openCallsWindow = new OpenCallsWindow(id);
+                openCallsWindow.Show();
+            }
         }
+
+        /// <summary>
+        /// Handles the "End Treatment" button click, allowing the volunteer to update the status after completing the treatment for the current call.
+        /// </summary>
         private void EndOfTreatment_Click(object sender, RoutedEventArgs e)
         {
             try
@@ -240,6 +280,9 @@ namespace PL.Volunteer
             }
         }
 
+        /// <summary>
+        /// Handles the "Cancel Treatment" button click, allowing the volunteer to update the status when they choose to cancel the treatment for the current call.
+        /// </summary>
         private void CancelTreatment_Click(object sender, RoutedEventArgs e)
         {
             try
@@ -253,29 +296,5 @@ namespace PL.Volunteer
 
             }
         }
-
-
-        //private void VolunteerObserver()
-        //{
-        //    int id = CurrentVolunteer!.Id;
-        //    CurrentVolunteer = null;
-        //    CurrentVolunteer = s_bl.volunteer.GetVolunteerDetails(id);
-
-        //}
-
-
-        ////// Adds an observer to monitor changes to the volunteer data.
-        //private void Window_Loaded(object sender, RoutedEventArgs e)
-        //{
-        //    if (CurrentVolunteer!.Id != 0)
-        //        s_bl.volunteer.AddObserver(CurrentVolunteer!.Id, VolunteerObserver);
-
-        //}
-
-        //// Removes the observer when the window is closed.
-        //private void Window_Closed(object sender, EventArgs e)
-        //{
-        //    s_bl.volunteer.RemoveObserver(CurrentVolunteer!.Id, VolunteerObserver);
-        //}
     }
 }

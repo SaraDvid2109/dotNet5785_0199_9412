@@ -22,9 +22,7 @@
         <local:CountToVisibilityConverter x:Key="CountToVisibilityConverter" />
         <local:ConvertStatusToVisibility x:Key="ConvertStatusToVisibilityKey" />
         <local:GroupByCollection x:Key="GroupByCollectionKey" />
-        <!--<local:PasswordToMaskConverter x:Key="PasswordToMaskConverterKey"/>-->
-
-        <!--<local:BooleanToVisibilityConverter x:Key="BooleanToVisibilityConverter" />-->
+       
 
         <!-- Global styles for buttons -->
         <Style x:Key="ButtonStyle" TargetType="Button">

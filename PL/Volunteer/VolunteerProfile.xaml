@@ -175,7 +175,7 @@
                 <Label Grid.Row="5" Grid.Column="1" Content="{Binding VolunteerCall.MaxTime}" Margin="0,5,0,10"/>
 
                 <Label Grid.Row="6" Grid.Column="0" Content="Status:"/>
-                <Label Grid.Row="6" Grid.Column="1" Content="{Binding VolunteerCall.Status}" Margin="0,5,0,10"/>
+                <Label Grid.Row="6" Grid.Column="1" Content="{Binding VolunteerCall.Status,Mode=TwoWay}" Margin="0,5,0,10"/>
 
                 <!--<Label Grid.Row="7" Grid.Column="0" Content="List Assignment :"/>
                 <Label Grid.Row="7" Grid.Column="1" Content="{Binding VolunteerCall.ListAssignmentsForCalls}" Margin="0,5,0,10"/>-->
