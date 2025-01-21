@@ -92,7 +92,7 @@ internal class AssignmentImplementation : IAssignment
         ?? throw new DO.DalDoesNotExistException($"Assignment with ID={item.Id} does Not exist"))
                 .Remove();
 
-        assignmentRootElem.Add(new XElement("assignment", createAssignmentElement(item)));
+        assignmentRootElem.Add(createAssignmentElement(item));
 
         XMLTools.SaveListToXMLElement(assignmentRootElem, Config.s_assignments_xml);
     }

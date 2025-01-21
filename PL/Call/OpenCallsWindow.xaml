@@ -14,12 +14,14 @@
         </Style>
     </Window.Resources>
     <Grid>
-        <Grid>
-            <Grid.RowDefinitions>
+        <Grid.RowDefinitions>
                 <RowDefinition Height="40*"/>
                 <RowDefinition Height="500*"/>
                 <RowDefinition Height="Auto"/>
-            </Grid.RowDefinitions>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="Auto"/>
+        </Grid.RowDefinitions>
 
             <!-- Filter section -->
             <Grid HorizontalAlignment="Stretch" Height="auto" Grid.Row="0" VerticalAlignment="Stretch" Width="auto">
@@ -53,11 +55,15 @@
                     </DataGridTemplateColumn>
                 </DataGrid.Columns>
             </DataGrid>
-            <TextBlock Text="{Binding CallDetails.Description}" FontSize="16" Margin="10" />
+        <TextBlock  FontSize="16" Grid.Row="2" Foreground="#0072CE">
+             <Run Text="Call description: " />
+             <Run Text="{Binding CallDetails.Description}"/>
+        </TextBlock>
 
-            <Label Grid.Row="2" Content="Change your address:"/>
-            <TextBox Text="{Binding VolunteerAddrees}" Width="NaN" Margin="164,5,376,5" Grid.Row="2" RenderTransformOrigin="0.853,0.342" />
-            <Button Content="Update address" Grid.Row="2" HorizontalAlignment="Left" Click="ChangeAddressButton_Click"  
+        <Grid Grid.Row="3">
+              <Label Grid.Row="2" Content="Change your address:"/>
+              <TextBox Text="{Binding VolunteerAddrees}" Width="NaN" Margin="164,5,376,5" Grid.Row="2" RenderTransformOrigin="0.853,0.342" />
+              <Button Content="Update address" Grid.Row="2" HorizontalAlignment="Left" Click="ChangeAddressButton_Click"  
                     Margin="440,5,0,5" />
         </Grid>
     </Grid>

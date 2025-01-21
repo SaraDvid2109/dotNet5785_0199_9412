@@ -77,10 +77,15 @@ internal static class CallManager
         var assignments = GetAssignmentCall(callId);
         if (assignments == null || !assignments.Any())
         {
-            if (call!.MaxTime - AdminManager.Now <= s_dal.Config.RiskRange)
+            if ((AdminManager.Now <= call!.MaxTime )&& (call!.MaxTime - AdminManager.Now <= s_dal.Config.RiskRange))
                 return BO.CallStatus.OpenAtRisk;
             else
-                return BO.CallStatus.Open;
+            {
+                if(AdminManager.Now <= call!.MaxTime)
+                    return BO.CallStatus.Open;
+                else
+                    return BO.CallStatus.Expired;
+            }
         }
         else
         {
@@ -99,10 +104,15 @@ internal static class CallManager
             }
             else
             {
-                if (assignment.TypeEndOfTreatment == DO.EndType.ExpiredCancellation)
-                    return BO.CallStatus.Expired;
-                else
+                if (assignment.TypeEndOfTreatment == DO.EndType.Treated)
                     return BO.CallStatus.Close;
+                else
+                {
+                    if (assignment.TypeEndOfTreatment == DO.EndType.SelfCancellation)
+                        return BO.CallStatus.Open;
+                    else
+                        return BO.CallStatus.Expired;
+                }
             }
         }
     }
@@ -132,7 +142,8 @@ internal static class CallManager
     {
         if (assignments == null)
             return null;
-        return assignments.OrderByDescending(a => a.TypeEndOfTreatment).FirstOrDefault();
+        return assignments.OrderByDescending(a => a.Id).FirstOrDefault();
+        //return assignments.OrderByDescending(a => a.TypeEndOfTreatment).FirstOrDefault();
     }
 
     /// <summary>

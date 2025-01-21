@@ -23,13 +23,15 @@ namespace PL.Call
         static readonly BlApi.IBl s_bl = BlApi.Factory.Get();
 
         private int id;
-
         public ClosedCallsWindow(int id = 0)
         {
             this.id = id;
             InitializeComponent();
             
         }
+        /// <summary>
+        ///Dependency property for binding closed calls list to UI
+        /// </summary>
         public IEnumerable<ClosedCallInList> ClosedCallList
         {
             get { return (IEnumerable<ClosedCallInList>)GetValue(ClosedCallListProperty); }
@@ -39,31 +41,44 @@ namespace PL.Call
         // Using a DependencyProperty as the backing store for ClosedCallList.  This enables animation, styling, binding, etc...
         public static readonly DependencyProperty ClosedCallListProperty =
             DependencyProperty.Register("ClosedCallList", typeof(IEnumerable<ClosedCallInList>), typeof(ClosedCallsWindow), new PropertyMetadata(null));
+        /// <summary>
+        /// Selected filter from ComboBox
+        /// </summary>
         public BO.CallType SelectedFiled { get; set; } = BO.CallType.None;
 
+        /// <summary>
+        /// Query the volunteer's closed calls list based on the selected filter
+        /// </summary>
         private void QueryVolunteerCalls()
         {
             ClosedCallList = (SelectedFiled == BO.CallType.None) ?
             s_bl.call.closedCallsHandledByVolunteer(id, null, null) : s_bl.call.closedCallsHandledByVolunteer(id, SelectedFiled, null);
         }
         /// <summary>
-        /// Observer to update the volunteer calls list when changes occur
+        /// Observer to update the volunteer's closed calls list when changes occur
         /// </summary>
         private void VolunteerCallsListObserver()
             => QueryVolunteerCalls();
 
+        /// <summary>
+        /// Add observer to monitor changes in calls data when the window loads
+        /// </summary>
         private void Window_Closed(object sender, EventArgs e)
         {
             s_bl.call.AddObserver(VolunteerCallsListObserver);
 
         }
-
+        /// <summary>
+        /// Remove observer when the window is closed
+        /// </summary>
         private void Window_Loaded(object sender, RoutedEventArgs e)
         {
             s_bl.call.RemoveObserver(VolunteerCallsListObserver);
 
         }
-
+        /// <summary>
+        /// Updates the closed calls list based on the selected field in the ComboBox.
+        /// </summary>
         private void ComboBox_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
             ClosedCallList = (SelectedFiled == BO.CallType.None) ?
