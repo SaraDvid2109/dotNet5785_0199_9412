@@ -438,6 +438,8 @@ internal class CallImplementation : ICall
             _dal.Assignment.Update(assignmentToUpdate);
             AssignmentManager.Observers.NotifyItemUpdated(assignmentToUpdate.Id);  //stage 5
             AssignmentManager.Observers.NotifyListUpdated();  //stage 5
+
+
         }
         catch (DO.DalDoesNotExistException ex)
         {
@@ -474,6 +476,7 @@ internal class CallImplementation : ICall
         _dal.Volunteer.Update(volunteer with { Active = true});//////
         _dal.Assignment.Create(assignmentToAdd);
         AssignmentManager.Observers.NotifyListUpdated();  //stage 5
+
     }
 
     #region Stage 5

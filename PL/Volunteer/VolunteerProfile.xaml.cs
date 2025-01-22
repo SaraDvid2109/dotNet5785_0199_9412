@@ -110,19 +110,20 @@ namespace PL.Volunteer
             int id = CurrentVolunteer!.Id;
             //CurrentVolunteer = null;
             CurrentVolunteer = s_bl.volunteer.GetVolunteerDetails(id);
+        }
+        private void VolunteerCallObserver() 
+        {
             BO.CallInProgress? call = s_bl.volunteer.GetVolunteerDetails(id).Progress;
             if (call != null)
             {
                 int callId = call.CallId;
                 VolunteerCall = s_bl.call.GetCallDetails(callId);
-                HaveCall = true;
             }
             else
             {
-                VolunteerCall = new BO.Call();
-                HaveCall = false;
+                VolunteerCall = new BO.Call();   
             }
-
+            HaveCall = s_bl.volunteer.VolunteerHaveCall(id);
         }
         /// <summary>
         /// Adds observers to monitor changes in volunteer data and their current call,
@@ -137,7 +138,7 @@ namespace PL.Volunteer
 
             }
            
-             s_bl.call.AddObserver(VolunteerObserver);
+             s_bl.call.AddObserver(VolunteerCall.Id,VolunteerCallObserver);
             
 
             
@@ -215,7 +216,7 @@ namespace PL.Volunteer
         private void Window_Closed(object sender, EventArgs e)
         {
             s_bl.volunteer.RemoveObserver(CurrentVolunteer!.Id, VolunteerObserver);
-            s_bl.call.RemoveObserver(VolunteerObserver);
+            s_bl.call.RemoveObserver(VolunteerCall.Id,VolunteerCallObserver);
               if (VolunteerCall != null)
                    HaveCall = true;
             

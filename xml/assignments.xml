@@ -512,4 +512,36 @@
     <EndTime>2025-01-20T18:11:54</EndTime>
     <TypeEndOfTreatment>Treated</TypeEndOfTreatment>
   </assignment>
+  <assignment>
+    <Id>69</Id>
+    <CallId>64</CallId>
+    <VolunteerId>213899412</VolunteerId>
+    <EnterTime>2025-01-20T18:11:54</EnterTime>
+    <EndTime>2025-01-20T18:11:54</EndTime>
+    <TypeEndOfTreatment>Treated</TypeEndOfTreatment>
+  </assignment>
+  <assignment>
+    <Id>70</Id>
+    <CallId>65</CallId>
+    <VolunteerId>213899412</VolunteerId>
+    <EnterTime>2025-01-20T18:11:54</EnterTime>
+    <EndTime>2025-01-20T18:11:54</EndTime>
+    <TypeEndOfTreatment>SelfCancellation</TypeEndOfTreatment>
+  </assignment>
+  <assignment>
+    <Id>71</Id>
+    <CallId>65</CallId>
+    <VolunteerId>213899412</VolunteerId>
+    <EnterTime>2025-01-20T18:11:54</EnterTime>
+    <EndTime>2025-01-20T18:11:54</EndTime>
+    <TypeEndOfTreatment>SelfCancellation</TypeEndOfTreatment>
+  </assignment>
+  <assignment>
+    <Id>72</Id>
+    <CallId>65</CallId>
+    <VolunteerId>213899412</VolunteerId>
+    <EnterTime>2025-01-20T18:11:54</EnterTime>
+    <EndTime />
+    <TypeEndOfTreatment />
+  </assignment>
 </ArrayOfAssignment>
