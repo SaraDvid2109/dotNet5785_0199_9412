@@ -32,8 +32,6 @@ internal class RolesCollection : IEnumerable
     public IEnumerator GetEnumerator() => s_roles.GetEnumerator();
 }
 
-// Class that implements IEnumerable for DistanceType enumeration.
-
 internal class DistanceTypeCollection : IEnumerable
 {
     static readonly IEnumerable<BO.DistanceType> s_distance =
