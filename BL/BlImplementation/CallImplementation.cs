@@ -57,23 +57,7 @@ internal class CallImplementation : ICall
             callInLists.Add(CallManager.ConvertFromDOToCallInList(c, assignment));
         }
         var filterCalls = CallManager.FilterCallInList(callInLists, value, filter);
-        //if (filter != null)
-        //{   
-        //    groupedCalls = filter switch
-        //    {
-        //        BO.CallInListFields.CallId => calls.GroupBy(c => (object)c.Id).Distinct(),
-        //        BO.CallInListFields.CallType => calls.GroupBy(c => (object)c.CarTypeToSend).Distinct(),
-        //        BO.CallInListFields.OpenTime => calls.GroupBy(c => (object)c.OpenTime).Distinct(),
-        //        BO.CallInListFields.Id => calls.GroupBy(c =>
-        //        (object)(assignment.FirstOrDefault(a => a.CallId == c.Id)?.Id ?? -1)),
-
-        //        _ => calls.GroupBy(c => (object)c.Id).Distinct()
-        //    };
-        //    calls = groupedCalls.FirstOrDefault(c => c.Key == value) ?? Enumerable.Empty<DO.Call>();
-        //}
-        //if (sort == null)
-        //    sortCalls = calls.OrderBy(c => c.Id);
-        //else
+       
         {
             sortCalls = sort switch
             {
@@ -91,33 +75,7 @@ internal class CallImplementation : ICall
         }
         return sortCalls;
 
-        //return sortCalls.Select(call =>
-        //{
-        //    var assignments = CallManager.GetAssignmentCall(call.Id);
-        //    return CallManager.ConvertFromDOToCallInList(call, assignments ?? Enumerable.Empty<DO.Assignment>());
-
-        //    //if (assignments == null)
-        //    //    throw new BO.BlNullPropertyException("no assignments");
-        //    //var assignmentOfCall = assignments.FirstOrDefault(a => a.CallId == call.Id);
-        //    //TimeSpan? time = null;
-        //    //if (assignmentOfCall.EndTime != null)
-        //    //{
-        //    //    time = assignmentOfCall.EndTime - assignmentOfCall.EnterTime;
-        //    //}
-        //    //return new BO.CallInList()
-        //    //{
-        //    //   Id = assignments?.LastOrDefault()?.Id ?? 0,
-        //    //   CallId = call.Id,
-        //    //   CallType = (BO.CallType)call.CarTypeToSend,
-        //    //   OpenTime = call.OpenTime,
-        //    //   TimeLeftToFinish = ClockManager.Now - call.MaxTime > TimeSpan.Zero ? ClockManager.Now - call.MaxTime : TimeSpan.Zero,
-        //    //   LastVolunteer = CallManager.getLastVolunteer(call),
-        //    //   TreatmentTimeLeft = time,
-        //    //   Status = CallManager.Status(call.Id),
-        //    //   TotalAssignments = assignments?.Count() ?? 0
-        //    //   };
-        //    //});
-        //});
+        
     }
     /// <summary>
     /// Returns the details of a specific call by its ID.
@@ -391,7 +349,7 @@ internal class CallImplementation : ICall
 
         if (assignment.VolunteerId != volunteerId)
             throw new BO.UnauthorizedAccessException("You do not have access permission to update the assignment");
-        if (assignment.TypeEndOfTreatment != null  /*||*/ && assignment.EndTime!= null)
+        if (assignment.TypeEndOfTreatment != null && assignment.EndTime!= null)
             throw new BO.UnauthorizedAccessException("You cannot update this assignment");
 
         DO.Assignment assignmentToUpdate = assignment with { EndTime = AdminManager.Now, TypeEndOfTreatment = DO.EndType.Treated };
@@ -425,7 +383,7 @@ internal class CallImplementation : ICall
 
         if (volunteer.Role == DO.Roles.Volunteer && assignment.VolunteerId != volunteerId)
             throw new BO.UnauthorizedAccessException("Sorry! You do not have access permission to revoke the assignment");
-        if (assignment.TypeEndOfTreatment != null /*||*/&& assignment.EndTime != null)
+        if (assignment.TypeEndOfTreatment != null && assignment.EndTime != null)
             throw new BO.UnauthorizedAccessException("You cannot cancel this assignment");
 
         DO.Assignment assignmentToUpdate;
@@ -475,6 +433,7 @@ internal class CallImplementation : ICall
         DO.Assignment assignmentToAdd = new DO.Assignment(0, callId, volunteerId, AdminManager.Now, null, null);
         _dal.Volunteer.Update(volunteer with { Active = true});//////
         _dal.Assignment.Create(assignmentToAdd);
+
         AssignmentManager.Observers.NotifyListUpdated();  //stage 5
 
     }

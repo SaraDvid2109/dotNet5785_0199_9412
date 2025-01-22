@@ -54,7 +54,7 @@
                         <DropShadowEffect ShadowDepth="3" Color="Yellow" BlurRadius="0" Opacity="1" />
                     </TextBlock.Effect>
                       <Run Text="Hello" />
-                      <Run Text="{Binding VolunteerName}" />
+                      <Run Text="{Binding VolunteerName, Mode=TwoWay}" />
                       <Run Text="!" />
                 </TextBlock>
 
@@ -138,7 +138,7 @@
             <Button Grid.Row="0" Grid.Column="1" Content="View Call History" Click="ViewCallHistory_Click" HorizontalAlignment="Center"/>-->
             </Grid>
 
-            <Grid Grid.Row="3"  Visibility="{Binding HaveCall, Converter={StaticResource ConvertHaveCallToVisibiltyKey}}">
+            <Grid Grid.Row="3"  Visibility="{Binding HaveCall, Converter={StaticResource ConvertHaveCallToVisibiltyKey }}">
                 <Grid.RowDefinitions>
                     <RowDefinition Height="Auto"/>
                     <RowDefinition Height="Auto"/>

@@ -109,7 +109,15 @@ namespace PL.Volunteer
         {
             int id = CurrentVolunteer!.Id;
             //CurrentVolunteer = null;
-            CurrentVolunteer = s_bl.volunteer.GetVolunteerDetails(id);
+            var updatedVolunteer = s_bl.volunteer.GetVolunteerDetails(id);
+            CurrentVolunteer = updatedVolunteer;
+            VolunteerName = CurrentVolunteer.Name!;
+            HaveCall = s_bl.volunteer.VolunteerHaveCall(id); //Checks if a volunteer currently has a call they are handling.
+            call = s_bl.volunteer.GetVolunteerDetails(id).Progress ?? new BO.CallInProgress();
+            VolunteerCall = s_bl.call.GetCallDetails(call.CallId) ?? new BO.Call(); //The call the volunteer is currently handling
+            BindingOperations.GetBindingExpression(this, CurrentVolunteerProperty)?.UpdateTarget();
+            BindingOperations.GetBindingExpression(this, VolunteerCallProperty)?.UpdateTarget();
+
         }
         private void VolunteerCallObserver() 
         {
@@ -135,13 +143,8 @@ namespace PL.Volunteer
             if (CurrentVolunteer != null && CurrentVolunteer.Id != 0)
             {
                 s_bl.volunteer.AddObserver(CurrentVolunteer.Id, VolunteerObserver);
-
             }
-           
-             s_bl.call.AddObserver(VolunteerCall.Id,VolunteerCallObserver);
-            
 
-            
             var latitudeVolunteer = CurrentVolunteer?.Latitude??0;
             var longitudeVolunteer = CurrentVolunteer?.Longitude??0;
            
@@ -216,7 +219,7 @@ namespace PL.Volunteer
         private void Window_Closed(object sender, EventArgs e)
         {
             s_bl.volunteer.RemoveObserver(CurrentVolunteer!.Id, VolunteerObserver);
-            s_bl.call.RemoveObserver(VolunteerCall.Id,VolunteerCallObserver);
+            s_bl.call.RemoveObserver(VolunteerCall.Id, VolunteerCallObserver);
               if (VolunteerCall != null)
                    HaveCall = true;
             
@@ -272,6 +275,7 @@ namespace PL.Volunteer
             {
                 s_bl.call.UpdateEndOfTreatmentCall(id, call.Id);
                 MessageBox.Show("The call completion has been successfully updated!", "Success", MessageBoxButton.OK, MessageBoxImage.Information);
+                VolunteerObserver();
 
             }
             catch (Exception ex)
@@ -290,6 +294,7 @@ namespace PL.Volunteer
             {
                 s_bl.call.CancelCallHandling(id, call.Id);
                 MessageBox.Show("Your registration for the call has been successfully canceled!", "Success", MessageBoxButton.OK, MessageBoxImage.Information);
+                VolunteerObserver();
             }
             catch (Exception ex)
             {

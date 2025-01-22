@@ -660,4 +660,14 @@
     <MaxTime>2025-01-20T18:20:54</MaxTime>
     <CarTypeToSend>RegularVehicle</CarTypeToSend>
   </Call>
+  <Call>
+    <Id>66</Id>
+    <Description>zzzzzzzzzzzzzzzzzzzzz</Description>
+    <Address>Herzl St 10, Tel Aviv, 6523701</Address>
+    <Latitude>31.797499</Latitude>
+    <Longitude>34.645104</Longitude>
+    <OpenTime>2025-01-20T18:11:54</OpenTime>
+    <MaxTime>2025-01-20T18:20:54</MaxTime>
+    <CarTypeToSend>RegularVehicle</CarTypeToSend>
+  </Call>
 </ArrayOfCall>
