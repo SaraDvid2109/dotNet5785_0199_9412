@@ -8,7 +8,6 @@
         Title="VolunteerListWindow" Height="450" Width="800" DataContext="{Binding RelativeSource={RelativeSource Mode=Self}}" 
        Loaded="Window_Loaded" Closed="Window_Closed">
     <Window.Resources>
-        <BooleanToVisibilityConverter x:Key="BooleanToVisibilityConverter"/>
         <Style TargetType="Button"
              BasedOn="{StaticResource ButtonStyle}">
         </Style>
@@ -61,10 +60,11 @@
                 <DataGridTemplateColumn Header="Delete" Width="Auto">
                     <DataGridTemplateColumn.CellTemplate>
                         <DataTemplate>
-                            <Button Content="Delete" Click="DeleteButton_Click" Tag="{Binding Id}"  Visibility="{Binding IsDeleteButtonVisible, Converter={StaticResource BooleanToVisibilityConverter}}" Command="{Binding DeleteCommand}" />
+                            <Button Content="Delete" Click="DeleteButton_Click" Tag="{Binding Id}"  Visibility="{Binding Active, Converter={StaticResource BooleanToVisibilityConverterKey}}" />
                         </DataTemplate>
                     </DataGridTemplateColumn.CellTemplate>
                 </DataGridTemplateColumn>
+
             </DataGrid.Columns>
         </DataGrid>
         
@@ -73,3 +73,4 @@
     </Grid>
 
 </Window>
+

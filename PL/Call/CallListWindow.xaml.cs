@@ -172,24 +172,6 @@ public partial class CallListWindow : Window, INotifyPropertyChanged
         }
     }
 
-    private bool _isDeleteButtonVisible;
-
-    /// <summary>
-    /// Gets or sets the visibility of the delete button.
-    /// </summary>
-    public bool IsDeleteButtonVisible
-    {
-        get => _isDeleteButtonVisible;
-        set
-        {
-            if (_isDeleteButtonVisible != value)
-            {
-                _isDeleteButtonVisible = value;
-                OnPropertyChanged();
-            }
-        }
-    }
-
     /// <summary>
     /// Raises the PropertyChanged event.
     /// </summary>
@@ -202,30 +184,6 @@ public partial class CallListWindow : Window, INotifyPropertyChanged
     /// <summary>
     /// Handles the selection change in the DataGrid to update the visibility of the delete button.
     /// </summary>
-    private void DataGrid_SelectionChanged(object sender, SelectionChangedEventArgs e)
-    {
-        if (SelectedCall != null)
-        {
-            UpdateDeleteButtonVisibility(SelectedCall.CallId);
-        }
-    }
-
-    /// <summary>
-    /// Updates the visibility of the delete button based on the call's status.
-    /// </summary>
-    /// <param name="id">The ID of the call to check.</param>
-    public void UpdateDeleteButtonVisibility(int id)
-    {
-        try
-        {
-            var callToCheck = s_bl.call.GetCallDetails(id); // קריאה מהשכבה הלוגית
-            IsDeleteButtonVisible = callToCheck != null && callToCheck.Status == BO.CallStatus.Open;
-        }
-        catch
-        {
-            IsDeleteButtonVisible = false; // הסתרה במקרים של בעיה
-        }
-    }
 
     /// <summary>
     /// Applies the selected filter to the call list.

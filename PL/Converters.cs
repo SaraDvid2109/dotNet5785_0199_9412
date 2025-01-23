@@ -68,9 +68,8 @@ public class BooleanToVisibilityConverter : IValueConverter
 {
     public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
     {
-        if (value is bool booleanValue)
-            return booleanValue ? Visibility.Visible : Visibility.Collapsed;
-
+        if (!(bool)value)
+            return Visibility.Visible;
         return Visibility.Collapsed;
     }
 
