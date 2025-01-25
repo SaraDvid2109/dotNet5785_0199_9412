@@ -23,8 +23,12 @@ namespace PL
         static readonly BlApi.IBl s_bl = BlApi.Factory.Get();
         public Login()
         {
+            Password = "sX4.nQ@0";
+            VolunteerId = 594677072;
+            
             InitializeComponent();
             DataContext = this;
+
         }
         /// <summary>
         ///Dependency property for binding volunteer's ID to the UI

@@ -68,6 +68,7 @@ namespace PL.Call
             s_bl.call.AddObserver(VolunteerCallsListObserver);
 
         }
+
         /// <summary>
         /// Remove observer when the window is closed
         /// </summary>

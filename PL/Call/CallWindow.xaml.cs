@@ -406,6 +406,7 @@ namespace PL.Call
             Console.WriteLine($"Error: {message} - {ex.Message}");
             MessageBox.Show(message, "Error", MessageBoxButton.OK, MessageBoxImage.Error);
         }
+
     }
 }
 

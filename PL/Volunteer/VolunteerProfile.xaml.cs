@@ -143,6 +143,7 @@ namespace PL.Volunteer
             if (CurrentVolunteer != null && CurrentVolunteer.Id != 0)
             {
                 s_bl.volunteer.AddObserver(CurrentVolunteer.Id, VolunteerObserver);
+                s_bl.call.AddObserver(CurrentVolunteer.Id, VolunteerObserver);
             }
 
             var latitudeVolunteer = CurrentVolunteer?.Latitude??0;
@@ -219,7 +220,7 @@ namespace PL.Volunteer
         private void Window_Closed(object sender, EventArgs e)
         {
             s_bl.volunteer.RemoveObserver(CurrentVolunteer!.Id, VolunteerObserver);
-            s_bl.call.RemoveObserver(VolunteerCall.Id, VolunteerCallObserver);
+            s_bl.call.RemoveObserver(CurrentVolunteer.Id, VolunteerObserver);
               if (VolunteerCall != null)
                    HaveCall = true;
             
@@ -275,7 +276,7 @@ namespace PL.Volunteer
             {
                 s_bl.call.UpdateEndOfTreatmentCall(id, call.Id);
                 MessageBox.Show("The call completion has been successfully updated!", "Success", MessageBoxButton.OK, MessageBoxImage.Information);
-                VolunteerObserver();
+                
 
             }
             catch (Exception ex)
@@ -294,7 +295,6 @@ namespace PL.Volunteer
             {
                 s_bl.call.CancelCallHandling(id, call.Id);
                 MessageBox.Show("Your registration for the call has been successfully canceled!", "Success", MessageBoxButton.OK, MessageBoxImage.Information);
-                VolunteerObserver();
             }
             catch (Exception ex)
             {
