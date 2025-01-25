@@ -3,6 +3,7 @@ using DalApi;
 using DO;
 using System;
 using System.Collections.Generic;
+using System.Runtime.CompilerServices;
 using System.Xml.Linq;
 
 /// <summary>
@@ -15,6 +16,7 @@ internal class AssignmentImplementation : IAssignment
     /// The ID is automatically generated using the next available ID from the configuration.
     /// </summary>
     /// <param name="item">The Assignment object to add.</param>
+    [MethodImpl(MethodImplOptions.Synchronized)] //stage 7
     public void Create(Assignment item)
     {
         XElement? assignmentRoot = XMLTools.LoadListFromXMLElement(Config.s_assignments_xml);
@@ -28,6 +30,7 @@ internal class AssignmentImplementation : IAssignment
     /// </summary>
     /// <param name="id">The ID of the Assignment to delete</param>
     /// <exception cref="DO.DalDoesNotExistException">Thrown if the Assignment with the specified ID does not exist.</exception>
+    [MethodImpl(MethodImplOptions.Synchronized)] //stage 7
     public void Delete(int id)
     {
         XElement assignmentRootElem = XMLTools.LoadListFromXMLElement(Config.s_assignments_xml);
@@ -40,6 +43,7 @@ internal class AssignmentImplementation : IAssignment
     /// <summary>
     /// Deletes all Assignment entities from the data source.
     /// </summary>
+    [MethodImpl(MethodImplOptions.Synchronized)] //stage 7
     public void DeleteAll()
     {
         XElement assignmentRootElem = XMLTools.LoadListFromXMLElement(Config.s_assignments_xml);
@@ -51,6 +55,7 @@ internal class AssignmentImplementation : IAssignment
     /// </summary>
     /// <param name="id">The ID of the Assignment to read.</param>
     /// <returns>The Assignment object if found; otherwise, null.</returns>
+    [MethodImpl(MethodImplOptions.Synchronized)] //stage 7
     public Assignment? Read(int id)
     {
         XElement? assignmentElem =
@@ -63,6 +68,7 @@ internal class AssignmentImplementation : IAssignment
     /// </summary>
     /// <param name="filter">A function to filter the assignments.</param>
     /// <returns>The first Assignment that matches the filter, or null if no match is found.</returns>
+    [MethodImpl(MethodImplOptions.Synchronized)] //stage 7
     public Assignment? Read(Func<Assignment, bool> filter) =>
          XMLTools.LoadListFromXMLElement(Config.s_assignments_xml).Elements().Select(a => getAssignment(a)).FirstOrDefault(filter);
     /// <summary>
@@ -70,6 +76,7 @@ internal class AssignmentImplementation : IAssignment
     /// </summary>
     /// <param name="filter">A predicate function used to filter the assignments. </param>
     /// <returns> objects that satisfy the filter condition, or all assignments if no filter is specified.</returns>
+    [MethodImpl(MethodImplOptions.Synchronized)] //stage 7
     public IEnumerable<Assignment> ReadAll(Func<Assignment, bool>? filter = null)
     {
         XElement assignmentsRootElem = XMLTools.LoadListFromXMLElement(Config.s_assignments_xml);
@@ -84,6 +91,7 @@ internal class AssignmentImplementation : IAssignment
     /// </summary>
     /// <param name="item">The updated Assignment object.</param>
     /// <exception cref="DO.DalDoesNotExistException">Thrown if the Assignment with the specified ID does not exist.</exception>
+    [MethodImpl(MethodImplOptions.Synchronized)] //stage 7
     public void Update(Assignment item)
     {
         XElement assignmentRootElem = XMLTools.LoadListFromXMLElement(Config.s_assignments_xml);

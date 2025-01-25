@@ -2,6 +2,7 @@
 using DalApi;
 using DO;
 using System.Collections.Generic;
+using System.Runtime.CompilerServices;
 
 /// <summary>
 /// Implementation of the IVolunteer interface, managing Volunteer entities in memory.
@@ -14,6 +15,7 @@ internal class VolunteerImplementation : IVolunteer
     /// </summary>
     /// <param name="item">The Volunteer object to add.</param>
     /// <exception cref="NotImplementedException">Thrown if a Volunteer with the same ID already exists.</exception>
+    [MethodImpl(MethodImplOptions.Synchronized)] //stage 7
     public void Create(Volunteer item)
     {
         if(Read(item.Id)is not null)
@@ -27,6 +29,7 @@ internal class VolunteerImplementation : IVolunteer
     /// </summary>
     /// <param name="id">The ID of the Volunteer to delete.</param>
     /// <exception cref="NotImplementedException">Thrown if the Volunteer with the specified ID does not exist.</exception>
+    [MethodImpl(MethodImplOptions.Synchronized)] //stage 7
     public void Delete(int id)
     {
         Volunteer? found = DataSource.Volunteers.Find(v => v.Id == id);/*FirstOrDefault(v => v.Id == id);*/
@@ -42,6 +45,7 @@ internal class VolunteerImplementation : IVolunteer
     /// <summary>
     /// Deletes all Volunteers from the data source.
     /// </summary>
+    [MethodImpl(MethodImplOptions.Synchronized)] //stage 7
     public void DeleteAll() => DataSource.Volunteers.Clear();
 
     /// <summary>
@@ -49,17 +53,20 @@ internal class VolunteerImplementation : IVolunteer
     /// </summary>
     /// <param name="id">The ID of the Volunteer to retrieve.</param>
     /// <returns>The Volunteer object, or null if not found.</returns>
+    [MethodImpl(MethodImplOptions.Synchronized)] //stage 7
     public Volunteer? Read(int id) => DataSource.Volunteers.FirstOrDefault(v => v.Id == id);
 
     /// <summary>
     /// Returns the first Volunteer matching the filter, or null.
     /// </summary>
+    [MethodImpl(MethodImplOptions.Synchronized)] //stage 7
     public Volunteer? Read(Func<Volunteer, bool> filter)=> DataSource.Volunteers?.FirstOrDefault(filter);
 
     /// <summary>
     /// Retrieves all Volunteers from the data source.
     /// </summary>
     /// <returns>A list of all Volunteer objects.</returns>
+    [MethodImpl(MethodImplOptions.Synchronized)] //stage 7
     public IEnumerable<Volunteer> ReadAll(Func<Volunteer, bool>? filter = null)
        => filter == null
             ? DataSource.Volunteers.Select(item => item)
@@ -70,6 +77,7 @@ internal class VolunteerImplementation : IVolunteer
     /// </summary>
     /// <param name="item">The updated Volunteer object.</param>
     /// <exception cref="NotImplementedException">Thrown if the Volunteer with the specified ID does not exist.</exception>
+    [MethodImpl(MethodImplOptions.Synchronized)] //stage 7
     public void Update(Volunteer item)
     {
         Volunteer? found = DataSource.Volunteers.Find(v => v.Id == item.Id);

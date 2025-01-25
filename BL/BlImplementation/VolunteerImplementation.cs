@@ -106,7 +106,7 @@ internal class volunteerImplementation : IVolunteer
                 TotalCallsHandled = treated.Count(),
                 TotalCallsCanceled = selfCancellation.Count(),
                 TotalCallsChosenHandleExpired = expiredCancellation.Count(),
-                CallHandledId = idCall?.Id,
+                CallHandledId = idCall?.CallId,
                 CallHandledType = lastCall != null ? (BO.CallType)lastCall.CarTypeToSend : BO.CallType.None
                 //idCall?.TypeEndOfTreatment.HasValue == true ? (BO.CallType)idCall.TypeEndOfTreatment.Value : BO.CallType.None
 

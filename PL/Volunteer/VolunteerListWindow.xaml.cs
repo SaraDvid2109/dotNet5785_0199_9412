@@ -65,11 +65,17 @@ public partial class VolunteerListWindow : Window
 
     // Add observer when the window loads
     private void Window_Loaded(object sender, RoutedEventArgs e)
-     => s_bl.volunteer.AddObserver(VolunteerListObserver);
+    {
+        s_bl.volunteer.AddObserver(VolunteerListObserver);
+        s_bl.call.AddObserver(VolunteerListObserver);
+    }
 
     // Remove observer when the window is closed
     private void Window_Closed(object sender, EventArgs e)
-        => s_bl.volunteer.RemoveObserver(VolunteerListObserver);
+    {
+        s_bl.volunteer.RemoveObserver(VolunteerListObserver);
+        s_bl.call.RemoveObserver(VolunteerListObserver);
+    }
 
     // Open the volunteer details window on double-clicking a row
     private void DataGrid_MouseDoubleClick(object sender, RoutedEventArgs e)

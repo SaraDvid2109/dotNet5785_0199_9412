@@ -371,7 +371,11 @@ namespace PL.Call
         private void Window_Loaded(object sender, RoutedEventArgs e)
         {
             if (CurrentCall != null && CurrentCall.Id != 0)
+            {
                 s_bl.call.AddObserver(CurrentCall.Id, RefreshCall);
+                s_bl.volunteer.AddObserver(CurrentCall.Id, RefreshCall);
+            }
+
         }
 
         /// <summary>
@@ -380,7 +384,10 @@ namespace PL.Call
         private void Window_Closed(object sender, EventArgs e)
         {
             if (CurrentCall != null && CurrentCall.Id != 0)
+            {
                 s_bl.call.RemoveObserver(CurrentCall.Id, RefreshCall);
+                s_bl.volunteer.RemoveObserver(CurrentCall.Id, RefreshCall);
+            }
         }
 
         /// <summary>
