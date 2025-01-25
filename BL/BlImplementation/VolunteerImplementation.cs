@@ -178,6 +178,8 @@ internal class volunteerImplementation : IVolunteer
 
             VolunteerManager.Observers.NotifyItemUpdated(volunteerToUpdate.Id);  //stage 5
             VolunteerManager.Observers.NotifyListUpdated();  //stage 5
+            CallManager.Observers.NotifyItemUpdated(volunteerToUpdate.Id);  //stage 5
+            CallManager.Observers.NotifyListUpdated();
 
         }
         catch (DO.DalDoesNotExistException ex)
