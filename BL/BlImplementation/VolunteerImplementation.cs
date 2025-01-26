@@ -52,6 +52,7 @@ internal class volunteerImplementation : IVolunteer
         };
         return boVolunteer.Role;
     }
+    
     /// <summary>
     /// Filters and sorts the volunteers based on the given activity status and sorting field, then returns the filtered and sorted list.
     /// </summary>
@@ -115,6 +116,7 @@ internal class volunteerImplementation : IVolunteer
 
        
     }
+   
     /// <summary>
     /// Returns the details of a volunteer by their ID.
     /// </summary>
@@ -132,6 +134,7 @@ internal class volunteerImplementation : IVolunteer
         return BoVolunteer;
 
     }
+    
     /// <summary>
     /// Updates the details of a volunteer by their ID.
     /// </summary>
@@ -141,6 +144,7 @@ internal class volunteerImplementation : IVolunteer
     /// <exception cref="BO.UnauthorizedAccessException">Thrown if the user doesn't have permission to update the volunteer's details.</exception>
     public void UpdatingVolunteerDetails(int id, BO.Volunteer volunteer)
     {
+        AdminManager.ThrowOnSimulatorIsRunning();  //stage 7
         if (!string.IsNullOrEmpty(volunteer.Address))
         {
             var coordinate = Helpers.Tools.GetAddressCoordinates(volunteer.Address);
@@ -188,6 +192,7 @@ internal class volunteerImplementation : IVolunteer
             throw new BO.BlDoesNotExistException("Error updating volunteer details: " + ex.Message);
         }
     }
+    
     /// <summary>
     /// Deletes a volunteer by their ID if the volunteer is inactive.
     /// </summary>
@@ -198,6 +203,7 @@ internal class volunteerImplementation : IVolunteer
     {
         try
         {
+            AdminManager.ThrowOnSimulatorIsRunning();  //stage 7
             DO.Volunteer? volunteerToDelete = _dal.Volunteer.Read(id);
             if (volunteerToDelete == null) throw new BO.BlDoesNotExistException("There is no volunteer with this ID.");
             if (!volunteerToDelete.Active)
@@ -213,6 +219,7 @@ internal class volunteerImplementation : IVolunteer
             throw new BO.BlDoesNotExistException("Error deleting volunteer:" + ex.Message);
         }
     }
+    
     /// <summary>
     /// Adds a new volunteer to the system.
     /// </summary>
@@ -220,7 +227,7 @@ internal class volunteerImplementation : IVolunteer
     /// <exception cref="BO.BllAlreadyExistException">Thrown if a volunteer with the same ID already exists.</exception>
     public void AddVolunteer(BO.Volunteer volunteer)
     {
-
+        AdminManager.ThrowOnSimulatorIsRunning();  //stage 7
         if (!string.IsNullOrEmpty(volunteer.Address))
         {
             var coordinate = Helpers.Tools.GetAddressCoordinates(volunteer.Address);
@@ -298,6 +305,7 @@ internal class volunteerImplementation : IVolunteer
                          (DO.DistanceType)volunteer.Type);
         return volunteer.MaximumDistance.HasValue && distance <= volunteer.MaximumDistance.Value;
     }
+    
     /// <summary>
     /// Checks if a volunteer currently has an active assignment.
     /// </summary>

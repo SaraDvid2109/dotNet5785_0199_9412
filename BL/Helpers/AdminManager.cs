@@ -236,7 +236,6 @@ internal static class AdminManager //stage 4
     /// 
     private static volatile bool s_stop = false;
 
-
     [MethodImpl(MethodImplOptions.Synchronized)] //stage 7                                                 
     public static void ThrowOnSimulatorIsRunning()
     {
@@ -280,7 +279,7 @@ internal static class AdminManager //stage 4
             //Add calls here to any logic simulation that was required in stage 7
             //for example: course registration simulation
             if (_simulateTask is null || _simulateTask.IsCompleted)//stage 7
-                _simulateTask = Task.Run(() => StudentManager.SimulateCourseRegistrationAndGrade());
+                  _simulateTask = Task.Run(() => CallManager.SimulateCallRegistrationAndGrade());
 
             //etc...
 

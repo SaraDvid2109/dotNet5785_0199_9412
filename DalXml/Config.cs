@@ -21,6 +21,7 @@ internal static class Config
         [MethodImpl(MethodImplOptions.Synchronized)] //stage 7
         private set => XMLTools.SetConfigIntVal(s_data_config_xml, "NextCallId", value);
     }
+
     /// <summary>
     /// Manages the configuration value for the next unique assignment ID.
     /// </summary>
@@ -31,6 +32,7 @@ internal static class Config
         [MethodImpl(MethodImplOptions.Synchronized)] //stage 7
         private set => XMLTools.SetConfigIntVal(s_data_config_xml, "NextAssignmentId", value);
     }
+
     /// <summary>
     /// Manages the current simulation clock value.
     /// </summary>
@@ -41,6 +43,7 @@ internal static class Config
         [MethodImpl(MethodImplOptions.Synchronized)] //stage 7
         set => XMLTools.SetConfigDateVal(s_data_config_xml, "Clock", value);
     }
+    
     /// <summary>
     /// Manages the risk range threshold as a time span.
     /// </summary>
@@ -51,6 +54,7 @@ internal static class Config
         [MethodImpl(MethodImplOptions.Synchronized)] //stage 7
         set => XMLTools.SetConfigTimeSpan(s_data_config_xml, "RiskRange", value);
     }
+    
     /// <summary>
     /// Resets the configuration settings to their initial states.
     /// </summary>

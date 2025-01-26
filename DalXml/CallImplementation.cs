@@ -25,6 +25,7 @@ internal class CallImplementation : ICall
         calls.Add(copyItem);
         XMLTools.SaveListToXMLSerializer(calls, Config.s_calls_xml); 
     }
+
     /// <summary>
     /// Deletes a Call entity by its ID.
     /// </summary>
@@ -38,11 +39,13 @@ internal class CallImplementation : ICall
             throw new DalDoesNotExistException($"Call with ID={id} does Not exist");
         XMLTools.SaveListToXMLSerializer(calls, Config.s_calls_xml);
     }
+
     /// <summary>
     ///  Deletes all Call entities from the data source.
     /// </summary>
     [MethodImpl(MethodImplOptions.Synchronized)] //stage 7
     public void DeleteAll() => XMLTools.SaveListToXMLSerializer(new List<Call>(), Config.s_calls_xml);
+    
     /// <summary>
     /// Reads a Call entity by its ID.
     /// </summary>
@@ -54,6 +57,7 @@ internal class CallImplementation : ICall
         List<Call> calls = XMLTools.LoadListFromXMLSerializer<Call>(Config.s_calls_xml);
         return calls.FirstOrDefault(it => it.Id == id);
     }
+
     /// <summary>
     /// Returns the first Call matching the filter, or null.
     /// </summary>
@@ -65,6 +69,7 @@ internal class CallImplementation : ICall
         List<Call> calls = XMLTools.LoadListFromXMLSerializer<Call>(Config.s_calls_xml);
         return calls.FirstOrDefault(filter);
     }
+
     /// <summary>
     /// Returns all calls that match the specified filter, or all calls if no filter is provided.
     /// </summary>
@@ -78,6 +83,7 @@ internal class CallImplementation : ICall
             ? calls.Select(item => item)
             : calls.Where(filter);
     }
+   
     /// <summary>
     /// Updates an existing Call entity in the data source.
     /// </summary>

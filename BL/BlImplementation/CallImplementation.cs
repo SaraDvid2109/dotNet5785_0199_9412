@@ -37,6 +37,7 @@ internal class CallImplementation : ICall
         //var groupedCalls = calls.GroupBy(c => CallManager.Status(c.Id));
         //return groupedCalls.ToArray();
     }
+
     /// <summary>
     /// Returns a list of calls with optional filtering and sorting.
     /// </summary>
@@ -77,6 +78,7 @@ internal class CallImplementation : ICall
 
         
     }
+    
     /// <summary>
     /// Returns the details of a specific call by its ID.
     /// </summary>
@@ -116,6 +118,7 @@ internal class CallImplementation : ICall
 
         return boCall;
     }
+   
     /// <summary>
     /// Updates the details of an existing call.
     /// </summary>
@@ -125,6 +128,7 @@ internal class CallImplementation : ICall
     /// <exception cref="BO.BlDoesNotExistException">Thrown if the call with the specified ID does not exist in the database.</exception>
     public void UpdatingCallDetails(int id, BO.Call call)
     {
+        AdminManager.ThrowOnSimulatorIsRunning();  //stage 7
         if (call.Address == null)
         {
             throw new BO.BlFormatException("Invalid address.");
@@ -157,6 +161,7 @@ internal class CallImplementation : ICall
             throw new BO.BlDoesNotExistException("Error:" + ex);
         }
     }
+
     /// <summary>
     /// Deletes a call by its ID if it meets the necessary conditions.
     /// </summary>
@@ -168,6 +173,7 @@ internal class CallImplementation : ICall
     {
         try
         {
+            AdminManager.ThrowOnSimulatorIsRunning();  //stage 7
             DO.Call? callToDelete = _dal.Call.Read(id);
             if (callToDelete == null) throw new BO.BlDoesNotExistException("There is no call with this ID.");
             var assignments = _dal.Assignment.ReadAll();
@@ -192,6 +198,7 @@ internal class CallImplementation : ICall
             throw new BO.BlDoesNotExistException("Error deleting volunteer:", ex);
         }
     }
+  
     /// <summary>
     /// Adds a new call to the system.
     /// </summary>
@@ -200,6 +207,7 @@ internal class CallImplementation : ICall
     /// <exception cref="BO.BllAlreadyExistException">Thrown if a call with the same ID already exists.</exception>
     public void AddCall(BO.Call call)
     {
+        AdminManager.ThrowOnSimulatorIsRunning();  //stage 7
         if (call.Address == null)
         {
             throw new BO.BlFormatException("Invalid address.");
@@ -226,6 +234,7 @@ internal class CallImplementation : ICall
         catch (DO.DalAlreadyExistException ex)
         { throw new BO.BllAlreadyExistException("Error creating call", ex); }
     }
+    
     /// <summary>
     /// Returns a list of closed calls handled by a specific volunteer, with optional filtering and sorting.
     /// </summary>
@@ -273,6 +282,7 @@ internal class CallImplementation : ICall
         };
         return sortedCall.Select(call => CallManager.ToBOClosedCall(call));
     }
+    
     /// <summary>
     /// Returns a list of open calls available for selection by a specific volunteer, with optional filtering and sorting.
     /// </summary>
@@ -331,6 +341,7 @@ internal class CallImplementation : ICall
 
 
     }
+   
     /// <summary>
     /// Updates the end of treatment details for a specific assignment handled by a volunteer.
     /// </summary>
@@ -340,6 +351,7 @@ internal class CallImplementation : ICall
     /// <exception cref="BO.UnauthorizedAccessException">Thrown if the volunteer does not have permission to update the assignment or if the assignment cannot be updated due to existing end time or treatment type.</exception>
     public void UpdateEndOfTreatmentCall(int volunteerId, int assignmentId)
     {
+        AdminManager.ThrowOnSimulatorIsRunning();  //stage 7
         DO.Volunteer? volunteer = _dal.Volunteer.Read(volunteerId);
         if (volunteer == null)
             throw new BO.BlDoesNotExistException($"Volunteer with {volunteerId} not found");
@@ -366,6 +378,7 @@ internal class CallImplementation : ICall
             throw new BO.BlDoesNotExistException("Error attempting to update call handling completion:" + ex);
         }
     }
+    
     /// <summary>
     /// Cancels the handling of a specific assignment by a volunteer or an administrator.
     /// </summary>
@@ -375,6 +388,7 @@ internal class CallImplementation : ICall
     /// <exception cref="BO.UnauthorizedAccessException">Thrown if the volunteer does not have permission to cancel the assignment or if the assignment cannot be canceled due to existing end time or treatment type.</exception>
     public void CancelCallHandling(int volunteerId, int assignmentId)
     {
+        AdminManager.ThrowOnSimulatorIsRunning();  //stage 7
         DO.Volunteer? volunteer = _dal.Volunteer.Read(volunteerId);
         if (volunteer == null)
             throw new BO.BlDoesNotExistException($"Volunteer with {volunteerId} not found");
@@ -405,6 +419,7 @@ internal class CallImplementation : ICall
             throw new BO.BlDoesNotExistException("Error trying to update call cancellation :" + ex);
         }
     }
+    
     /// <summary>
     /// Assigns a specific call to a volunteer for handling.
     /// </summary>
@@ -414,6 +429,7 @@ internal class CallImplementation : ICall
     /// <exception cref="BO.BlOperationNotAllowedException">Thrown if the volunteer is already handling another call or if the call is not available for handling.</exception>
     public void ChooseCallForHandling(int volunteerId, int callId)
     {
+        AdminManager.ThrowOnSimulatorIsRunning();  //stage 7
         DO.Volunteer? volunteer = _dal.Volunteer.Read(volunteerId);
         if (volunteer == null)
             throw new BO.BlDoesNotExistException($"Volunteer with {volunteerId} not found");

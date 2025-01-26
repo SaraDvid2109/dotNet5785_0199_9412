@@ -107,7 +107,10 @@ public class BlDistance : Exception
     public BlDistance(string? message) : base(message) { }
 }
 
-
+public class BLTemporaryNotAvailableException : Exception
+{
+    public BLTemporaryNotAvailableException(string? message) : base(message) { }
+}
 
 
 

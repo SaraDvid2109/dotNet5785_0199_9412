@@ -26,6 +26,7 @@ internal class AdminImplementation : IAdmin
     /// <exception cref="BO.BlFormatException">Thrown when an unhandled time unit is provided.</exception>
     public void ForwardClock(TimeUnit unit)
     {
+        AdminManager.ThrowOnSimulatorIsRunning();  //stage 7
         AdminManager.UpdateClock(unit switch
         {
             BO.TimeUnit.Minute => AdminManager.Now.AddMinutes(1),
@@ -37,34 +38,51 @@ internal class AdminImplementation : IAdmin
         });
 
     }
+
     /// <summary>
     /// Returns the maximum range for risk calculations.
     /// </summary>
     /// <returns>Returns a value representing the configured maximum risk range.</returns>
     public TimeSpan GetMaxRange() => AdminManager.RiskRange;
+
     /// <summary>
     /// Sets the maximum range for risk calculations.
     /// </summary>
     /// <param name="range">The  value to set as the maximum risk range.</param>
-    public void SetMaxRange(TimeSpan range) => AdminManager.RiskRange = range;
+    public void SetMaxRange(TimeSpan range) 
+    {
+        AdminManager.ThrowOnSimulatorIsRunning();  //stage 7
+        AdminManager.RiskRange = range;
+    } 
+
     /// <summary>
     /// Resets the database to its initial state and synchronizes the system clock.
     /// </summary>
     public void ResetDB()
     {
-        _dal.ResetDB();
-        AdminManager.UpdateClock(AdminManager.Now);
-        AdminManager.RiskRange = AdminManager.RiskRange;
+        AdminManager.ThrowOnSimulatorIsRunning();  //stage 7
+        AdminManager.ThrowOnSimulatorIsRunning();  //stage 7
+        AdminManager.ResetDB(); //stage 7
     }
+
     /// <summary>
     /// Initializes the database  and synchronizes the system clock.
     /// </summary>
     public void InitializeDB()
     {
-        DalTest.Initialization.Do();
-        AdminManager.UpdateClock(AdminManager.Now);
-        AdminManager.RiskRange = AdminManager.RiskRange;
+        AdminManager.ThrowOnSimulatorIsRunning();  //stage 7
+        AdminManager.ThrowOnSimulatorIsRunning();  //stage 7
+        AdminManager.InitializeDB(); //stage 7
     }
+
+    public void StartSimulator(int interval)  //stage 7
+    {
+        AdminManager.ThrowOnSimulatorIsRunning();  //stage 7
+        AdminManager.Start(interval); //stage 7
+    }
+
+    public void StopSimulator()
+    => AdminManager.Stop(); //stage 7
 
     #region Stage 5
     public void AddClockObserver(Action clockObserver) =>

@@ -25,6 +25,7 @@ internal class VolunteerImplementation : IVolunteer
             volunteers.Add(item);
         XMLTools.SaveListToXMLSerializer(volunteers, Config.s_volunteers_xml);
     }
+
     /// <summary>
     /// Deletes a Volunteer from the data source by ID.
     /// </summary>
@@ -39,11 +40,13 @@ internal class VolunteerImplementation : IVolunteer
         XMLTools.SaveListToXMLSerializer(volunteers, Config.s_volunteers_xml);
 
     }
+
     /// <summary>
     /// Deletes all Volunteers from the data source.
     /// </summary>
     [MethodImpl(MethodImplOptions.Synchronized)] //stage 7
     public void DeleteAll() => XMLTools.SaveListToXMLSerializer(new List<Volunteer>(), Config.s_volunteers_xml);
+    
     /// <summary>
     /// Retrieves a Volunteer from the data source by ID.
     /// </summary>
@@ -55,6 +58,7 @@ internal class VolunteerImplementation : IVolunteer
         List<Volunteer> volunteers = XMLTools.LoadListFromXMLSerializer<Volunteer>(Config.s_volunteers_xml);
         return volunteers.FirstOrDefault(it => it.Id == id);
     }
+
     /// <summary>
     /// Returns the first Volunteer matching the filter, or null.
     /// </summary>
@@ -66,6 +70,7 @@ internal class VolunteerImplementation : IVolunteer
         List<Volunteer> volunteers = XMLTools.LoadListFromXMLSerializer<Volunteer>(Config.s_volunteers_xml);
         return volunteers.FirstOrDefault(filter);
     }
+    
     /// <summary>
     /// Returns all volunteers that match the specified filter, or all volunteers if no filter is provided.
     /// </summary>
@@ -79,6 +84,7 @@ internal class VolunteerImplementation : IVolunteer
             ? volunteers.Select(item => item)
             :volunteers.Where(filter);
     }
+    
     /// <summary>
     /// Updates an existing Volunteer in the data source.
     /// </summary>

@@ -25,6 +25,7 @@ internal class AssignmentImplementation : IAssignment
         assignmentRoot.Add(createAssignmentElement(copyItem));
         XMLTools.SaveListToXMLElement(assignmentRoot, Config.s_assignments_xml);
     }
+
     /// <summary>
     /// Deletes an Assignment entity by its ID.
     /// </summary>
@@ -40,6 +41,7 @@ internal class AssignmentImplementation : IAssignment
         .Remove();
         XMLTools.SaveListToXMLElement(assignmentRootElem, Config.s_assignments_xml);
     }
+
     /// <summary>
     /// Deletes all Assignment entities from the data source.
     /// </summary>
@@ -50,6 +52,7 @@ internal class AssignmentImplementation : IAssignment
         assignmentRootElem.Elements().Remove();
         XMLTools.SaveListToXMLElement(assignmentRootElem, Config.s_assignments_xml);
     }
+
     /// <summary>
     /// Reads an Assignment entity by its ID.
     /// </summary>
@@ -63,6 +66,7 @@ internal class AssignmentImplementation : IAssignment
         return assignmentElem is null ? null : getAssignment(assignmentElem);
 
     }
+
     /// <summary>
     /// Returns the first Assignment matching the filter, or null.
     /// </summary>
@@ -71,6 +75,7 @@ internal class AssignmentImplementation : IAssignment
     [MethodImpl(MethodImplOptions.Synchronized)] //stage 7
     public Assignment? Read(Func<Assignment, bool> filter) =>
          XMLTools.LoadListFromXMLElement(Config.s_assignments_xml).Elements().Select(a => getAssignment(a)).FirstOrDefault(filter);
+    
     /// <summary>
     /// Returns all assignments that match the specified filter, or all assignments if no filter is provided.
     /// </summary>
@@ -86,6 +91,7 @@ internal class AssignmentImplementation : IAssignment
         else
             return assignments.Where(filter);
     }
+    
     /// <summary>
     /// Updates an existing Assignment entity in the data source.
     /// </summary>
@@ -104,6 +110,7 @@ internal class AssignmentImplementation : IAssignment
 
         XMLTools.SaveListToXMLElement(assignmentRootElem, Config.s_assignments_xml);
     }
+    
     /// <summary>
     /// Converts a XElement into an Assignment object.
     /// </summary>
@@ -124,6 +131,7 @@ internal class AssignmentImplementation : IAssignment
         };
        
     }
+    
     /// <summary>
     /// Converts a Assignment into an XElement object.
     /// </summary>
