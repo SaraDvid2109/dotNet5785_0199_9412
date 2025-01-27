@@ -14,8 +14,11 @@ internal static class AssignmentManager
 
     public static IEnumerable<DO.Assignment> findAssignment(int id)
     {
-        return s_dal.Assignment.ReadAll()
+        lock (AdminManager.BlMutex) //stage 7
+        {
+            return s_dal.Assignment.ReadAll()
                      .Where(a => a.CallId == id);
+        }
     }
     // כל המתודות במחלקה יהיו internal static
 }
