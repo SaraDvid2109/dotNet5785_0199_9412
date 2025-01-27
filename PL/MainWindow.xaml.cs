@@ -10,19 +10,23 @@ using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
+using System.Windows.Threading;
+using System.ComponentModel;
 
 namespace PL
 {
     /// <summary>
     /// Interaction logic for MainWindow.xaml
     /// </summary>
-    public partial class MainWindow : Window
+    public partial class MainWindow : Window, INotifyPropertyChanged
     {
         static readonly BlApi.IBl s_bl = BlApi.Factory.Get();
 
         public MainWindow()
         {
             InitializeComponent();
+            DataContext = this;
+            StartStopButtonText = "Start Simulator";
         }
 
         private void SetWindowSizeToImage()
@@ -32,6 +36,83 @@ namespace PL
 
             this.Width = bitmap.PixelWidth;
             this.Height = bitmap.PixelHeight;
+        }
+
+
+        private string _startStopButtonText = "Start Simulator";
+        public string StartStopButtonText
+        {
+            get => _startStopButtonText;
+            set
+            {
+                if (_startStopButtonText != value)
+                {
+                    _startStopButtonText = value;
+                    OnPropertyChanged(nameof(StartStopButtonText));
+                    OnPropertyChanged(nameof(ButtonsEnabled));
+                }
+            }
+        }
+
+
+        // Interval property with dependency property support for binding
+        public int Interval
+        {
+            get { return (int)GetValue(IntervalProperty); }
+            set { SetValue(IntervalProperty, value); }
+        }
+
+        // Using a DependencyProperty as the backing store for Interval.  This enables animation, styling, binding, etc...
+        public static readonly DependencyProperty IntervalProperty =
+            DependencyProperty.Register("Interval", typeof(int), typeof(MainWindow)/*, new PropertyMetadata(DateTime.Now)*/);
+
+        private bool _isSimulatorRunning;
+
+        public bool IsSimulatorRunning
+        {
+            get => _isSimulatorRunning;
+            set
+            {
+                if (_isSimulatorRunning != value)
+                {
+                    _isSimulatorRunning = value;
+                    OnPropertyChanged(nameof(IsSimulatorRunning));
+                }
+            }
+        }
+        public event PropertyChangedEventHandler? PropertyChanged;
+
+        private void OnStartStopButton_Click(object sender, RoutedEventArgs e)
+        {
+            if (IsSimulatorRunning)
+            {
+                // Stop the simulator
+                s_bl.Admin.StopSimulator();
+                IsSimulatorRunning = false;
+                StartStopButtonText = "Start Simulator";
+            }
+            else
+            {
+                // Start the simulator
+                s_bl.Admin.StartSimulator(Interval);
+                IsSimulatorRunning = true;
+                StartStopButtonText = "Stop Simulator";
+            }
+        }
+
+        public bool ButtonsEnabled => !IsSimulatorRunning;
+
+        protected void OnPropertyChanged(string propertyName)
+        {
+            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
+        }
+
+        private void Window_Closed(object sender, EventArgs e)
+        {
+            if (IsSimulatorRunning)
+            {
+                s_bl.Admin.StopSimulator();
+            }
         }
 
         // CurrentTime property with dependency property support for binding
@@ -67,28 +148,103 @@ namespace PL
         }
 
         // Button click handlers to advance the system time by different units
-        private void btnAddOneMinute_Click(object sender, RoutedEventArgs e) => s_bl.Admin.ForwardClock(BO.TimeUnit.Minute);
+        private void btnAddOneMinute_Click(object sender, RoutedEventArgs e)
+        {
+            try
+            {
+                s_bl.Admin.ForwardClock(BO.TimeUnit.Minute);
+            }
+            catch (BO.BLTemporaryNotAvailableException ex)
+            {
+                MessageBox.Show(ex.Message, "Operation Failed", MessageBoxButton.OK, MessageBoxImage.Error);
+            }
+        }
 
-        private void btnAddOneHour_Click(object sender, RoutedEventArgs e) => s_bl.Admin.ForwardClock(BO.TimeUnit.Hour);
+        private void btnAddOneHour_Click(object sender, RoutedEventArgs e)
+        {
+            try
+            {
+                s_bl.Admin.ForwardClock(BO.TimeUnit.Hour);
+            }
+            catch (BO.BLTemporaryNotAvailableException ex)
+            {
+                MessageBox.Show(ex.Message, "Operation Failed", MessageBoxButton.OK, MessageBoxImage.Error);
+            }
+        }
 
-        private void btnAddOneDay_Click(object sender, RoutedEventArgs e) => s_bl.Admin.ForwardClock(BO.TimeUnit.Day);
+        private void btnAddOneDay_Click(object sender, RoutedEventArgs e)
+        {
+            try
+            {
+                s_bl.Admin.ForwardClock(BO.TimeUnit.Day);
+            }
+            catch (BO.BLTemporaryNotAvailableException ex)
+            {
+                MessageBox.Show(ex.Message, "Operation Failed", MessageBoxButton.OK, MessageBoxImage.Error);
+            }
+        }
 
-        private void btnAddOneMonth_Click(object sender, RoutedEventArgs e) => s_bl.Admin.ForwardClock(BO.TimeUnit.Month);
+        private void btnAddOneMonth_Click(object sender, RoutedEventArgs e)
+        {
+            try
+            {
+                s_bl.Admin.ForwardClock(BO.TimeUnit.Month);
+            }
+            catch (BO.BLTemporaryNotAvailableException ex)
+            {
+                MessageBox.Show(ex.Message, "Operation Failed", MessageBoxButton.OK, MessageBoxImage.Error);
+            }
+        }
 
-        private void btnAddOneYear_Click(object sender, RoutedEventArgs e) => s_bl.Admin.ForwardClock(BO.TimeUnit.Year);
+        private void btnAddOneYear_Click(object sender, RoutedEventArgs e)
+        {
+            try
+            {
+                s_bl.Admin.ForwardClock(BO.TimeUnit.Year);
+            }
+            catch (BO.BLTemporaryNotAvailableException ex)
+            {
+                MessageBox.Show(ex.Message, "Operation Failed", MessageBoxButton.OK, MessageBoxImage.Error);
+            }
+        }
 
         // Button click handler to update the MaxRiskRange in the system
         private void btUpdateRiskRange_Click(object sender, RoutedEventArgs e)
         {
-            s_bl.Admin.SetMaxRange(MaxRiskRange);
-            MessageBox.Show("Max Risk Range updated successfully!", "Update Confirmation", MessageBoxButton.OK, MessageBoxImage.Information);
+            try
+            {
+                s_bl.Admin.SetMaxRange(MaxRiskRange);
+                MessageBox.Show("Max Risk Range updated successfully!", "Update Confirmation", MessageBoxButton.OK, MessageBoxImage.Information);
+            }
+            catch (BO.BLTemporaryNotAvailableException ex)
+            {
+                MessageBox.Show(ex.Message, "Operation Failed", MessageBoxButton.OK, MessageBoxImage.Error);
+            }
         }
 
+        private volatile DispatcherOperation? _observerOperationClock = null; //stage 7
+
         // Observer method to update the CurrentTime whenever the clock changes
-        private void clockObserver() => CurrentTime = s_bl.Admin.GetClock();
+        private void clockObserver()
+        {
+            if (_observerOperationClock is null || _observerOperationClock.Status == DispatcherOperationStatus.Completed)
+                _observerOperationClock = Dispatcher.BeginInvoke(() =>
+                {
+                    CurrentTime = s_bl.Admin.GetClock();
+                });
+        }
+
+        private volatile DispatcherOperation? _observerOperationConfig = null; //stage 7
 
         // Observer method to update the MaxRiskRange whenever the configuration changes
-        private void configObserver() => MaxRiskRange = s_bl.Admin.GetMaxRange();
+        private void configObserver() 
+        {
+            if (_observerOperationConfig is null || _observerOperationConfig.Status == DispatcherOperationStatus.Completed)
+                _observerOperationConfig = Dispatcher.BeginInvoke(() =>
+                {
+                    MaxRiskRange = s_bl.Admin.GetMaxRange();
+                });
+        }
 
         // Cleanup method to remove observers when the window is closed
         private void CleanupOnWindowClose(object sender, EventArgs e)
@@ -165,5 +321,7 @@ namespace PL
                 }
             }
         }
+
+        
     }
 }

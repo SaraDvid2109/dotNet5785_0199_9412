@@ -12,6 +12,7 @@ using System.Windows.Input;
 using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Shapes;
+using System.Windows.Threading;
 
 namespace PL
 {
@@ -23,13 +24,14 @@ namespace PL
         static readonly BlApi.IBl s_bl = BlApi.Factory.Get();
         public Login()
         {
-            Password = "sS0)|ctP";
-            VolunteerId = 287118574;
+            Password = "gQ1{LPYU";
+            VolunteerId = 466546926;
             
             InitializeComponent();
             DataContext = this;
 
         }
+       
         /// <summary>
         ///Dependency property for binding volunteer's ID to the UI
         /// </summary>
@@ -131,6 +133,7 @@ namespace PL
                 MessageBox.Show($"An error occurred: {ex.Message}", "Error", MessageBoxButton.OK, MessageBoxImage.Error);
             }
         }
+       
         /// <summary>
         /// Opens the volunteer profile screen for the currently logged-in volunteer.
         /// </summary>
@@ -139,6 +142,7 @@ namespace PL
             VolunteerProfile volunteerWindow = new VolunteerProfile(VolunteerId);
             volunteerWindow.Show();
         }
+        
         /// <summary>
         /// Opens the main management screen for administrative tasks.
         /// </summary>
@@ -147,16 +151,24 @@ namespace PL
             MainWindow mainWindow = new MainWindow();
             mainWindow.Show();
         }
+
+        private volatile DispatcherOperation? _observerOperation = null; //stage 7
+
         /// <summary>
         /// Observes the login status and updates the manager flag based on the volunteer's role.
         /// </summary>
         private void LoginObserver() 
         {
-            if (s_bl.volunteer.GetVolunteerDetails(VolunteerId).Role == BO.Roles.Manager)
-                IsManager = true;
-            else
-                IsManager = false;
+            if (_observerOperation is null || _observerOperation.Status == DispatcherOperationStatus.Completed)
+                _observerOperation = Dispatcher.BeginInvoke(() =>
+                {
+                    if (s_bl.volunteer.GetVolunteerDetails(VolunteerId).Role == BO.Roles.Manager)
+                        IsManager = true;
+                    else
+                        IsManager = false;
+                });
         }
+       
         /// <summary>
         /// Adds the LoginObserver to monitor changes when the window is loaded.
         /// </summary>
@@ -164,6 +176,7 @@ namespace PL
         {
             s_bl.volunteer.AddObserver(VolunteerId,LoginObserver);
         }
+        
         /// <summary>
         /// Removes the LoginObserver when the window is closed.
         /// </summary>
@@ -171,6 +184,7 @@ namespace PL
         {
            s_bl.volunteer.RemoveObserver(VolunteerId, LoginObserver);
         }
+       
         /// <summary>
         /// Displays the entered password when the Eye button is clicked.
         /// </summary>
@@ -180,6 +194,7 @@ namespace PL
             MessageBox.Show($"The password entered is: {Password}");
 
         }
+        
         /// <summary>
         /// Updates the Password property when the password in the PasswordBox changes.
         /// </summary>

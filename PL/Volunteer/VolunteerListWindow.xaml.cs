@@ -13,6 +13,7 @@ using System.Windows.Input;
 using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Shapes;
+using System.Windows.Threading;
 
 namespace PL.Volunteer;
 
@@ -54,6 +55,8 @@ public partial class VolunteerListWindow : Window
 
     }
 
+    private volatile DispatcherOperation? _observerOperation = null; //stage 7
+
     // Query the volunteer list based on the selected filter
     private void queryVolunteerList()
        => VolunteerList = (SelectedFiled == BO.CallType.None) ?
@@ -61,7 +64,15 @@ public partial class VolunteerListWindow : Window
 
     // Observer to update the volunteer list when changes occur
     private void VolunteerListObserver()
-        => queryVolunteerList();
+    {
+        if (_observerOperation is null || _observerOperation.Status == DispatcherOperationStatus.Completed)
+            _observerOperation = Dispatcher.BeginInvoke(() =>
+            {
+                queryVolunteerList();
+            });
+
+    }
+
 
     // Add observer when the window loads
     private void Window_Loaded(object sender, RoutedEventArgs e)
@@ -115,6 +126,4 @@ public partial class VolunteerListWindow : Window
             }
         }
     }
-
-
 }

@@ -11,6 +11,7 @@ using System.Windows.Input;
 using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Shapes;
+using System.Windows.Threading;
 
 namespace PL.Volunteer;
 
@@ -98,14 +99,20 @@ public partial class VolunteerWindow : Window
         }
     }
 
+    private volatile DispatcherOperation? _observerOperation = null; //stage 7
+
     /// <summary>
     /// An observer method that refills the item
     /// </summary>
-    private void VolunteerObserver() 
+    private void VolunteerObserver()
     {
-        int id = CurrentVolunteer!.Id;
-        CurrentVolunteer = null;
-        CurrentVolunteer = s_bl.volunteer.GetVolunteerDetails(id);
+        if (_observerOperation is null || _observerOperation.Status == DispatcherOperationStatus.Completed)
+            _observerOperation = Dispatcher.BeginInvoke(() =>
+            {
+                int id = CurrentVolunteer!.Id;
+                CurrentVolunteer = null;
+                CurrentVolunteer = s_bl.volunteer.GetVolunteerDetails(id);
+            });
 
     }
 

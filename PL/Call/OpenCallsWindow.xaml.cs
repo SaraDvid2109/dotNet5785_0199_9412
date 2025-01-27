@@ -13,6 +13,7 @@ using System.Windows.Input;
 using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Shapes;
+using System.Windows.Threading;
 
 namespace PL.Call
 {
@@ -23,6 +24,7 @@ namespace PL.Call
     {
         static readonly BlApi.IBl s_bl = BlApi.Factory.Get();
         private int id;
+       
         /// <summary>
         /// Initializes the OpenCallsWindow, sets the volunteer ID, and updates their address.
         /// </summary>
@@ -70,6 +72,7 @@ namespace PL.Call
         /// Selected call from DataGrid
         /// </summary>
         public BO.OpenCallInList? SelectedCall { get; set; }
+
         /// <summary>
         /// Selected call details
         /// </summary>
@@ -91,6 +94,7 @@ namespace PL.Call
             OpenCallList = (SelectedFiled == BO.CallType.None) ?
             s_bl.call.openCallsForSelectionByVolunteer(id, null, null) : s_bl.call.openCallsForSelectionByVolunteer(id, SelectedFiled, null);
         }
+      
         /// <summary>
         /// Handles the "Choose" button click to assign the volunteer to a call.
         /// </summary>
@@ -119,6 +123,7 @@ namespace PL.Call
 
             }
         }
+        
         /// <summary>
         /// Handles the click event for changing the volunteer's address and updates it in the system.
         /// </summary>
@@ -149,11 +154,20 @@ namespace PL.Call
             s_bl.call.openCallsForSelectionByVolunteer(id, null, null) : s_bl.call.openCallsForSelectionByVolunteer(id, SelectedFiled, null);
         }
 
+        private volatile DispatcherOperation? _observerOperation = null; //stage 7
+
         /// <summary>
         /// Observer to update the volunteer calls list when changes occur
         /// </summary>
         private void VolunteerCallsListObserver()
-            => QueryVolunteerCalls();
+        {
+            if (_observerOperation is null || _observerOperation.Status == DispatcherOperationStatus.Completed)
+                _observerOperation = Dispatcher.BeginInvoke(() =>
+                {
+                    QueryVolunteerCalls();
+                });
+        }
+            
 
         /// <summary>
         /// Add observer to monitor changes in calls data when the window loads
@@ -162,6 +176,7 @@ namespace PL.Call
         {
             s_bl.call.AddObserver(VolunteerCallsListObserver);
         }
+       
         /// <summary>
         /// Remove observer when the window is closed
         /// </summary>
@@ -169,6 +184,7 @@ namespace PL.Call
         {
             s_bl.call.RemoveObserver(VolunteerCallsListObserver);
         }
+        
         /// <summary>
         /// Handles the selection change in the data grid and updates details for the selected call.
         /// </summary>

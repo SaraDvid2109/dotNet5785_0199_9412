@@ -6,6 +6,7 @@ using System.Net.Mail;
 using System.Net;
 using System.Windows;
 using System.Windows.Controls;
+using System.Windows.Threading;
 
 namespace PL.Call
 {
@@ -292,25 +293,23 @@ namespace PL.Call
         {
             try
             {
-                using (SmtpClient smtpClient = new SmtpClient("smtp.gmail.com", 587)) // השתמשי בפורט 587
+                using (SmtpClient smtpClient = new SmtpClient("smtp.gmail.com", 587)) 
                 {
                     // שימוש בסיסמת אפליקציה (אם את ב-Gmail)
-                    smtpClient.Credentials = new NetworkCredential("hadasshor10@gmail.com", "bqdd enut suql kbsh");
+                    smtpClient.Credentials = new NetworkCredential("davidsara4545@gmail.com", "bqdd enut suql kbsh");
                     smtpClient.EnableSsl = true; // הפעלת SSL
 
                     // יצירת הודעת מייל
                     MailMessage mailMessage = new MailMessage
                     {
-                        From = new MailAddress("hadasshor10@gmail.com"),
+                        From = new MailAddress("davidsara4545@gmail.com"),
                         Subject = subject,
                         Body = body,
                         IsBodyHtml = true
                     };
 
                     mailMessage.To.Add(toEmail);
-                    // mailMessage.To.Add("yedidia2004@gmail.com");
 
-                    // שליחת המייל
                     smtpClient.Send(mailMessage);
                     Console.WriteLine($"Email sent successfully to {toEmail}");
                 }
@@ -363,7 +362,24 @@ namespace PL.Call
             }
         }
 
-        public ObservableCollection<CallAssignInList> Assignments { get; set; } = new ObservableCollection<CallAssignInList>();
+        private volatile DispatcherOperation? _observerOperation = null; //stage 7
+
+        /// <summary>
+        /// Refreshes the call details.
+        /// </summary>
+        private void CallObserver()
+        {
+            if (_observerOperation is null || _observerOperation.Status == DispatcherOperationStatus.Completed)
+                _observerOperation = Dispatcher.BeginInvoke(() =>
+                {
+                    if (CurrentCall == null) return;
+
+                    int id = CurrentCall.Id;
+                    CurrentCall = null;
+                    CurrentCall = s_bl.call.GetCallDetails(id);
+                    UpdateUIAccess();
+                });
+        }
 
         /// <summary>
         /// Adds the observer when the window loads.
@@ -372,8 +388,8 @@ namespace PL.Call
         {
             if (CurrentCall != null && CurrentCall.Id != 0)
             {
-                s_bl.call.AddObserver(CurrentCall.Id, RefreshCall);
-                s_bl.volunteer.AddObserver(CurrentCall.Id, RefreshCall);
+                s_bl.call.AddObserver(CurrentCall.Id, CallObserver);
+                s_bl.volunteer.AddObserver(CurrentCall.Id, CallObserver);
             }
 
         }
@@ -385,22 +401,9 @@ namespace PL.Call
         {
             if (CurrentCall != null && CurrentCall.Id != 0)
             {
-                s_bl.call.RemoveObserver(CurrentCall.Id, RefreshCall);
-                s_bl.volunteer.RemoveObserver(CurrentCall.Id, RefreshCall);
+                s_bl.call.RemoveObserver(CurrentCall.Id, CallObserver);
+                s_bl.volunteer.RemoveObserver(CurrentCall.Id, CallObserver);
             }
-        }
-
-        /// <summary>
-        /// Refreshes the call details.
-        /// </summary>
-        private void RefreshCall()
-        {
-            if (CurrentCall == null) return;
-
-            int id = CurrentCall.Id;
-            CurrentCall = null;
-            CurrentCall = s_bl.call.GetCallDetails(id);
-            UpdateUIAccess();
         }
 
         /// <summary>

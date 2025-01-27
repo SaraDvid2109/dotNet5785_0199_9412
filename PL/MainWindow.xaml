@@ -41,11 +41,11 @@
 
             <!-- Buttons to advance the system clock -->
             <StackPanel Grid.Column="1" Orientation="Horizontal" HorizontalAlignment="Left" Margin="5,0,0,0">
-                <Button Content="Advance by Minute" Margin="5" Width="Auto" Click="btnAddOneMinute_Click" />
-                <Button Content="Advance by Hour" Margin="5" Width="Auto" Click="btnAddOneHour_Click" />
-                <Button Content="Advance by Day" Margin="5" Width="Auto" Click="btnAddOneDay_Click" />
-                <Button Content="Advance by Month" Margin="5" Width="Auto" Click="btnAddOneMonth_Click" />
-                <Button Content="Advance by Year" Margin="5" Width="Auto" Click="btnAddOneYear_Click" />
+                <Button Content="Advance by Minute" Margin="5" Width="Auto" Click="btnAddOneMinute_Click" IsEnabled="{Binding ButtonsEnabled}"/>
+                <Button Content="Advance by Hour" Margin="5" Width="Auto" Click="btnAddOneHour_Click" IsEnabled="{Binding ButtonsEnabled}" />
+                <Button Content="Advance by Day" Margin="5" Width="Auto" Click="btnAddOneDay_Click" IsEnabled="{Binding ButtonsEnabled}" />
+                <Button Content="Advance by Month" Margin="5" Width="Auto" Click="btnAddOneMonth_Click" IsEnabled="{Binding ButtonsEnabled}" />
+                <Button Content="Advance by Year" Margin="5" Width="Auto" Click="btnAddOneYear_Click" IsEnabled="{Binding ButtonsEnabled}" />
             </StackPanel>
         </Grid>
 
@@ -63,19 +63,29 @@
                 <!-- Label for Risk Range -->
                 <Label Content="Risk Range:" VerticalAlignment="Center" Margin="0,0,10,0"/>
                 <!-- TextBox to edit a configuration variable -->
-                <TextBox Text="{Binding MaxRiskRange}" Width="100" Margin="5" />
+                <TextBox Text="{Binding MaxRiskRange}" Width="100" Margin="5" IsReadOnly="{Binding IsSimulatorRunning}"/>
                 <!-- Button to update the configuration variable in the database -->
-                <Button Content="Update" Margin="5" Width="100" Click="btUpdateRiskRange_Click"/>
+                <Button Content="Update" Margin="5" Width="100" Click="btUpdateRiskRange_Click" IsEnabled="{Binding ButtonsEnabled}"/>
+            </StackPanel>
+
+            <!-- Edit Interval variables -->
+            <StackPanel Grid.Row="0" Orientation="Horizontal" VerticalAlignment="Top" Margin="0,80,0,0">
+                <!-- Label for Interval -->
+                <Label Content="Interval (minutes per second):" VerticalAlignment="Center" Margin="0,0,10,0"/>
+                <!-- TextBox to edit a Interval variable -->
+                <TextBox Text="{Binding Interval, UpdateSourceTrigger=PropertyChanged}" Width="100" Margin="5" IsReadOnly="{Binding IsSimulatorRunning}"/>
+                <!-- Button to update the Interval variable in the database -->
+                <Button Content="{Binding StartStopButtonText}" Margin="5" Width="100" Click="OnStartStopButton_Click"/>
             </StackPanel>
 
             <!-- Buttons for database management -->
             <StackPanel Orientation="Horizontal" VerticalAlignment="Top" Height="86" Margin="26,182,10,0" Grid.RowSpan="2">
                 <!--To open the volunteer list view screen-->
                 <Button Content="Handle Volunteers" Margin="5" Width="150" Click="btnVolunteers_Click"/>
-                <Button Content="Initialize Database" Margin="5" Width="150" Click="DatabaseInitialization_Click"/>
-                <Button Content="Reset Database" Margin="5" Width="150" Click="DatabaseReset_Click"/>
+                <Button Content="Initialize Database" Margin="5" Width="150" Click="DatabaseInitialization_Click" IsEnabled="{Binding ButtonsEnabled}"/>
+                <Button Content="Reset Database" Margin="5" Width="150" Click="DatabaseReset_Click" IsEnabled="{Binding ButtonsEnabled}"/>
                 <Button Content="Handle Calls" Margin="5" Width="150" Click="btnCalls_Click"/>
             </StackPanel>
-        </Grid>
+            </Grid>
     </Grid>
 </Window>

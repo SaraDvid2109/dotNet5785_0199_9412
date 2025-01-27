@@ -14,6 +14,7 @@ using System.Windows.Input;
 using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Shapes;
+using System.Windows.Threading;
 
 namespace PL.Volunteer
 {
@@ -49,7 +50,7 @@ namespace PL.Volunteer
             catch (Exception ex)
             {
                 MessageBox.Show($"Unexpected error: {ex.Message}", "error", MessageBoxButton.OK, MessageBoxImage.Error);
-
+                //call = new BO.CallInProgress(); // Ensure 'call' is initialized even if an exception occurs
             }
         }
         /// <summary>
@@ -101,38 +102,53 @@ namespace PL.Volunteer
         // Using a DependencyProperty as the backing store for HaveCall.  This enables animation, styling, binding, etc...
         public static readonly DependencyProperty HaveCallProperty =
             DependencyProperty.Register("HaveCall", typeof(bool), typeof(VolunteerProfile), new PropertyMetadata(false));
-
+       
+        private volatile DispatcherOperation? _observerOperationVolunteer = null; //stage 7
+        
         /// <summary>
         /// Observer method that updates the volunteer or their current call upon any changes.
         /// </summary>
         private void VolunteerObserver()
         {
-            int id = CurrentVolunteer!.Id;
-            //CurrentVolunteer = null;
-            var updatedVolunteer = s_bl.volunteer.GetVolunteerDetails(id);
-            CurrentVolunteer = updatedVolunteer;
-            VolunteerName = CurrentVolunteer.Name!;
-            HaveCall = s_bl.volunteer.VolunteerHaveCall(id); //Checks if a volunteer currently has a call they are handling.
-            call = s_bl.volunteer.GetVolunteerDetails(id).Progress ?? new BO.CallInProgress();
-            VolunteerCall = s_bl.call.GetCallDetails(call.CallId) ?? new BO.Call(); //The call the volunteer is currently handling
-            BindingOperations.GetBindingExpression(this, CurrentVolunteerProperty)?.UpdateTarget();
-            BindingOperations.GetBindingExpression(this, VolunteerCallProperty)?.UpdateTarget();
+            if (_observerOperationVolunteer is null || _observerOperationVolunteer.Status == DispatcherOperationStatus.Completed)
+                _observerOperationVolunteer = Dispatcher.BeginInvoke(() =>
+                {
 
+                    int id = CurrentVolunteer!.Id;
+                    //CurrentVolunteer = null;
+                    var updatedVolunteer = s_bl.volunteer.GetVolunteerDetails(id);
+                    CurrentVolunteer = updatedVolunteer;
+                    VolunteerName = CurrentVolunteer.Name!;
+                    HaveCall = s_bl.volunteer.VolunteerHaveCall(id); //Checks if a volunteer currently has a call they are handling.
+                    call = s_bl.volunteer.GetVolunteerDetails(id).Progress ?? new BO.CallInProgress();
+                    VolunteerCall = s_bl.call.GetCallDetails(call.CallId) ?? new BO.Call(); //The call the volunteer is currently handling
+                    BindingOperations.GetBindingExpression(this, CurrentVolunteerProperty)?.UpdateTarget();
+                    BindingOperations.GetBindingExpression(this, VolunteerCallProperty)?.UpdateTarget();
+                });
         }
+
+        private volatile DispatcherOperation? _observerOperationCall = null; //stage 7
+
         private void VolunteerCallObserver() 
         {
-            BO.CallInProgress? call = s_bl.volunteer.GetVolunteerDetails(id).Progress;
-            if (call != null)
-            {
-                int callId = call.CallId;
-                VolunteerCall = s_bl.call.GetCallDetails(callId);
-            }
-            else
-            {
-                VolunteerCall = new BO.Call();   
-            }
-            HaveCall = s_bl.volunteer.VolunteerHaveCall(id);
+            if (_observerOperationCall is null || _observerOperationCall.Status == DispatcherOperationStatus.Completed)
+                _observerOperationCall = Dispatcher.BeginInvoke(() =>
+                {
+
+                    BO.CallInProgress? call = s_bl.volunteer.GetVolunteerDetails(id).Progress;
+                    if (call != null)
+                    {
+                        int callId = call.CallId;
+                        VolunteerCall = s_bl.call.GetCallDetails(callId);
+                    }
+                    else
+                    {
+                        VolunteerCall = new BO.Call();
+                    }
+                    HaveCall = s_bl.volunteer.VolunteerHaveCall(id);
+                });
         }
+
         /// <summary>
         /// Adds observers to monitor changes in volunteer data and their current call,
         /// and creates a map showing the volunteer's location and the call they are handling.
@@ -253,6 +269,7 @@ namespace PL.Volunteer
             ClosedCallsWindow closedCallsWindow= new ClosedCallsWindow(id);
             closedCallsWindow.Show();
         }
+
         private void ChooseCall_Click(object sender, RoutedEventArgs e)
         {
             if (VolunteerCall.Status == BO.CallStatus.Treatment || VolunteerCall.Status == BO.CallStatus.TreatmentOfRisk)

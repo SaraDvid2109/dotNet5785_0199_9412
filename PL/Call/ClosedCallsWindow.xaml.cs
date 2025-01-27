@@ -12,6 +12,7 @@ using System.Windows.Input;
 using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Shapes;
+using System.Windows.Threading;
 
 namespace PL.Call
 {
@@ -29,6 +30,7 @@ namespace PL.Call
             InitializeComponent();
             
         }
+       
         /// <summary>
         ///Dependency property for binding closed calls list to UI
         /// </summary>
@@ -41,6 +43,7 @@ namespace PL.Call
         // Using a DependencyProperty as the backing store for ClosedCallList.  This enables animation, styling, binding, etc...
         public static readonly DependencyProperty ClosedCallListProperty =
             DependencyProperty.Register("ClosedCallList", typeof(IEnumerable<ClosedCallInList>), typeof(ClosedCallsWindow), new PropertyMetadata(null));
+       
         /// <summary>
         /// Selected filter from ComboBox
         /// </summary>
@@ -54,12 +57,21 @@ namespace PL.Call
             ClosedCallList = (SelectedFiled == BO.CallType.None) ?
             s_bl.call.closedCallsHandledByVolunteer(id, null, null) : s_bl.call.closedCallsHandledByVolunteer(id, SelectedFiled, null);
         }
+
+        private volatile DispatcherOperation? _observerOperation = null; //stage 7
+
         /// <summary>
         /// Observer to update the volunteer's closed calls list when changes occur
         /// </summary>
         private void VolunteerCallsListObserver()
-            => QueryVolunteerCalls();
-
+        {
+            if (_observerOperation is null || _observerOperation.Status == DispatcherOperationStatus.Completed)
+                _observerOperation = Dispatcher.BeginInvoke(() =>
+                {
+                    QueryVolunteerCalls();
+                });
+        }
+            
         /// <summary>
         /// Add observer to monitor changes in calls data when the window loads
         /// </summary>
@@ -77,6 +89,7 @@ namespace PL.Call
             s_bl.call.RemoveObserver(VolunteerCallsListObserver);
 
         }
+      
         /// <summary>
         /// Updates the closed calls list based on the selected field in the ComboBox.
         /// </summary>

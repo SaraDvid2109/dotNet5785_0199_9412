@@ -17,6 +17,7 @@ using System.Windows.Input;
 using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Shapes;
+using System.Windows.Threading;
 
 namespace PL.Call;
 
@@ -107,11 +108,19 @@ public partial class CallListWindow : Window, INotifyPropertyChanged
         CallList = s_bl?.call.CallInLists(filterField, filterValue, sortField) ?? Enumerable.Empty<CallInList>();
     }
 
+    private volatile DispatcherOperation? _observerOperation = null; //stage 7
+
     /// <summary>
     /// Observer to update the call list when changes occur.
     /// </summary>
     private void CallListObserver()
-        => queryCallList();
+    {
+        if (_observerOperation is null || _observerOperation.Status == DispatcherOperationStatus.Completed)
+            _observerOperation = Dispatcher.BeginInvoke(() =>
+            {
+                queryCallList();
+            });
+    }
 
     /// <summary>
     /// Adds the observer when the window loads.
