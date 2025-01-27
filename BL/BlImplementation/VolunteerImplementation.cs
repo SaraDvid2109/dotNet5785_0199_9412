@@ -24,8 +24,9 @@ internal class volunteerImplementation : IVolunteer
     /// <exception cref="BO.BlNullPropertyException">Thrown if no volunteer is found with the given username or password.</exception>
     public BO.Roles Login(string username, string password)
     {
-        DO.Volunteer? volunteer = _dal.Volunteer.ReadAll(v => v.Name == username && v.Password == password).FirstOrDefault();
-
+        DO.Volunteer? volunteer;
+        lock (AdminManager.BlMutex) //stage 7
+             volunteer = _dal.Volunteer.ReadAll(v => v.Name == username && v.Password == password).FirstOrDefault();
         if (volunteer == null)
         {
             throw new BO.BlNullPropertyException("There is no volunteer with that name or password.");
@@ -65,19 +66,22 @@ internal class volunteerImplementation : IVolunteer
         IEnumerable<DO.Volunteer> volunteers;
         IEnumerable<IGrouping<bool, DO.Volunteer>> groupedVolunteers;
         IEnumerable<DO.Volunteer> sortVolunteers;
-        List<DO.Assignment> assignments = _dal.Assignment.ReadAll().ToList();
-        if (active == null)
-            volunteers = _dal.Volunteer.ReadAll();
-        else
+        List<DO.Assignment> assignments;
+        lock (AdminManager.BlMutex) //stage 7
         {
-            groupedVolunteers = _dal.Volunteer.ReadAll().GroupBy(v => v.Active == true);
-            if (groupedVolunteers == null || !groupedVolunteers.Any())
-                throw new BO.BlNullPropertyException("Volunteer data source is empty or null.");
+            assignments = _dal.Assignment.ReadAll().ToList();
+            if (active == null)
+                volunteers = _dal.Volunteer.ReadAll();
+            else
+            {
+                groupedVolunteers = _dal.Volunteer.ReadAll().GroupBy(v => v.Active == true);
+                if (groupedVolunteers == null || !groupedVolunteers.Any())
+                    throw new BO.BlNullPropertyException("Volunteer data source is empty or null.");
 
-            volunteers = groupedVolunteers.FirstOrDefault(g => g.Key == active.Value) ?? Enumerable.Empty<DO.Volunteer>();
+                volunteers = groupedVolunteers.FirstOrDefault(g => g.Key == active.Value) ?? Enumerable.Empty<DO.Volunteer>();
+            }
+
         }
-       
-
         if (!volunteers.Any())
             return Enumerable.Empty<BO.VolunteerInList>();
         else
@@ -94,7 +98,9 @@ internal class volunteerImplementation : IVolunteer
         return sortVolunteers.Select(volunteer =>
         {
             var idCall = assignments.LastOrDefault(item => item.VolunteerId == volunteer.Id && (item.TypeEndOfTreatment == null || item.EndTime == null));
-            DO.Call? lastCall = idCall != null ? _dal.Call.Read(idCall.CallId) : null;
+            DO.Call? lastCall;
+            lock (AdminManager.BlMutex) //stage 7
+                lastCall = idCall != null ? _dal.Call.Read(idCall.CallId) : null;
             var treated = Helpers.VolunteerManager.GetAssignments(assignments, volunteer, DO.EndType.Treated) ?? Enumerable.Empty<DO.Assignment>();
             var selfCancellation = Helpers.VolunteerManager.GetAssignments(assignments, volunteer, DO.EndType.SelfCancellation) ?? Enumerable.Empty<DO.Assignment>();
             var expiredCancellation = Helpers.VolunteerManager.GetAssignments(assignments, volunteer, DO.EndType.ExpiredCancellation) ?? Enumerable.Empty<DO.Assignment>();
@@ -125,13 +131,16 @@ internal class volunteerImplementation : IVolunteer
     /// <exception cref="BO.BlDoesNotExistException">Thrown if no volunteer is found with the given ID.</exception>
     public BO.Volunteer GetVolunteerDetails(int id)
     {
-        DO.Volunteer? volunteer = _dal.Volunteer.Read(id);
-        if (volunteer == null)
-        {
-            throw new BO.BlDoesNotExistException("There is no volunteer with this ID.");
-        }
-        BO.Volunteer BoVolunteer = VolunteerManager.ToBOVolunteer(volunteer);
-        return BoVolunteer;
+        return VolunteerManager.GetVolunteerDetails(id);
+        //DO.Volunteer? volunteer;
+        //lock (AdminManager.BlMutex) //stage 7
+        //    volunteer = _dal.Volunteer.Read(id);
+        //if (volunteer == null)
+        //{
+        //    throw new BO.BlDoesNotExistException("There is no volunteer with this ID.");
+        //}
+        //BO.Volunteer BoVolunteer = VolunteerManager.ToBOVolunteer(volunteer);
+        //return BoVolunteer;
 
     }
     
@@ -154,31 +163,35 @@ internal class volunteerImplementation : IVolunteer
         Helpers.VolunteerManager.IntegrityCheck(volunteer);
         try
         {
-            DO.Volunteer? requester = _dal.Volunteer.Read(id);
-            if (requester == null)
+            DO.Volunteer volunteerToUpdate;
+            lock (AdminManager.BlMutex) //stage 7
             {
-                throw new BO.BlDoesNotExistException("There is no volunteer with this ID.");
-            }
-            // Check permissions
-            if (!requester.Role.Equals("Manager"))
-            {
-                if (requester.Id != volunteer.Id)
-                    throw new BO.UnauthorizedAccessException("You are not authorized to update this volunteer.");
-            }
+                DO.Volunteer? requester = _dal.Volunteer.Read(id);
+                if (requester == null)
+                {
+                    throw new BO.BlDoesNotExistException("There is no volunteer with this ID.");
+                }
+                // Check permissions
+                if (!requester.Role.Equals("Manager"))
+                {
+                    if (requester.Id != volunteer.Id)
+                        throw new BO.UnauthorizedAccessException("You are not authorized to update this volunteer.");
+                }
 
-            DO.Volunteer? existingVolunteer = _dal.Volunteer.Read(volunteer.Id);
-            if (existingVolunteer == null)
-            {
-                throw new BO.BlDoesNotExistException($"Volunteer with ID {volunteer.Id} not found.");
+                DO.Volunteer? existingVolunteer = _dal.Volunteer.Read(volunteer.Id);
+                if (existingVolunteer == null)
+                {
+                    throw new BO.BlDoesNotExistException($"Volunteer with ID {volunteer.Id} not found.");
+                }
+
+                if ((BO.Roles)requester.Role != BO.Roles.Manager && (BO.Roles)existingVolunteer.Role != volunteer.Role)
+                {
+                    throw new BO.UnauthorizedAccessException("Only managers can update the role.");
+                }
+                volunteerToUpdate = VolunteerManager.ToDOVolunteer(volunteer);
+
+                _dal.Volunteer.Update(volunteerToUpdate);
             }
-            
-            if ((BO.Roles)requester.Role!=BO.Roles.Manager && (BO.Roles)existingVolunteer.Role!=volunteer.Role)
-            {
-                throw new BO.UnauthorizedAccessException("Only managers can update the role.");
-            }
-            DO.Volunteer volunteerToUpdate= VolunteerManager.ToDOVolunteer(volunteer);
-           
-            _dal.Volunteer.Update(volunteerToUpdate);
 
             VolunteerManager.Observers.NotifyItemUpdated(volunteerToUpdate.Id);  //stage 5
             VolunteerManager.Observers.NotifyListUpdated();  //stage 5
@@ -204,7 +217,9 @@ internal class volunteerImplementation : IVolunteer
         try
         {
             AdminManager.ThrowOnSimulatorIsRunning();  //stage 7
-            DO.Volunteer? volunteerToDelete = _dal.Volunteer.Read(id);
+            lock (AdminManager.BlMutex) //stage 7
+            { 
+                DO.Volunteer? volunteerToDelete = _dal.Volunteer.Read(id);
             if (volunteerToDelete == null) throw new BO.BlDoesNotExistException("There is no volunteer with this ID.");
             if (!volunteerToDelete.Active)
             {
@@ -213,6 +228,7 @@ internal class volunteerImplementation : IVolunteer
             }
             else
                 throw new BO.BlOperationNotAllowedException("The volunteer cannot be deleted.");
+            }
         }
         catch (DO.DalDoesNotExistException ex)
         {
@@ -238,8 +254,8 @@ internal class volunteerImplementation : IVolunteer
         try
         {
             DO.Volunteer volunteerToAdd = VolunteerManager.ToDOVolunteer(volunteer);
-
-            _dal.Volunteer.Create(volunteerToAdd);
+            lock (AdminManager.BlMutex) //stage 7
+                 _dal.Volunteer.Create(volunteerToAdd);
             VolunteerManager.Observers.NotifyListUpdated();  //stage 5
         }
         catch (DO.DalAlreadyExistException ex) { throw new BO.BllAlreadyExistException(ex.Message); }
@@ -254,7 +270,9 @@ internal class volunteerImplementation : IVolunteer
     /// </returns>
     public IEnumerable<BO.VolunteerInList> FilterVolunteerListByCallType(BO.CallType type)
     {
-        var volunteers = _dal.Volunteer.ReadAll();
+        IEnumerable<DO.Volunteer> volunteers;
+        lock (AdminManager.BlMutex) //stage 7
+              volunteers = _dal.Volunteer.ReadAll();
 
         if (!volunteers.Any())
         {
@@ -262,12 +280,16 @@ internal class volunteerImplementation : IVolunteer
         }
         else
         {
-            List<DO.Assignment> assignments = _dal.Assignment.ReadAll().ToList();
+            List<DO.Assignment> assignments;
+            lock (AdminManager.BlMutex) //stage 7
+                assignments = _dal.Assignment.ReadAll().ToList();
 
             return volunteers.Select(volunteer =>
             {
                 var idCall = assignments.FirstOrDefault(item => item.VolunteerId == volunteer.Id && (item.TypeEndOfTreatment==null || item.EndTime==null));
-                DO.Call? lastCall = idCall != null ? _dal.Call.Read(idCall.CallId) : null;
+                DO.Call? lastCall;
+                lock (AdminManager.BlMutex) //stage 7
+                    lastCall = idCall != null ? _dal.Call.Read(idCall.CallId) : null;
                 var treated = Helpers.VolunteerManager.GetAssignments(assignments, volunteer, DO.EndType.Treated) ?? Enumerable.Empty<DO.Assignment>();
                 var selfCancellation = Helpers.VolunteerManager.GetAssignments(assignments, volunteer, DO.EndType.SelfCancellation) ?? Enumerable.Empty<DO.Assignment>();
                 var expiredCancellation = Helpers.VolunteerManager.GetAssignments(assignments, volunteer, DO.EndType.ExpiredCancellation) ?? Enumerable.Empty<DO.Assignment>();
@@ -314,7 +336,9 @@ internal class volunteerImplementation : IVolunteer
     /// False if the volunteer has no assignment or the assignment is in any other status.</returns>
     public bool VolunteerHaveCall(int id)
     {
-       Assignment? assignment =_dal.Assignment.ReadAll(a => a.VolunteerId == id).LastOrDefault();
+        Assignment? assignment;
+        lock (AdminManager.BlMutex) //stage 7
+            assignment =_dal.Assignment.ReadAll(a => a.VolunteerId == id).LastOrDefault();
         if (assignment == null)
             return false;
         if (assignment.TypeEndOfTreatment.Equals(BO.CallStatus.Treatment)
