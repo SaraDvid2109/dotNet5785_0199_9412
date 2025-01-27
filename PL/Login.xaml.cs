@@ -24,8 +24,8 @@ namespace PL
         static readonly BlApi.IBl s_bl = BlApi.Factory.Get();
         public Login()
         {
-            Password = "gQ1{LPYU";
-            VolunteerId = 466546926;
+            Password = "uC8}yKN\"";
+            VolunteerId = 616123774;
             
             InitializeComponent();
             DataContext = this;

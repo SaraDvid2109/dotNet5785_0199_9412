@@ -212,6 +212,10 @@ namespace PL.Call
                 }
                 this.Close();
             }
+            catch (BO.BLTemporaryNotAvailableException ex)
+            {
+                MessageBox.Show(ex.Message, "Operation Failed", MessageBoxButton.OK, MessageBoxImage.Error);
+            }
             catch (Exception ex)
             {
                 MessageBox.Show($"Unexpected error: {ex.Message}", "Error", MessageBoxButton.OK, MessageBoxImage.Error);

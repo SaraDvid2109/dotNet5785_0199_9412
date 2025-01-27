@@ -100,56 +100,64 @@ internal static class Tools
 
         const string LocationIqApiKey = "pk.a0941b60144dc7fe0b85814d99ab3be7";
         const string BaseUrl = "https://us1.locationiq.com/v1/search.php";
+        const int MaxRetries = 5;
+        const int InitialDelayMilliseconds = 1000;
 
-        // בניית כתובת הבקשה
         string requestUrl = $"{BaseUrl}?key={LocationIqApiKey}&q={Uri.EscapeDataString(address)}&format=json";
 
         using (var client = new HttpClient())
         {
-            HttpResponseMessage response;
-            try
+            for (int retry = 0; retry < MaxRetries; retry++)
             {
-                // ביצוע הקריאה הסינכרונית
-                response = client.GetAsync(requestUrl).Result;
+                HttpResponseMessage response;
+                try
+                {
+                    response = client.GetAsync(requestUrl).Result;
+                }
+                catch (Exception ex)
+                {
+                    throw new BlFileLoadCreateException("Error sending request to LocationIQ API.", ex);
+                }
+
+                if (response.IsSuccessStatusCode)
+                {
+                    string responseContent = response.Content.ReadAsStringAsync().Result;
+                    var locationData = System.Text.Json.JsonSerializer.Deserialize<List<LocationIqResponse>>(responseContent);
+
+                    if (locationData == null || locationData.Count == 0)
+                    {
+                        throw new BlDoesNotExistException("No coordinates found for the provided address.");
+                    }
+
+                    var coordinates = locationData[0];
+                    bool isLatValid = double.TryParse(coordinates.lat, out double latitude);
+                    bool isLonValid = double.TryParse(coordinates.lon, out double longitude);
+
+                    if (isLatValid && isLonValid)
+                    {
+                        return (latitude, longitude);
+                    }
+                    else
+                    {
+                        throw new BlFormatException($"Invalid coordinate data. Latitude valid: {isLatValid}, Longitude valid: {isLonValid}");
+                    }
+                }
+                else if (response.StatusCode == System.Net.HttpStatusCode.TooManyRequests)
+                {
+                    // Wait before retrying
+                    int delay = InitialDelayMilliseconds * (int)Math.Pow(2, retry);
+                    Task.Delay(delay).Wait();
+                }
+                else
+                {
+                    throw new BlFileLoadCreateException($"Error fetching data from LocationIQ: {response.ReasonPhrase}");
+                }
             }
-            catch (Exception ex)
-            {
-                throw new BlFileLoadCreateException("Error sending request to LocationIQ API.", ex);
-            }
 
-            if (!response.IsSuccessStatusCode)
-            {
-                throw new BlFileLoadCreateException($"Error fetching data from LocationIQ: {response.ReasonPhrase}");
-            }
-
-            string responseContent = response.Content.ReadAsStringAsync().Result;
-
-
-            var locationData = System.Text.Json.JsonSerializer.Deserialize<List<LocationIqResponse>>(responseContent);
-
-            if (locationData == null || locationData.Count == 0)
-            {
-                throw new BlDoesNotExistException("No coordinates found for the provided address.");
-            }
-
-            var coordinates = locationData[0];
-
-
-            bool isLatValid = double.TryParse(coordinates.lat, out double latitude);
-            bool isLonValid = double.TryParse(coordinates.lon, out double longitude);
-
-
-
-            if (isLatValid && isLonValid)
-            {
-                return (latitude, longitude);
-            }
-            else
-            {
-                throw new BlFormatException($"Invalid coordinate data. Latitude valid: {isLatValid}, Longitude valid: {isLonValid}");
-            }
+            throw new BlFileLoadCreateException("Exceeded maximum retry attempts for LocationIQ API.");
         }
     }
+
 
     /// <summary>
     /// class to get the latitude and longitude of a LocationIqResponse

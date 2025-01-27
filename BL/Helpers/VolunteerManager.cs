@@ -321,7 +321,7 @@ internal static class VolunteerManager
         {
             lock (AdminManager.BlMutex) //stage 7
                 assignmants = s_dal.Assignment.ReadAll(a => a.EndTime == null && a.VolunteerId == doVolunteer.Id);
-            DO.Assignment assignment = assignmants.First();
+            DO.Assignment? assignment = assignmants.FirstOrDefault();
             if (assignment == null)
             {
                 var openCalls = CallManager.openCallsForSelectionByVolunteer(doVolunteer.Id, null, null).ToList();
@@ -329,17 +329,25 @@ internal static class VolunteerManager
                 {
                     var random = new Random();
                     int randomIndex = random.Next(openCalls.Count());
-                    if (Random.Shared.NextDouble() <= 0.2)
-                        CallManager.ChooseCallForHandling(doVolunteer.Id, openCalls[randomIndex].Id);
+                    try
+                    {
+                        if (Random.Shared.NextDouble() <= 0.2)
+                            CallManager.ChooseCallForHandling(doVolunteer.Id, openCalls[randomIndex].Id);
+                    }
+                    catch (BO.BLTemporaryNotAvailableException ex)
+                    {
+                        // Handle the exception, e.g., log it or notify the user
+                        Console.WriteLine(ex.Message);
+                    }
                 }
             }
             else
             {
-                BO.Volunteer boVolunteer=GetVolunteerDetails(doVolunteer.Id);
+                BO.Volunteer boVolunteer = GetVolunteerDetails(doVolunteer.Id);
                 double minutes;
                 if (boVolunteer.Progress != null)
                 {
-                    minutes = boVolunteer.Progress.Distance +20;
+                    minutes = boVolunteer.Progress.Distance + 20;
 
                     if (AdminManager.Now >= assignment.EnterTime.AddMinutes(minutes))
                     {
@@ -351,11 +359,8 @@ internal static class VolunteerManager
                             CallManager.CancelCallHandling(doVolunteer.Id, assignment.Id);
                     }
                 }
-                
             }
-
         }
-
-
     }
+
 }

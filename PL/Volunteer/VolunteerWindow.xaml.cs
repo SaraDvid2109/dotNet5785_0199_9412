@@ -93,6 +93,10 @@ public partial class VolunteerWindow : Window
 
             this.Close();
         }
+        catch (BO.BLTemporaryNotAvailableException ex)
+        {
+            MessageBox.Show(ex.Message, "Operation Failed", MessageBoxButton.OK, MessageBoxImage.Error);
+        }
         catch (Exception ex)
         {
             MessageBox.Show($"Unexpected error: {ex.Message}", "error", MessageBoxButton.OK, MessageBoxImage.Error);
