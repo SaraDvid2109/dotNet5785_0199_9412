@@ -1,4 +1,5 @@
-﻿using BO;
+﻿using BlApi;
+using BO;
 using DalApi;
 using DO;
 using Microsoft.VisualBasic;
@@ -11,7 +12,7 @@ namespace Helpers;
 /// </summary>
 internal static class CallManager
 {
-    private static IDal s_dal = Factory.Get; //stage 4
+    private static IDal s_dal = DalApi.Factory.Get; //stage 4
 
     internal static ObserverManager Observers = new(); //stage 5 
 
@@ -373,19 +374,22 @@ internal static class CallManager
     /// 
     internal static void PeriodicCallsUpdates(DateTime oldClock, DateTime newClock)
     {
-        IEnumerable<DO.Call>? Calls;
+
+        List<DO.Call>? Calls;
         lock (AdminManager.BlMutex) //stage 7
-            Calls = s_dal.Call.ReadAll();
-        var noAssignments = from Call in Calls
-                            let assignments = GetAssignmentCall(Call.Id)
-                            where AdminManager.Now >= Call.MaxTime && assignments == null
-                            select Call;
-        var haveAssignments = from Call in Calls
+            Calls = s_dal.Call.ReadAll().ToList();
+        List<int> ids = new List<int> { };
+        List<DO.Call> noAssignments = (from Call in Calls
+                                let assignments = GetAssignmentCall(Call.Id)
+                                where AdminManager.Now >= Call.MaxTime && assignments == null
+                                select Call).ToList();
+
+        List<DO.Call> haveAssignments = (from Call in Calls
                               let assignments = GetAssignmentCall(Call.Id)
                               where AdminManager.Now >= Call.MaxTime && assignments != null
                               let lastAssignment = GetLastAssignment(assignments)
                               where lastAssignment != null && lastAssignment.EndTime == null
-                              select Call;
+                              select Call).ToList();
 
         foreach (var Call in noAssignments)
         {
@@ -399,16 +403,29 @@ internal static class CallManager
                     TypeEndOfTreatment = DO.EndType.ExpiredCancellation
                 });
             }
+            ids.Add(Call.Id);
+            foreach (var item in ids)
+            {
+                Observers.NotifyItemUpdated(item); //stage 5
+            }
+            ids.Clear();
             Observers.NotifyListUpdated(); //stage 5
         }
 
         var convertHaveAssignments = haveAssignments.Select(c => GetLastAssignment(GetAssignmentCall(c.Id)!)!);
         var updatedHaveAssignments = convertHaveAssignments.Select(a => a = a with { EndTime = AdminManager.Now, TypeEndOfTreatment = DO.EndType.ExpiredCancellation });
+        
         foreach (var assignment in updatedHaveAssignments)
         {
             lock (AdminManager.BlMutex) //stage 7
                 s_dal.Assignment.Update(assignment);
+            ids.Add(assignment.CallId);
+
             Observers.NotifyItemUpdated(assignment.Id); //stage 5
+        }
+        foreach (var item in ids)
+        {
+            Observers.NotifyItemUpdated(item); //stage 5
         }
         Observers.NotifyListUpdated(); //stage 5
     }
@@ -608,6 +625,7 @@ internal static class CallManager
             throw new BO.BlDoesNotExistException("Error attempting to update call handling completion:" + ex);
         }
     }
+    
     /// <summary>
     /// Cancels the handling of a specific assignment by a volunteer or an administrator.
     /// </summary>
@@ -655,3 +673,5 @@ internal static class CallManager
     }
 
 }
+
+
