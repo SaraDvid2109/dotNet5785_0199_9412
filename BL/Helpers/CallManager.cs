@@ -470,7 +470,7 @@ internal static class CallManager
             CallType = (BO.CallType)call.CarTypeToSend,
             OpenTime = call.OpenTime,
             TimeLeftToFinish = AdminManager.Now - call.MaxTime > TimeSpan.Zero ? AdminManager.Now - call.MaxTime : TimeSpan.Zero,
-            LastVolunteer = volunteer!.Name,
+            LastVolunteer = volunteer?.Name, // Add null check here
             TreatmentTimeLeft = time,
             Status = Status(call.Id),
             TotalAssignments = assignments.Count()
@@ -672,9 +672,7 @@ internal static class CallManager
             throw new BO.BlDoesNotExistException("Error trying to update call cancellation :" + ex);
         }
     }
-
    
-
     internal static void AddCallsSimulation()
     {
         //We asked the GPT chat: create an array for me that has 50 cases that call the MDA

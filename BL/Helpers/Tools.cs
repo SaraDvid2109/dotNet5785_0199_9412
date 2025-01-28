@@ -91,7 +91,7 @@ internal static class Tools
     /// <summary>
     /// Gets the geographic coordinates (latitude and longitude) for a given address.
     /// </summary>
-    public static async Task<(double Latitude, double Longitude)> GetAddressCoordinates(string address)
+    public static async Task<(double Latitude, double Longitude)> GetAddressCoordinates(string? address)
     {
         if (string.IsNullOrWhiteSpace(address))
         {

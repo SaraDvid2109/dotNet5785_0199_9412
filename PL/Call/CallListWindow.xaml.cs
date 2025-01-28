@@ -179,6 +179,10 @@ public partial class CallListWindow : Window, INotifyPropertyChanged
         {
             MessageBox.Show(ex.Message, "ERROR", MessageBoxButton.OK, MessageBoxImage.Error);
         }
+        catch (BO.UnauthorizedAccessException ex)
+        {
+            MessageBox.Show(ex.Message, "ERROR", MessageBoxButton.OK, MessageBoxImage.Error);
+        }
     }
 
     /// <summary>

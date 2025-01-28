@@ -15,14 +15,19 @@ static class XMLTools
     }
 
     #region SaveLoadWithXMLSerializer
+    private static readonly object fileLock = new object();
+
     public static void SaveListToXMLSerializer<T>(List<T> list, string xmlFileName) where T : class
     {
         string xmlFilePath = s_xmlDir + xmlFileName;
 
         try
         {
-            using FileStream file = new(xmlFilePath, FileMode.Create, FileAccess.Write, FileShare.None);
-            new XmlSerializer(typeof(List<T>)).Serialize(file, list);
+            lock (fileLock)
+            {
+                using FileStream file = new(xmlFilePath, FileMode.Create, FileAccess.Write, FileShare.None);
+                new XmlSerializer(typeof(List<T>)).Serialize(file, list);
+            }
         }
         catch (Exception ex)
         {

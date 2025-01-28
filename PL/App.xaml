@@ -22,7 +22,9 @@
         <local:CountToVisibilityConverter x:Key="CountToVisibilityConverter" />
         <local:ConvertStatusToVisibility x:Key="ConvertStatusToVisibilityKey" />
         <local:GroupByCollection x:Key="GroupByCollectionKey" />
-       
+        <local:CallDeleteVisibilityConverter x:Key="CallDeleteVisibilityConverterKey" />
+
+
 
         <!-- Global styles for buttons -->
         <Style x:Key="ButtonStyle" TargetType="Button">

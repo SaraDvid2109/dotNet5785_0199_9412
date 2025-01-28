@@ -128,6 +128,26 @@ class ConvertStatusToVisibility : IValueConverter
     }
 }
 
+public class CallDeleteVisibilityConverter : IValueConverter
+{
+    public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
+    {
+        if (value is CallInList call)
+        {
+            // בדיקה אם הסטטוס הוא פתוח ואין הקצאות
+            if (call.Status == CallStatus.Open && call.TotalAssignments == 0)
+            {
+                return Visibility.Visible;
+            }
+        }
+        return Visibility.Collapsed;
+    }
+
+    public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture)
+    {
+        throw new NotImplementedException();
+    }
+}
 
 
 
