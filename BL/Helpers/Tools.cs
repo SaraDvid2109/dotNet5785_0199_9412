@@ -91,7 +91,7 @@ internal static class Tools
     /// <summary>
     /// Gets the geographic coordinates (latitude and longitude) for a given address.
     /// </summary>
-    public static (double Latitude, double Longitude) GetAddressCoordinates(string address)
+    public static async Task<(double Latitude, double Longitude)> GetAddressCoordinates(string address)
     {
         if (string.IsNullOrWhiteSpace(address))
         {
@@ -112,7 +112,7 @@ internal static class Tools
                 HttpResponseMessage response;
                 try
                 {
-                    response = client.GetAsync(requestUrl).Result;
+                    response = await client.GetAsync(requestUrl);
                 }
                 catch (Exception ex)
                 {
@@ -121,7 +121,7 @@ internal static class Tools
 
                 if (response.IsSuccessStatusCode)
                 {
-                    string responseContent = response.Content.ReadAsStringAsync().Result;
+                    string responseContent = await response.Content.ReadAsStringAsync();
                     var locationData = System.Text.Json.JsonSerializer.Deserialize<List<LocationIqResponse>>(responseContent);
 
                     if (locationData == null || locationData.Count == 0)
@@ -146,7 +146,7 @@ internal static class Tools
                 {
                     // Wait before retrying
                     int delay = InitialDelayMilliseconds * (int)Math.Pow(2, retry);
-                    Task.Delay(delay).Wait();
+                    await Task.Delay(delay);
                 }
                 else
                 {
@@ -178,73 +178,73 @@ internal static class Tools
     /// function that checks if the coordinates of a volunteer match the coordinates based on his address. 
     /// we use the function GetAddressCoordinates to compare the expected coordinates with the received , allowing a small tolerance
     /// </summary>
-    public static bool CheckAddressVolunteer(BO.Volunteer vol)
-    {
-        if (vol.Latitude == null || vol.Longitude == null)
-        {
-            throw new BlNullPropertyException("Latitude or Longitude is null.");
-        }
+    //public static bool CheckAddressVolunteer(BO.Volunteer vol)
+    //{
+    //    if (vol.Latitude == null || vol.Longitude == null)
+    //    {
+    //        throw new BlNullPropertyException("Latitude or Longitude is null.");
+    //    }
 
-        if (string.IsNullOrEmpty(vol.Address))
-        {
-            throw new BlNullPropertyException("Address is null or empty.");
-        }
-        var (expectedLatitude, expectedLongitude) = Tools.GetAddressCoordinates(vol.Address);
+    //    if (string.IsNullOrEmpty(vol.Address))
+    //    {
+    //        throw new BlNullPropertyException("Address is null or empty.");
+    //    }
+    //    var (expectedLatitude, expectedLongitude) = Tools.GetAddressCoordinates(vol.Address);
 
-        const double tolerance = 0.0001;
-        bool isLatitudeMatch = Math.Abs(vol.Latitude.Value - expectedLatitude) < tolerance;
-        bool isLongitudeMatch = Math.Abs(vol.Longitude.Value - expectedLongitude) < tolerance;
+    //    const double tolerance = 0.0001;
+    //    bool isLatitudeMatch = Math.Abs(vol.Latitude.Value - expectedLatitude) < tolerance;
+    //    bool isLongitudeMatch = Math.Abs(vol.Longitude.Value - expectedLongitude) < tolerance;
 
-        return isLatitudeMatch && isLongitudeMatch;
-    }
+    //    return isLatitudeMatch && isLongitudeMatch;
+    //}
 
     /// <summary>
     /// function that checks if the coordinates of a call match the coordinates based on his address. 
     /// we use the function GetAddressCoordinates to compare the expected coordinates with the received , allowing a small tolerance
     /// </summary>
-    public static bool CheckAddressCall(BO.Call c)
-    {
-        if (string.IsNullOrEmpty(c.Address))
-        {
-            throw new BlNullPropertyException("Address is null or empty.");
-        }
-        var (expectedLatitude, expectedLongitude) = Tools.GetAddressCoordinates(c.Address);
-        const double tolerance = 0.0001;
+    //public static bool CheckAddressCall(BO.Call c)
+    //{
+    //    if (string.IsNullOrEmpty(c.Address))
+    //    {
+    //        throw new BlNullPropertyException("Address is null or empty.");
+    //    }
+    //    var (expectedLatitude, expectedLongitude) = Tools.GetAddressCoordinates(c.Address);
+    //    const double tolerance = 0.0001;
 
-        bool isLatitudeMatch = Math.Abs(c.Latitude.GetValueOrDefault() - expectedLatitude) < tolerance;
-        bool isLongitudeMatch = Math.Abs(c.Longitude.GetValueOrDefault() - expectedLongitude) < tolerance;
+    //    bool isLatitudeMatch = Math.Abs(c.Latitude.GetValueOrDefault() - expectedLatitude) < tolerance;
+    //    bool isLongitudeMatch = Math.Abs(c.Longitude.GetValueOrDefault() - expectedLongitude) < tolerance;
 
-        return isLatitudeMatch && isLongitudeMatch;
-    }
+    //    return isLatitudeMatch && isLongitudeMatch;
+    //}
 
     /// <summary>
     ///  function to calculate the distance between two addresses
     ///  we use Haversine formula
     /// </summary>
-    public static double CalculateDistanceBetweenAddresses(string address1, string address2)
-    {
-        var (latitude1, longitude1) = GetAddressCoordinates(address1);
-        var (latitude2, longitude2) = GetAddressCoordinates(address2);
+    //public static double CalculateDistanceBetweenAddresses(string address1, string address2)
+    //{
+    //    var (latitude1, longitude1) = GetAddressCoordinates(address1);
+    //    var (latitude2, longitude2) = GetAddressCoordinates(address2);
 
-        const double EarthRadiusKm = 6371.0;
+    //    const double EarthRadiusKm = 6371.0;
 
-        double latitude1Rad = DegreesToRadians(latitude1);
-        double longitude1Rad = DegreesToRadians(longitude1);
-        double latitude2Rad = DegreesToRadians(latitude2);
-        double longitude2Rad = DegreesToRadians(longitude2);
+    //    double latitude1Rad = DegreesToRadians(latitude1);
+    //    double longitude1Rad = DegreesToRadians(longitude1);
+    //    double latitude2Rad = DegreesToRadians(latitude2);
+    //    double longitude2Rad = DegreesToRadians(longitude2);
 
-        double deltaLatitude = latitude2Rad - latitude1Rad;
-        double deltaLongitude = longitude2Rad - longitude1Rad;
+    //    double deltaLatitude = latitude2Rad - latitude1Rad;
+    //    double deltaLongitude = longitude2Rad - longitude1Rad;
 
-        double a = Math.Sin(deltaLatitude / 2) * Math.Sin(deltaLatitude / 2) +
-                   Math.Cos(latitude1Rad) * Math.Cos(latitude2Rad) *
-                   Math.Sin(deltaLongitude / 2) * Math.Sin(deltaLongitude / 2);
+    //    double a = Math.Sin(deltaLatitude / 2) * Math.Sin(deltaLatitude / 2) +
+    //               Math.Cos(latitude1Rad) * Math.Cos(latitude2Rad) *
+    //               Math.Sin(deltaLongitude / 2) * Math.Sin(deltaLongitude / 2);
 
-        double c = 2 * Math.Atan2(Math.Sqrt(a), Math.Sqrt(1 - a));
-        double distance = EarthRadiusKm * c;
+    //    double c = 2 * Math.Atan2(Math.Sqrt(a), Math.Sqrt(1 - a));
+    //    double distance = EarthRadiusKm * c;
 
-        return distance;
-    }
+    //    return distance;
+    //}
 
     /// <summary>
     /// function to transform Degrees To Radians
@@ -300,12 +300,15 @@ internal static class Tools
         /// <summary>
         /// calulate the air distance with the coordinates
         /// </summary>
-        public static double CalculateAirDistance(string address1, string address2)
+        public static double CalculateAirDistance(double? latitude1, double? longitude1, double? latitude2, double? longitude2)
         {
-            var (latitude1, longitude1) = GetAddressCoordinates(address1);
-            var (latitude2, longitude2) = GetAddressCoordinates(address2);
-
-            return CalculateDistanceBetweenCoordinates(latitude1, longitude1, latitude2, longitude2);
+            //var (latitude1, longitude1) = GetAddressCoordinates(address1);
+            //var (latitude2, longitude2) = GetAddressCoordinates(address2);
+            if (latitude1 != null && longitude1 != null && latitude2 != null && longitude2 != null)
+            {
+                return CalculateDistanceBetweenCoordinates(latitude1.Value, longitude1.Value, latitude2.Value, longitude2.Value);
+            }
+            return 0;
         }
        
         public class RouteResponse
@@ -330,6 +333,7 @@ internal static class Tools
             double latitude2Rad = DegreesToRadians(latitude2);
             double longitude2Rad = DegreesToRadians(longitude2);
 
+
             double deltaLatitude = latitude2Rad - latitude1Rad;
             double deltaLongitude = longitude2Rad - longitude1Rad;
 
@@ -340,6 +344,7 @@ internal static class Tools
             double c = 2 * Math.Atan2(Math.Sqrt(a), Math.Sqrt(1 - a));
 
             return EarthRadiusKm * c;
+
         }
         private class LocationIqDirectionsResponse
         {
@@ -358,4 +363,7 @@ internal static class Tools
 
     #endregion Adress & Latitude & Longitude calculation
 
+
+
+    
 }
