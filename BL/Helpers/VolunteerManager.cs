@@ -72,18 +72,18 @@ internal static class VolunteerManager
             throw new BO.BlFormatException("The MaximumDistance must be 0–10 kilometer.");
         }
 
-        if (!string.IsNullOrEmpty(volunteer.Address))
-        {
-            var coordinate = Helpers.Tools.GetAddressCoordinates(volunteer.Address);
-            if (volunteer.Latitude != coordinate.Latitude)
-            {
-                throw new BO.BlFormatException("Invalid Latitude.");
-            }
-            if (volunteer.Longitude != coordinate.Longitude)
-            {
-                throw new BO.BlFormatException("Invalid Longitude.");
-            }
-        }
+        //if (!string.IsNullOrEmpty(volunteer.Address))
+        //{
+        //    var coordinate = Helpers.Tools.GetAddressCoordinates(volunteer.Address);
+        //    if (volunteer.Latitude != coordinate.Latitude)
+        //    {
+        //        throw new BO.BlFormatException("Invalid Latitude.");
+        //    }
+        //    if (volunteer.Longitude != coordinate.Longitude)
+        //    {
+        //        throw new BO.BlFormatException("Invalid Longitude.");
+        //    }
+        //}
 
     }
 
@@ -231,7 +231,7 @@ internal static class VolunteerManager
                     MaxTime = call.MaxTime ?? DateTime.MinValue,
                     EnterTime = idCall.EnterTime,
                     Distance = volunteer.Type == DO.DistanceType.Aerial
-                     ? Tools.DistanceCalculator.CalculateAirDistance(call.Address, volunteer.Address)
+                     ? Tools.DistanceCalculator.CalculateAirDistance(call.Latitude,call.Longitude, volunteer.Latitude,volunteer.Longitude)
                      : Tools.DistanceCalculator.CalculateDistanceOSRMSync(
                          new Tools.Location { Lat = call.Latitude, Lon = call.Longitude },
                          new Tools.Location { Lat = volunteer.Latitude, Lon = volunteer.Longitude },

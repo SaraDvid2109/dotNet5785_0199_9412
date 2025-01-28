@@ -6,6 +6,7 @@ using Helpers;
 using System;
 using System.Diagnostics;
 using System.Linq;
+using System.Net;
 using System.Xml.Linq;
 
 /// <summary>
@@ -154,12 +155,13 @@ internal class volunteerImplementation : IVolunteer
     public void UpdatingVolunteerDetails(int id, BO.Volunteer volunteer)
     {
         AdminManager.ThrowOnSimulatorIsRunning();  //stage 7
-        if (!string.IsNullOrEmpty(volunteer.Address))
-        {
-            var coordinate = Helpers.Tools.GetAddressCoordinates(volunteer.Address);
-            volunteer.Latitude = coordinate.Latitude;
-            volunteer.Longitude = coordinate.Longitude;
-        }
+        //if (!string.IsNullOrEmpty(volunteer.Address))
+        //{
+        //    var coordinate = Helpers.Tools.GetAddressCoordinates(volunteer.Address);
+        //    volunteer.Latitude = coordinate.Latitude;
+        //    volunteer.Longitude = coordinate.Longitude;
+        //}
+
         Helpers.VolunteerManager.IntegrityCheck(volunteer);
         try
         {
@@ -197,6 +199,9 @@ internal class volunteerImplementation : IVolunteer
             VolunteerManager.Observers.NotifyListUpdated();  //stage 5
             CallManager.Observers.NotifyItemUpdated(volunteerToUpdate.Id);  //stage 5
             CallManager.Observers.NotifyListUpdated();
+            
+            _ = UpdateVolunteerFieldsAsync(volunteerToUpdate);
+            
 
         }
         catch (DO.DalDoesNotExistException ex)
@@ -244,12 +249,12 @@ internal class volunteerImplementation : IVolunteer
     public void AddVolunteer(BO.Volunteer volunteer)
     {
         AdminManager.ThrowOnSimulatorIsRunning();  //stage 7
-        if (!string.IsNullOrEmpty(volunteer.Address))
-        {
-            var coordinate = Helpers.Tools.GetAddressCoordinates(volunteer.Address);
-            volunteer.Latitude = coordinate.Latitude;
-            volunteer.Longitude = coordinate.Longitude;
-        }
+        //if (!string.IsNullOrEmpty(volunteer.Address))
+        //{
+        //    var coordinate = Helpers.Tools.GetAddressCoordinates(volunteer.Address);
+        //    volunteer.Latitude = coordinate.Latitude;
+        //    volunteer.Longitude = coordinate.Longitude;
+        //}
         Helpers.VolunteerManager.IntegrityCheck(volunteer);
         try
         {
@@ -257,6 +262,9 @@ internal class volunteerImplementation : IVolunteer
             lock (AdminManager.BlMutex) //stage 7
                  _dal.Volunteer.Create(volunteerToAdd);
             VolunteerManager.Observers.NotifyListUpdated();  //stage 5
+            
+             _ = UpdateVolunteerFieldsAsync(volunteerToAdd);
+            
         }
         catch (DO.DalAlreadyExistException ex) { throw new BO.BllAlreadyExistException(ex.Message); }
     }
@@ -320,7 +328,7 @@ internal class volunteerImplementation : IVolunteer
 
 
         double distance = volunteer.Type == BO.DistanceType.Aerial
-                     ? Tools.DistanceCalculator.CalculateAirDistance(call.Address, volunteer.Address)
+                     ? Tools.DistanceCalculator.CalculateAirDistance(call.Latitude,call.Longitude, volunteer.Latitude,volunteer.Latitude)
                      : Tools.DistanceCalculator.CalculateDistanceOSRMSync(
                          new Tools.Location { Lat = call.Latitude, Lon = call.Longitude },
                          new Tools.Location { Lat = volunteer.Latitude, Lon = volunteer.Longitude },
@@ -358,6 +366,29 @@ internal class volunteerImplementation : IVolunteer
     public void RemoveObserver(int id, Action observer) =>
     VolunteerManager.Observers.RemoveObserver(id, observer); //stage 5
     #endregion Stage 5
+
+
+    /// <summary>
+    /// Computes missing fields asynchronously and updates the volunteer in the DAL.
+    /// </summary>
+    /// <param name="volunteerId">The ID of the volunteer to update.</param>
+    /// <param name="address">The address to compute coordinates for.</param>
+    private async Task UpdateVolunteerFieldsAsync(DO.Volunteer volunteer)
+    {
+        try
+        {
+            var coordinate = await Helpers.Tools.GetAddressCoordinates(volunteer.Address); // קריאה אסינכרונית
+            volunteer = volunteer with { Latitude = coordinate.Latitude, Longitude = coordinate.Longitude };
+            lock (AdminManager.BlMutex)
+                _dal.Volunteer.Update(volunteer);
+            VolunteerManager.Observers.NotifyItemUpdated(volunteer.Id);  //stage 5
+            VolunteerManager.Observers.NotifyListUpdated();  //stage 5
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"Error updating volunteer location for ID {volunteer.Id}: {ex.Message}");
+        }
+    }
 
 }
 

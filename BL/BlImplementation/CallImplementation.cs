@@ -144,9 +144,9 @@ internal class CallImplementation : ICall
         {
             throw new BO.BlFormatException("Invalid address.");
         }
-        var coordinates = Tools.GetAddressCoordinates(call.Address);
-        call.Latitude = coordinates.Latitude;
-        call.Longitude = coordinates.Longitude;
+        //var coordinates = Tools.GetAddressCoordinates(call.Address);
+        //call.Latitude = coordinates.Latitude;
+        //call.Longitude = coordinates.Longitude;
 
         CallManager.IntegrityCheck(call);
 
@@ -165,7 +165,7 @@ internal class CallImplementation : ICall
               _dal.Call.Update(DOCall);
             CallManager.Observers.NotifyItemUpdated(DOCall.Id);  //stage 5
             CallManager.Observers.NotifyListUpdated();  //stage 5
-
+            _=UpdateCallFieldsAsync(DOCall);
         }
         catch (DO.DalDoesNotExistException ex)
         {
@@ -229,9 +229,9 @@ internal class CallImplementation : ICall
         {
             throw new BO.BlFormatException("Invalid address.");
         }
-        var coordinates = Tools.GetAddressCoordinates(call.Address);
-        call.Latitude = coordinates.Latitude;
-        call.Longitude = coordinates.Longitude;
+        //var coordinates = Tools.GetAddressCoordinates(call.Address);
+        //call.Latitude = coordinates.Latitude;
+        //call.Longitude = coordinates.Longitude;
         Helpers.CallManager.IntegrityCheck(call);
         try
         {
@@ -247,6 +247,7 @@ internal class CallImplementation : ICall
             lock (AdminManager.BlMutex) //stage 7
                 _dal.Call.Create(callToAdd);
             CallManager.Observers.NotifyListUpdated();  //stage 5
+           _= UpdateCallFieldsAsync(callToAdd);
         }
         catch (DO.DalAlreadyExistException ex)
         { throw new BO.BllAlreadyExistException("Error creating call", ex); }
@@ -380,6 +381,7 @@ internal class CallImplementation : ICall
     /// <exception cref="BO.UnauthorizedAccessException">Thrown if the volunteer does not have permission to update the assignment or if the assignment cannot be updated due to existing end time or treatment type.</exception>
     public void UpdateEndOfTreatmentCall(int volunteerId, int assignmentId)
     {
+        AdminManager.ThrowOnSimulatorIsRunning();  //stage 7
         CallManager.UpdateEndOfTreatmentCall(volunteerId,assignmentId);
         //AdminManager.ThrowOnSimulatorIsRunning();  //stage 7
         //DO.Assignment? assignment;
@@ -422,6 +424,7 @@ internal class CallImplementation : ICall
     /// <exception cref="BO.UnauthorizedAccessException">Thrown if the volunteer does not have permission to cancel the assignment or if the assignment cannot be canceled due to existing end time or treatment type.</exception>
     public void CancelCallHandling(int volunteerId, int assignmentId)
     {
+        AdminManager.ThrowOnSimulatorIsRunning();  //stage 7
         CallManager.CancelCallHandling(volunteerId,assignmentId);
         //AdminManager.ThrowOnSimulatorIsRunning();  //stage 7
         //DO.Volunteer? volunteer;
@@ -469,6 +472,7 @@ internal class CallImplementation : ICall
     /// <exception cref="BO.BlOperationNotAllowedException">Thrown if the volunteer is already handling another call or if the call is not available for handling.</exception>
     public void ChooseCallForHandling(int volunteerId, int callId)
     {
+        AdminManager.ThrowOnSimulatorIsRunning();  //stage 7
         CallManager.ChooseCallForHandling(volunteerId, callId);
 
         //AdminManager.ThrowOnSimulatorIsRunning();  //stage 7
@@ -518,4 +522,20 @@ internal class CallImplementation : ICall
     #endregion Stage 5
 
 
+    private async Task UpdateCallFieldsAsync(DO.Call call)
+    {
+        try
+        {
+            var coordinate = await Helpers.Tools.GetAddressCoordinates(call.Address); // קריאה אסינכרונית
+            call = call with { Latitude = coordinate.Latitude, Longitude = coordinate.Longitude };
+            lock (AdminManager.BlMutex)
+                _dal.Call.Update(call);
+            CallManager.Observers.NotifyItemUpdated(call.Id);  //stage 5
+            CallManager.Observers.NotifyListUpdated();  //stage 5
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"Error updating call location for ID {call.Id}: {ex.Message}");
+        }
+    }
 }

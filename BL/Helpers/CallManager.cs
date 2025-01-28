@@ -3,6 +3,7 @@ using BO;
 using DalApi;
 using DO;
 using Microsoft.VisualBasic;
+using System;
 using System.Net;
 namespace Helpers;
 
@@ -55,19 +56,19 @@ internal static class CallManager
             throw new BO.BlFormatException("Address cannot be null or empty.");
         }
 
-        var coordinates = Helpers.Tools.GetAddressCoordinates(call.Address);
-        if (coordinates == (0, 0))
-        {
-            throw new BO.BlFormatException("Invalid address.");
-        }
-        if (call.Latitude != coordinates.Latitude)
-        {
-            throw new BO.BlFormatException("Invalid Latitude.");
-        }
-        if (call.Longitude != coordinates.Longitude)
-        {
-            throw new BO.BlFormatException("Invalid Longitude.");
-        }
+        //var coordinates = Helpers.Tools.GetAddressCoordinates(call.Address);
+        //if (coordinates == (0, 0))
+        //{
+        //    throw new BO.BlFormatException("Invalid address.");
+        //}
+        //if (call.Latitude != coordinates.Latitude)
+        //{
+        //    throw new BO.BlFormatException("Invalid Latitude.");
+        //}
+        //if (call.Longitude != coordinates.Longitude)
+        //{
+        //    throw new BO.BlFormatException("Invalid Longitude.");
+        //}
     }
 
     /// <summary>
@@ -337,10 +338,10 @@ internal static class CallManager
             Destination = call.Description,
             Address = call.Address,
             OpenTime = call.OpenTime,
-            MaxTime=call.MaxTime,
-            Distance = 
+            MaxTime = call.MaxTime,
+            Distance =
                      volunteer.Type == DO.DistanceType.Aerial
-                     ? Tools.DistanceCalculator.CalculateAirDistance(call.Address, volunteer.Address)
+                     ? Tools.DistanceCalculator.CalculateAirDistance(call.Latitude,call.Longitude, volunteer.Latitude,volunteer.Longitude)
                      : Tools.DistanceCalculator.CalculateDistanceOSRMSync(
                          new Tools.Location { Lat = call.Latitude, Lon = call.Longitude },
                          new Tools.Location { Lat = volunteer.Latitude, Lon = volunteer.Longitude },
@@ -355,7 +356,7 @@ internal static class CallManager
     /// <returns>A <see cref="DO.Call"/> object representing the call.</returns>
     public static DO.Call ToDOCall(BO.Call call)
     {
-        return  new DO.Call(
+        return new DO.Call(
                 call.Id,
                 call.Description,
                 call.Address ?? throw new BO.BlNullPropertyException("No address entered!"),
@@ -456,7 +457,7 @@ internal static class CallManager
         }
         DO.Volunteer? volunteer;
         lock (AdminManager.BlMutex) //stage 7
-             volunteer = s_dal.Volunteer.Read(assignmentOfCall.VolunteerId);
+            volunteer = s_dal.Volunteer.Read(assignmentOfCall.VolunteerId);
         TimeSpan? time = null;
         if (assignmentOfCall.EndTime != null)
         {
@@ -468,7 +469,7 @@ internal static class CallManager
             CallId = call.Id,
             CallType = (BO.CallType)call.CarTypeToSend,
             OpenTime = call.OpenTime,
-            TimeLeftToFinish = AdminManager.Now - call.MaxTime> TimeSpan.Zero ? AdminManager.Now - call.MaxTime: TimeSpan.Zero,
+            TimeLeftToFinish = AdminManager.Now - call.MaxTime > TimeSpan.Zero ? AdminManager.Now - call.MaxTime : TimeSpan.Zero,
             LastVolunteer = volunteer!.Name,
             TreatmentTimeLeft = time,
             Status = Status(call.Id),
@@ -527,7 +528,7 @@ internal static class CallManager
                 BO.OpenCallInListField.MaxTime => filterCalls.OrderBy(c => c.MaxTime),
                 BO.OpenCallInListField.Distance => filterCalls.OrderBy(c =>
                     volunteer.Type == DO.DistanceType.Aerial
-                    ? Tools.DistanceCalculator.CalculateAirDistance(c.Address, volunteer.Address)
+                    ? Tools.DistanceCalculator.CalculateAirDistance(c.Latitude,c.Longitude ,volunteer.Latitude,volunteer.Longitude)
                     : Tools.DistanceCalculator.CalculateDistanceOSRMSync(
                         new Tools.Location { Lat = c.Latitude, Lon = c.Longitude },
                         new Tools.Location { Lat = volunteer.Latitude, Lon = volunteer.Longitude },
@@ -550,7 +551,7 @@ internal static class CallManager
     /// <exception cref="BO.BlOperationNotAllowedException">Thrown if the volunteer is already handling another call or if the call is not available for handling.</exception>
     public static void ChooseCallForHandling(int volunteerId, int callId)
     {
-        AdminManager.ThrowOnSimulatorIsRunning();  //stage 7
+        
         IEnumerable<DO.Assignment> assignments;
         DO.Volunteer? volunteer;
         lock (AdminManager.BlMutex) //stage 7
@@ -594,7 +595,7 @@ internal static class CallManager
     /// <exception cref="BO.UnauthorizedAccessException">Thrown if the volunteer does not have permission to update the assignment or if the assignment cannot be updated due to existing end time or treatment type.</exception>
     public static void UpdateEndOfTreatmentCall(int volunteerId, int assignmentId)
     {
-        AdminManager.ThrowOnSimulatorIsRunning();  //stage 7
+        
         DO.Assignment? assignment;
         lock (AdminManager.BlMutex) //stage 7
         {
@@ -635,7 +636,7 @@ internal static class CallManager
     /// <exception cref="BO.UnauthorizedAccessException">Thrown if the volunteer does not have permission to cancel the assignment or if the assignment cannot be canceled due to existing end time or treatment type.</exception>
     public static void CancelCallHandling(int volunteerId, int assignmentId)
     {
-        AdminManager.ThrowOnSimulatorIsRunning();  //stage 7
+        
         DO.Volunteer? volunteer;
         DO.Assignment? assignment;
         lock (AdminManager.BlMutex) //stage 7
@@ -671,6 +672,101 @@ internal static class CallManager
             throw new BO.BlDoesNotExistException("Error trying to update call cancellation :" + ex);
         }
     }
+
+   
+
+    internal static void AddCallsSimulation()
+    {
+        //We asked the GPT chat: create an array for me that has 50 cases that call the MDA
+        string?[] descriptionsArr = new string?[]
+        {
+            "Unconscious person", "Road accident with injuries", "Gunshot wound", "Severe burns",
+            "Fall from height", "Infant not breathing", "Stroke symptoms", "Acute heart attack",
+            "Severe shortness of breath", "Heavy bleeding", "Head injury", "Deep cut on hand",
+            "Fall from bicycle", "Food poisoning", "Severe allergic reaction", "Chest pain",
+            "Drowning", "Snake bite", "Workplace injury", "Minor burn from gas explosion",
+            "Stab wound in abdomen", "Dehydration symptoms", "High fever and seizures",
+            "Fall on stairs", "Sports injury", "Broken leg in accident", "Assault with sharp object",
+            "Motorcycle accident injury", "Frostbite while outdoors", "Minor electric shock",
+            "Sudden sharp back pain", "Scheduled check-up visit", "Blood pressure measurement request",
+            "Routine blood test", "Medical transport request", "Assistance with medical equipment setup",
+            "Consultation for ongoing symptoms", "Heart rate monitoring device setup",
+            "Request for flu vaccination", "Consultation for mild allergy", "Routine blood sugar test",
+            "Request for tetanus shot", "Follow-up on previous treatment", "Minor wound dressing change",
+            "Routine elderly health assessment", "Work clearance health screening", "Pregnancy check-up",
+            "Chronic pain management", "Diabetes management support", "Request for mobility aid assistance",
+            "Health education session", "Guidance on post-surgery care", "Prescription refill assistance",
+            "Dietitian consultation request", "Physical fitness assessment", "Medication side effect inquiry",
+            "Physiotherapy session request", "Home safety evaluation", "Wellness check for remote patient",
+            "Routine child vaccination"
+        };
+
+        //We asked the GPT chat: can you create for us an array of 50 addresses in Israel
+        string[] addresses = new string[]
+        {
+            "Herzl St 10, Tel Aviv", "Ben Gurion St 5, Ramat Gan", "Dizengoff St 25, Tel Aviv",
+            "Allenby St 40, Haifa", "Jaffa St 60, Jerusalem", "Rothschild Blvd 16, Tel Aviv",
+            "Weizmann St 12, Kfar Saba", "HaNasi St 8, Herzliya", "Sokolov St 30, Holon",
+            "Ben Yehuda St 100, Tel Aviv", "Ehad HaAm St 50, Beersheba", "Herzliya St 15, Netanya",
+            "Keren HaYesod St 22, Ashdod", "Herzl St 45, Rishon LeZion", "Moshe Dayan St 3, Ashkelon",
+            "Ben Tsvi St 10, Bat Yam", "Yitzhak Rabin St 20, Lod", "King George St 45, Tel Aviv",
+            "Arlozorov St 100, Tel Aviv", "Aluf David St 5, Petah Tikva", "Habanim St 12, Hadera",
+            "Shabazi St 18, Ramat Hasharon", "Levi Eshkol St 40, Ashkelon", "Weizmann St 6, Rehovot",
+            "Jabotinsky St 15, Bnei Brak", "HaGalil St 10, Kiryat Shmona", "HaNasi Weizmann St 35, Haifa",
+            "Moshe Dayan St 1, Ashdod", "Menachem Begin Blvd 55, Tel Aviv", "Hashalom Rd 10, Tel Aviv",
+            "Shderot Chen St 45, Eilat", "Ayalon St 5, Rishon LeZion", "King Solomon St 20, Tiberias",
+            "Rothschild Blvd 80, Tel Aviv", "Yigal Allon St 55, Ramat Gan", "Neve Shaanan St 3, Haifa",
+            "Einstein St 12, Haifa", "Bar Ilan St 4, Givat Shmuel", "Yehuda Halevi St 40, Tel Aviv",
+            "Haifa Rd 10, Acre", "Nahum St 1, Holon", "Eliezer Kaplan St 5, Herzliya",
+            "Dov Hoz St 20, Be'er Sheva", "Moshe Sharet St 15, Ashkelon", "Haneviim St 60, Jerusalem",
+            "Emek Refaim St 12, Jerusalem", "HaSolel St 1, Nazareth", "Hanamal St 4, Haifa",
+            "HaKibbutz HaMeuhad St 6, Kfar Yona"
+        };
+
+        //We asked the GPT chat: can you create for us an array of longitude lines and an array
+        //of latitude lines corresponding to the above array respectively
+        double[] latitudes = new double[]
+        {
+            32.066158, 32.082271, 32.080480, 32.818409, 31.784217, 32.063922, 32.175034, 32.166313, 32.014046,
+            32.089771, 31.251810, 32.328516, 31.802418, 31.969633, 31.669258, 32.018748, 31.951569, 32.073253,
+            32.087601, 32.090678, 32.440987, 32.145339, 31.661712, 31.894756, 32.089611, 33.207333, 32.796785,
+            31.803742, 32.071457, 32.061399, 29.55805, 31.973001, 32.785539, 32.070054, 32.788712, 32.110003,
+            32.083762, 32.055893, 32.926099, 32.019313, 32.166313, 31.249872, 31.661712, 32.083307, 31.784217,
+            31.765365, 32.696947, 32.823115, 32.317325, 32.392867
+        };
+
+        double[] longitudes = new double[]
+        {
+            34.779808, 34.812548, 34.774989, 34.988507, 35.223391, 34.771805, 34.906552, 34.842972, 34.772101,
+            34.773922, 34.791460, 34.853196, 34.641665, 34.804390, 34.574262, 34.747685, 34.899520, 34.774281,
+            34.791522, 34.887761, 34.923137, 34.838293, 34.571489, 34.812223, 34.834804, 35.570961, 35.003008,
+            34.656998, 34.791613, 34.789561, 34.934200, 34.771497, 34.779572, 34.804868, 35.021502, 35.053653,
+            34.824040, 34.773058, 35.066441, 34.767654, 34.842972, 34.771687, 34.571489, 34.799839, 35.223391,
+            35.219762, 35.308230, 35.002729, 34.919138, 34.876413
+        };
+        var random = new Random();
+        while (true)
+        {
+            for (int i = 0; i < 5; i++)
+            {
+                int place = random.Next(0, addresses.Length);
+                var newCall = new DO.Call
+                {
+                    Description = descriptionsArr[random.Next(0, descriptionsArr.Length)],
+                    Address = addresses[place],
+                    Latitude = latitudes[place],
+                    Longitude = longitudes[place],
+                    OpenTime = AdminManager.Now,
+                    MaxTime = AdminManager.Now.AddMinutes(random.Next(10, 30)),
+                    CarTypeToSend = (DO.CallType)random.Next(0, 3)
+                };
+                lock (AdminManager.BlMutex)
+                    s_dal.Call.Create(newCall);
+            }
+            Task.Delay(TimeSpan.FromMinutes(5));
+        }
+    }
+
 
 }
 
