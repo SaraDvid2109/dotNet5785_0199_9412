@@ -426,14 +426,18 @@ namespace PL
         {
             IEnumerable<int> calls = s_bl.call.CallQuantities();
             List<int> ListCalls = calls.ToList();
-            OpenStatus = ListCalls[0];
-            TreatmentStatus = ListCalls[1];
-            OpenAtRiskStatus = ListCalls[2];
-            TreatmentOfRiskStatus = ListCalls[3];
-            ExpiredStatus = ListCalls[4];
-            CloseStatus = ListCalls[5];
 
+            Dispatcher.Invoke(() =>
+            {
+                OpenStatus = ListCalls[0];
+                TreatmentStatus = ListCalls[1];
+                OpenAtRiskStatus = ListCalls[2];
+                TreatmentOfRiskStatus = ListCalls[3];
+                ExpiredStatus = ListCalls[4];
+                CloseStatus = ListCalls[5];
+            });
         }
+
 
         private void OpenStatusCalls_Click(object sender, RoutedEventArgs e)
             =>new CallListWindow(BO.CallStatus.Open).Show();
