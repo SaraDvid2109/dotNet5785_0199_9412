@@ -438,7 +438,6 @@ namespace PL
             });
         }
 
-
         private void OpenStatusCalls_Click(object sender, RoutedEventArgs e)
             =>new CallListWindow(BO.CallStatus.Open).Show();
 
