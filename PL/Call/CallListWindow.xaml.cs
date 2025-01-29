@@ -34,8 +34,15 @@ public partial class CallListWindow : Window, INotifyPropertyChanged
     /// <summary>
     /// Initializes a new instance of the CallListWindow class.
     /// </summary>
-    public CallListWindow()
+    public CallListWindow(BO.CallStatus status = BO.CallStatus.None)
     {
+        if (status != BO.CallStatus.None)
+        {
+            SelectedFiled = BO.CallInListFields.Status;
+            SelectedFilterValue = status;
+        }
+        else
+            SelectedFiled = BO.CallInListFields.None;
         DataContext = this;
         InitializeComponent();
     }

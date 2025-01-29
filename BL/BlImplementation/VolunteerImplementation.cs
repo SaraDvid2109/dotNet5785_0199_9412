@@ -54,7 +54,7 @@ internal class volunteerImplementation : IVolunteer
         };
         return boVolunteer.Role;
     }
-    
+
     /// <summary>
     /// Filters and sorts the volunteers based on the given activity status and sorting field, then returns the filtered and sorted list.
     /// </summary>
@@ -69,20 +69,23 @@ internal class volunteerImplementation : IVolunteer
         IEnumerable<DO.Volunteer> sortVolunteers;
         List<DO.Assignment> assignments;
         lock (AdminManager.BlMutex) //stage 7
-        {
             assignments = _dal.Assignment.ReadAll().ToList();
-            if (active == null)
+        if (active == null)
+        {
+            lock (AdminManager.BlMutex) //stage 7
                 volunteers = _dal.Volunteer.ReadAll();
-            else
-            {
-                groupedVolunteers = _dal.Volunteer.ReadAll().GroupBy(v => v.Active == true);
-                if (groupedVolunteers == null || !groupedVolunteers.Any())
-                    throw new BO.BlNullPropertyException("Volunteer data source is empty or null.");
-
-                volunteers = groupedVolunteers.FirstOrDefault(g => g.Key == active.Value) ?? Enumerable.Empty<DO.Volunteer>();
-            }
-
         }
+        else
+        {
+            lock (AdminManager.BlMutex) //stage 7
+                groupedVolunteers = _dal.Volunteer.ReadAll().GroupBy(v => v.Active == true);
+            if (groupedVolunteers == null || !groupedVolunteers.Any())
+                throw new BO.BlNullPropertyException("Volunteer data source is empty or null.");
+
+            volunteers = groupedVolunteers.FirstOrDefault(g => g.Key == active.Value) ?? Enumerable.Empty<DO.Volunteer>();
+        }
+
+        
         if (!volunteers.Any())
             return Enumerable.Empty<BO.VolunteerInList>();
         else
@@ -166,34 +169,35 @@ internal class volunteerImplementation : IVolunteer
         try
         {
             DO.Volunteer volunteerToUpdate;
+            DO.Volunteer? requester;
             lock (AdminManager.BlMutex) //stage 7
+                 requester = _dal.Volunteer.Read(id);
+            if (requester == null)
             {
-                DO.Volunteer? requester = _dal.Volunteer.Read(id);
-                if (requester == null)
-                {
-                    throw new BO.BlDoesNotExistException("There is no volunteer with this ID.");
-                }
-                // Check permissions
-                if (!requester.Role.Equals("Manager"))
-                {
-                    if (requester.Id != volunteer.Id)
-                        throw new BO.UnauthorizedAccessException("You are not authorized to update this volunteer.");
-                }
-
-                DO.Volunteer? existingVolunteer = _dal.Volunteer.Read(volunteer.Id);
-                if (existingVolunteer == null)
-                {
-                    throw new BO.BlDoesNotExistException($"Volunteer with ID {volunteer.Id} not found.");
-                }
-
-                if ((BO.Roles)requester.Role != BO.Roles.Manager && (BO.Roles)existingVolunteer.Role != volunteer.Role)
-                {
-                    throw new BO.UnauthorizedAccessException("Only managers can update the role.");
-                }
-                volunteerToUpdate = VolunteerManager.ToDOVolunteer(volunteer);
-
-                _dal.Volunteer.Update(volunteerToUpdate);
+                throw new BO.BlDoesNotExistException("There is no volunteer with this ID.");
             }
+            // Check permissions
+            if (!requester.Role.Equals("Manager"))
+            {
+                if (requester.Id != volunteer.Id)
+                    throw new BO.UnauthorizedAccessException("You are not authorized to update this volunteer.");
+            }
+            DO.Volunteer? existingVolunteer;
+            lock (AdminManager.BlMutex) //stage 7
+               existingVolunteer = _dal.Volunteer.Read(volunteer.Id);
+            if (existingVolunteer == null)
+            {
+                throw new BO.BlDoesNotExistException($"Volunteer with ID {volunteer.Id} not found.");
+            }
+
+            if ((BO.Roles)requester.Role != BO.Roles.Manager && (BO.Roles)existingVolunteer.Role != volunteer.Role)
+            {
+                throw new BO.UnauthorizedAccessException("Only managers can update the role.");
+            }
+            volunteerToUpdate = VolunteerManager.ToDOVolunteer(volunteer);
+            lock (AdminManager.BlMutex) //stage 7
+                _dal.Volunteer.Update(volunteerToUpdate);
+            
 
             VolunteerManager.Observers.NotifyItemUpdated(volunteerToUpdate.Id);  //stage 5
             VolunteerManager.Observers.NotifyListUpdated();  //stage 5
@@ -222,18 +226,19 @@ internal class volunteerImplementation : IVolunteer
         try
         {
             AdminManager.ThrowOnSimulatorIsRunning();  //stage 7
+            DO.Volunteer? volunteerToDelete;
             lock (AdminManager.BlMutex) //stage 7
-            { 
-                DO.Volunteer? volunteerToDelete = _dal.Volunteer.Read(id);
+                volunteerToDelete = _dal.Volunteer.Read(id);
             if (volunteerToDelete == null) throw new BO.BlDoesNotExistException("There is no volunteer with this ID.");
             if (!volunteerToDelete.Active)
             {
-                _dal.Volunteer.Delete(id);
+                lock (AdminManager.BlMutex) //stage 7
+                    _dal.Volunteer.Delete(id);
                 VolunteerManager.Observers.NotifyListUpdated();  //stage 5
             }
             else
                 throw new BO.BlOperationNotAllowedException("The volunteer cannot be deleted.");
-            }
+            
         }
         catch (DO.DalDoesNotExistException ex)
         {

@@ -148,6 +148,24 @@ public class CallDeleteVisibilityConverter : IValueConverter
         throw new NotImplementedException();
     }
 }
+public class BorderColorConverter : IValueConverter
+{
+    public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
+    {
+        double? visibilty = (double?)value;
+        if (visibilty != null)
+        {
+            return Brushes.Red;  
+        }
+        return Brushes.Yellow;  
+
+    }
+
+    public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture)
+    {
+        throw new NotImplementedException();
+    }
+}
 
 
 

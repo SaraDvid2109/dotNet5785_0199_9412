@@ -5,7 +5,7 @@ public enum Roles { Volunteer, Manager };
 public enum DistanceType { Aerial, Car, Walking };
 public enum CallType { RegularVehicle, Ambulance, IntensiveCareAmbulance, None };
 public enum EndType { Treated, AdminCancellation, SelfCancellation, ExpiredCancellation };
-public enum CallStatus { Open, Treatment, OpenAtRisk, TreatmentOfRisk, Expired, Close };
+public enum CallStatus { Open, Treatment, OpenAtRisk, TreatmentOfRisk, Expired, Close, None };
 public enum TimeUnit { Minute, Hour, Day, Month, Year };
 public enum VolunteerField { Id, Name, Active, None }
 public enum CallField { Id, Address, CarTypeToSend }

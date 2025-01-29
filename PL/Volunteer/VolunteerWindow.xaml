@@ -97,9 +97,10 @@
                 <Label Grid.Row="4" Grid.Column="0" Content="Password:" />
                 <TextBox Grid.Row="4" Grid.Column="1" Text="{Binding CurrentVolunteer.Password, Mode=TwoWay, NotifyOnValidationError=true,  ValidatesOnExceptions=true}" />
 
-                <!-- Address -->
-                <Label Grid.Row="5" Grid.Column="0" Content="Address:" />
-                <TextBox Grid.Row="5" Grid.Column="1" Text="{Binding CurrentVolunteer.Address, Mode=TwoWay, NotifyOnValidationError=true,  ValidatesOnExceptions=true}" />
+            <!-- Address -->
+            <Label Grid.Row="5" Grid.Column="0" Content="Address:" />
+            <TextBox Grid.Row="5" Grid.Column="1" Text="{Binding CurrentVolunteer.Address, Mode=TwoWay, NotifyOnValidationError=true,  ValidatesOnExceptions=true}" 
+                              BorderBrush="{Binding CurrentVolunteer.Longitude, Converter={StaticResource BorderColorConverterKey}}"/>
 
                 <!-- Role -->
                 <Label Grid.Row="8" Grid.Column="0" Content="Role:" />
