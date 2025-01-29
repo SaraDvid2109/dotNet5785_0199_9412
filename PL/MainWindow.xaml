@@ -5,14 +5,20 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:PL"
         mc:Ignorable="d"
+        WindowState="Maximized"
         Title="MainWindow" Height="450" Width="800"
         DataContext="{Binding RelativeSource={RelativeSource Mode=Self}}" Loaded="InitializeMainWindow" Closed="CleanupOnWindowClose" >
     <Window.Resources>
         <Style TargetType="Button"
           BasedOn="{StaticResource ButtonStyle}">
         </Style>
-        <!--<ImageBrush x:Key="BackgroundImageBrush" ImageSource="Images/starOfDavid.jpg" Stretch="UniformToFill"/>-->
     </Window.Resources>
+
+    <Window.Background>
+        <ImageBrush ImageSource="pack://application:,,,/Images/starofdavid.jpg" Opacity="0.9"/>
+    </Window.Background>
+    
+    
     <!-- Wrap the entire content in a Viewbox -->
     <Viewbox Stretch="Uniform">
         <Grid>
@@ -90,42 +96,42 @@
             
               <StackPanel Orientation="Vertical" VerticalAlignment="Top" Height="136" Margin="475,17,20,0">
                 <StackPanel Orientation="Horizontal" >
-                     <TextBlock Width="215" FontWeight="Bold"  Foreground="#0072CE">
+                        <TextBlock Width="215" FontWeight="Bold"  Foreground="#FF0000">
                         <Run Text="Number of Open calls:"/>
                         <Run  Text="{Binding OpenStatus}"/>
                      </TextBlock>
                      <Button Content="open" Width="50" Click="OpenStatusCalls_Click"/>
                 </StackPanel>
                 <StackPanel Orientation="Horizontal" >
-                    <TextBlock  Width="215" FontWeight="Bold" Foreground="#0072CE">
+                        <TextBlock  Width="215" FontWeight="Bold" Foreground="#FF0000">
                         <Run Text="Number of Treatment calls:"/>
                         <Run  Text="{Binding TreatmentStatus}"/>
                      </TextBlock>
                      <Button Content="open" Width="50" Click="TreatmentStatusCalls_Click"/>
                 </StackPanel>
                 <StackPanel Orientation="Horizontal" >
-                    <TextBlock Width="215" FontWeight="Bold" Foreground="#0072CE">
+                        <TextBlock Width="215" FontWeight="Bold" Foreground="#FF0000">
                         <Run Text="Number of OpenAtRisk calls:"/>
                         <Run  Text="{Binding OpenAtRiskStatus}"/>
                     </TextBlock>
                     <Button Content="open" Width="50" Click="OpenAtRiskStatusCalls_Click"/>
                 </StackPanel>
                 <StackPanel Orientation="Horizontal" >
-                    <TextBlock  Width="215" FontWeight="Bold" Foreground="#0072CE">
+                        <TextBlock  Width="215" FontWeight="Bold" Foreground="#FF0000">
                           <Run Text="Number of TreatmentOfRisk calls:"/>
                           <Run  Text="{Binding TreatmentOfRiskStatus}"/>
                     </TextBlock>
                     <Button Content="open" Width="50" Click="TreatmentOfRiskStatusCalls_Click"/>
                 </StackPanel>
                 <StackPanel Orientation="Horizontal" >
-                    <TextBlock  Width="215"  FontWeight="Bold" Foreground="#0072CE">
+                        <TextBlock  Width="215"  FontWeight="Bold" Foreground="#FF0000">
                         <Run Text="Number of Expired calls:"/>
                         <Run  Text="{Binding ExpiredStatus}"/>
                     </TextBlock>
                     <Button Content="open" Width="50" Click="ExpiredStatusCalls_Click"/>
                 </StackPanel>
                 <StackPanel Orientation="Horizontal" >
-                    <TextBlock Width="215" FontWeight="Bold" Foreground="#0072CE">
+                        <TextBlock Width="215" FontWeight="Bold" Foreground="#FF0000">
                         <Run Text="Number of Close calls:"/>
                         <Run  Text="{Binding CloseStatus}"/>
                     </TextBlock>
