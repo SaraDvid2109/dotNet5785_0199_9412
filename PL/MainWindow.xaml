@@ -90,27 +90,27 @@
             
               <StackPanel Orientation="Vertical" VerticalAlignment="Top" Height="136" Margin="475,17,20,0">
                 <StackPanel Orientation="Horizontal" >
-                    <TextBlock Text="{Binding OpenStatus,StringFormat='Number of Open calls: {0}'}" Width="215" FontWeight="Bold"  Foreground="#0072CE"/>
+                        <TextBlock Text="{Binding OpenStatus,StringFormat='Number of Open calls: {0}'}" Width="215" FontWeight="Bold"  Foreground="#FF0000"/>
                     <Button Content="open" Width="50" Click="OpenStatusCalls_Click"/>
                 </StackPanel>
                 <StackPanel Orientation="Horizontal" >
-                    <TextBlock Text="{Binding TreatmentStatus,StringFormat='Number of Treatment calls: {0}'}" Width="215" FontWeight="Bold" Foreground="#0072CE"/>
+                        <TextBlock Text="{Binding TreatmentStatus,StringFormat='Number of Treatment calls: {0}'}" Width="215" FontWeight="Bold" Foreground="#FF0000"/>
                     <Button Content="open" Width="50" Click="TreatmentStatusCalls_Click"/>
                 </StackPanel>
                 <StackPanel Orientation="Horizontal" >
-                    <TextBlock Text="{Binding OpenAtRiskStatus,StringFormat='Number of close calls: {0}'}" Width="215" FontWeight="Bold" Foreground="#0072CE"/>
+                        <TextBlock Text="{Binding OpenAtRiskStatus,StringFormat='Number of close calls: {0}'}" Width="215" FontWeight="Bold" Foreground="#FF0000"/>
                     <Button Content="open" Width="50" Click="OpenAtRiskStatusCalls_Click"/>
                 </StackPanel>
                 <StackPanel Orientation="Horizontal" >
-                    <TextBlock Text="{Binding TreatmentOfRiskStatus,StringFormat='Number of TreatmentOfRisk calls: {0}'}" Width="215" FontWeight="Bold" Foreground="#0072CE"/>
+                        <TextBlock Text="{Binding TreatmentOfRiskStatus,StringFormat='Number of TreatmentOfRisk calls: {0}'}" Width="215" FontWeight="Bold" Foreground="#FF0000"/>
                     <Button Content="open" Width="50" Click="TreatmentOfRiskStatusCalls_Click"/>
                 </StackPanel>
                 <StackPanel Orientation="Horizontal" >
-                    <TextBlock Text="{Binding ExpiredStatus,StringFormat='Number of Expired calls: {0}'}" Width="215"  FontWeight="Bold" Foreground="#0072CE"/>
+                        <TextBlock Text="{Binding ExpiredStatus,StringFormat='Number of Expired calls: {0}'}" Width="215"  FontWeight="Bold" Foreground="#FF0000"/>
                     <Button Content="open" Width="50" Click="ExpiredStatusCalls_Click"/>
                 </StackPanel>
                 <StackPanel Orientation="Horizontal" >
-                    <TextBlock Text="{Binding CloseStatus, StringFormat='Number of close calls: {0}'}" Width="215" FontWeight="Bold" Foreground="#0072CE"/>
+                        <TextBlock Text="{Binding CloseStatus, StringFormat='Number of close calls: {0}'}" Width="215" FontWeight="Bold" Foreground="#FF0000"/>
                     <Button Content="open" Width="50" Click="CloseStatusCalls_Click"/>
                 </StackPanel>
             </StackPanel>
