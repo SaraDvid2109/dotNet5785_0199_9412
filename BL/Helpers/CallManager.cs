@@ -175,9 +175,11 @@ internal static class CallManager
         {
             throw new BO.BlNullPropertyException("No assignments found for the given call.");
         }
-        DO.Volunteer volunteer;
+        DO.Volunteer? volunteer;
         lock (AdminManager.BlMutex) //stage 7
-            volunteer = s_dal.Volunteer.Read(last.VolunteerId) ?? throw new BO.BlNullPropertyException("No assignments found for the given call.");
+            volunteer = s_dal.Volunteer.Read(last.VolunteerId);
+        if(volunteer==null)
+            throw new BO.BlNullPropertyException("No volunteer found for the given call.");
         return volunteer.Name;
     }
 
@@ -492,17 +494,15 @@ internal static class CallManager
         IEnumerable<DO.Call> calls;
         DO.Volunteer? volunteer;
         lock (AdminManager.BlMutex) //stage 7
-        {
             volunteer = s_dal.Volunteer.Read(id);
-            if (volunteer == null)
+        if (volunteer == null)
                 throw new BO.BlDoesNotExistException($"Volunteer with {id} not found");
-            if (volunteer.Address == null)
-            {
-                throw new BlNullPropertyException("Volunteer address cannot be null.");
-            }
-
+        if (volunteer.Address == null)
+              throw new BlNullPropertyException("Volunteer address cannot be null.");
+            
+        lock (AdminManager.BlMutex) //stage 7
             calls = s_dal.Call.ReadAll();
-        }
+        
         IEnumerable<DO.Call> sortedCall;
         IEnumerable<DO.Call> filterCalls;
 
@@ -554,17 +554,18 @@ internal static class CallManager
         
         IEnumerable<DO.Assignment> assignments;
         DO.Volunteer? volunteer;
+        DO.Call? call;
         lock (AdminManager.BlMutex) //stage 7
-        {
             volunteer = s_dal.Volunteer.Read(volunteerId);
-            if (volunteer == null)
-                throw new BO.BlDoesNotExistException($"Volunteer with {volunteerId} not found");
-            DO.Call? call = s_dal.Call.Read(callId);
-            if (call == null)
-                throw new BO.BlDoesNotExistException($"Call with {callId} not found");
-
+        if (volunteer == null)
+            throw new BO.BlDoesNotExistException($"Volunteer with {volunteerId} not found");
+        lock (AdminManager.BlMutex) //stage 7
+             call = s_dal.Call.Read(callId);
+         if (call == null)
+             throw new BO.BlDoesNotExistException($"Call with {callId} not found");
+        lock (AdminManager.BlMutex) //stage 7
             assignments = s_dal.Assignment.ReadAll();
-        }
+        
         if (assignments != null)
         {
             var assignmentVolunteer = assignments.FirstOrDefault(a => a.VolunteerId == volunteerId && a.TypeEndOfTreatment == null);
@@ -597,15 +598,16 @@ internal static class CallManager
     {
         
         DO.Assignment? assignment;
+        DO.Volunteer? volunteer;
         lock (AdminManager.BlMutex) //stage 7
-        {
-            DO.Volunteer? volunteer = s_dal.Volunteer.Read(volunteerId);
-            if (volunteer == null)
-                throw new BO.BlDoesNotExistException($"Volunteer with {volunteerId} not found");
+            volunteer = s_dal.Volunteer.Read(volunteerId);
+        if (volunteer == null)
+             throw new BO.BlDoesNotExistException($"Volunteer with {volunteerId} not found");
+        lock (AdminManager.BlMutex) //stage 7
             assignment = s_dal.Assignment.Read(assignmentId);
-            if (assignment == null)
-                throw new BO.BlDoesNotExistException($"Assignment with {assignmentId} not found");
-        }
+         if (assignment == null)
+               throw new BO.BlDoesNotExistException($"Assignment with {assignmentId} not found");
+        
         if (assignment.VolunteerId != volunteerId)
             throw new BO.UnauthorizedAccessException("You do not have access permission to update the assignment");
         if (assignment.TypeEndOfTreatment != null && assignment.EndTime != null)
@@ -640,14 +642,14 @@ internal static class CallManager
         DO.Volunteer? volunteer;
         DO.Assignment? assignment;
         lock (AdminManager.BlMutex) //stage 7
-        {
             volunteer = s_dal.Volunteer.Read(volunteerId);
             if (volunteer == null)
                 throw new BO.BlDoesNotExistException($"Volunteer with {volunteerId} not found");
+        lock (AdminManager.BlMutex) //stage 7
             assignment = s_dal.Assignment.Read(assignmentId);
             if (assignment == null)
                 throw new BO.BlDoesNotExistException($"Assignment with {assignmentId} not found");
-        }
+        
         if (volunteer.Role == DO.Roles.Volunteer && assignment.VolunteerId != volunteerId)
             throw new BO.UnauthorizedAccessException("Sorry! You do not have access permission to revoke the assignment");
         if (assignment.TypeEndOfTreatment != null && assignment.EndTime != null)
@@ -673,97 +675,97 @@ internal static class CallManager
         }
     }
    
-    internal static void AddCallsSimulation()
-    {
-        //We asked the GPT chat: create an array for me that has 50 cases that call the MDA
-        string?[] descriptionsArr = new string?[]
-        {
-            "Unconscious person", "Road accident with injuries", "Gunshot wound", "Severe burns",
-            "Fall from height", "Infant not breathing", "Stroke symptoms", "Acute heart attack",
-            "Severe shortness of breath", "Heavy bleeding", "Head injury", "Deep cut on hand",
-            "Fall from bicycle", "Food poisoning", "Severe allergic reaction", "Chest pain",
-            "Drowning", "Snake bite", "Workplace injury", "Minor burn from gas explosion",
-            "Stab wound in abdomen", "Dehydration symptoms", "High fever and seizures",
-            "Fall on stairs", "Sports injury", "Broken leg in accident", "Assault with sharp object",
-            "Motorcycle accident injury", "Frostbite while outdoors", "Minor electric shock",
-            "Sudden sharp back pain", "Scheduled check-up visit", "Blood pressure measurement request",
-            "Routine blood test", "Medical transport request", "Assistance with medical equipment setup",
-            "Consultation for ongoing symptoms", "Heart rate monitoring device setup",
-            "Request for flu vaccination", "Consultation for mild allergy", "Routine blood sugar test",
-            "Request for tetanus shot", "Follow-up on previous treatment", "Minor wound dressing change",
-            "Routine elderly health assessment", "Work clearance health screening", "Pregnancy check-up",
-            "Chronic pain management", "Diabetes management support", "Request for mobility aid assistance",
-            "Health education session", "Guidance on post-surgery care", "Prescription refill assistance",
-            "Dietitian consultation request", "Physical fitness assessment", "Medication side effect inquiry",
-            "Physiotherapy session request", "Home safety evaluation", "Wellness check for remote patient",
-            "Routine child vaccination"
-        };
+    //internal static void AddCallsSimulation()
+    //{
+    //    //We asked the GPT chat: create an array for me that has 50 cases that call the MDA
+    //    string?[] descriptionsArr = new string?[]
+    //    {
+    //        "Unconscious person", "Road accident with injuries", "Gunshot wound", "Severe burns",
+    //        "Fall from height", "Infant not breathing", "Stroke symptoms", "Acute heart attack",
+    //        "Severe shortness of breath", "Heavy bleeding", "Head injury", "Deep cut on hand",
+    //        "Fall from bicycle", "Food poisoning", "Severe allergic reaction", "Chest pain",
+    //        "Drowning", "Snake bite", "Workplace injury", "Minor burn from gas explosion",
+    //        "Stab wound in abdomen", "Dehydration symptoms", "High fever and seizures",
+    //        "Fall on stairs", "Sports injury", "Broken leg in accident", "Assault with sharp object",
+    //        "Motorcycle accident injury", "Frostbite while outdoors", "Minor electric shock",
+    //        "Sudden sharp back pain", "Scheduled check-up visit", "Blood pressure measurement request",
+    //        "Routine blood test", "Medical transport request", "Assistance with medical equipment setup",
+    //        "Consultation for ongoing symptoms", "Heart rate monitoring device setup",
+    //        "Request for flu vaccination", "Consultation for mild allergy", "Routine blood sugar test",
+    //        "Request for tetanus shot", "Follow-up on previous treatment", "Minor wound dressing change",
+    //        "Routine elderly health assessment", "Work clearance health screening", "Pregnancy check-up",
+    //        "Chronic pain management", "Diabetes management support", "Request for mobility aid assistance",
+    //        "Health education session", "Guidance on post-surgery care", "Prescription refill assistance",
+    //        "Dietitian consultation request", "Physical fitness assessment", "Medication side effect inquiry",
+    //        "Physiotherapy session request", "Home safety evaluation", "Wellness check for remote patient",
+    //        "Routine child vaccination"
+    //    };
 
-        //We asked the GPT chat: can you create for us an array of 50 addresses in Israel
-        string[] addresses = new string[]
-        {
-            "Herzl St 10, Tel Aviv", "Ben Gurion St 5, Ramat Gan", "Dizengoff St 25, Tel Aviv",
-            "Allenby St 40, Haifa", "Jaffa St 60, Jerusalem", "Rothschild Blvd 16, Tel Aviv",
-            "Weizmann St 12, Kfar Saba", "HaNasi St 8, Herzliya", "Sokolov St 30, Holon",
-            "Ben Yehuda St 100, Tel Aviv", "Ehad HaAm St 50, Beersheba", "Herzliya St 15, Netanya",
-            "Keren HaYesod St 22, Ashdod", "Herzl St 45, Rishon LeZion", "Moshe Dayan St 3, Ashkelon",
-            "Ben Tsvi St 10, Bat Yam", "Yitzhak Rabin St 20, Lod", "King George St 45, Tel Aviv",
-            "Arlozorov St 100, Tel Aviv", "Aluf David St 5, Petah Tikva", "Habanim St 12, Hadera",
-            "Shabazi St 18, Ramat Hasharon", "Levi Eshkol St 40, Ashkelon", "Weizmann St 6, Rehovot",
-            "Jabotinsky St 15, Bnei Brak", "HaGalil St 10, Kiryat Shmona", "HaNasi Weizmann St 35, Haifa",
-            "Moshe Dayan St 1, Ashdod", "Menachem Begin Blvd 55, Tel Aviv", "Hashalom Rd 10, Tel Aviv",
-            "Shderot Chen St 45, Eilat", "Ayalon St 5, Rishon LeZion", "King Solomon St 20, Tiberias",
-            "Rothschild Blvd 80, Tel Aviv", "Yigal Allon St 55, Ramat Gan", "Neve Shaanan St 3, Haifa",
-            "Einstein St 12, Haifa", "Bar Ilan St 4, Givat Shmuel", "Yehuda Halevi St 40, Tel Aviv",
-            "Haifa Rd 10, Acre", "Nahum St 1, Holon", "Eliezer Kaplan St 5, Herzliya",
-            "Dov Hoz St 20, Be'er Sheva", "Moshe Sharet St 15, Ashkelon", "Haneviim St 60, Jerusalem",
-            "Emek Refaim St 12, Jerusalem", "HaSolel St 1, Nazareth", "Hanamal St 4, Haifa",
-            "HaKibbutz HaMeuhad St 6, Kfar Yona"
-        };
+    //    //We asked the GPT chat: can you create for us an array of 50 addresses in Israel
+    //    string[] addresses = new string[]
+    //    {
+    //        "Herzl St 10, Tel Aviv", "Ben Gurion St 5, Ramat Gan", "Dizengoff St 25, Tel Aviv",
+    //        "Allenby St 40, Haifa", "Jaffa St 60, Jerusalem", "Rothschild Blvd 16, Tel Aviv",
+    //        "Weizmann St 12, Kfar Saba", "HaNasi St 8, Herzliya", "Sokolov St 30, Holon",
+    //        "Ben Yehuda St 100, Tel Aviv", "Ehad HaAm St 50, Beersheba", "Herzliya St 15, Netanya",
+    //        "Keren HaYesod St 22, Ashdod", "Herzl St 45, Rishon LeZion", "Moshe Dayan St 3, Ashkelon",
+    //        "Ben Tsvi St 10, Bat Yam", "Yitzhak Rabin St 20, Lod", "King George St 45, Tel Aviv",
+    //        "Arlozorov St 100, Tel Aviv", "Aluf David St 5, Petah Tikva", "Habanim St 12, Hadera",
+    //        "Shabazi St 18, Ramat Hasharon", "Levi Eshkol St 40, Ashkelon", "Weizmann St 6, Rehovot",
+    //        "Jabotinsky St 15, Bnei Brak", "HaGalil St 10, Kiryat Shmona", "HaNasi Weizmann St 35, Haifa",
+    //        "Moshe Dayan St 1, Ashdod", "Menachem Begin Blvd 55, Tel Aviv", "Hashalom Rd 10, Tel Aviv",
+    //        "Shderot Chen St 45, Eilat", "Ayalon St 5, Rishon LeZion", "King Solomon St 20, Tiberias",
+    //        "Rothschild Blvd 80, Tel Aviv", "Yigal Allon St 55, Ramat Gan", "Neve Shaanan St 3, Haifa",
+    //        "Einstein St 12, Haifa", "Bar Ilan St 4, Givat Shmuel", "Yehuda Halevi St 40, Tel Aviv",
+    //        "Haifa Rd 10, Acre", "Nahum St 1, Holon", "Eliezer Kaplan St 5, Herzliya",
+    //        "Dov Hoz St 20, Be'er Sheva", "Moshe Sharet St 15, Ashkelon", "Haneviim St 60, Jerusalem",
+    //        "Emek Refaim St 12, Jerusalem", "HaSolel St 1, Nazareth", "Hanamal St 4, Haifa",
+    //        "HaKibbutz HaMeuhad St 6, Kfar Yona"
+    //    };
 
-        //We asked the GPT chat: can you create for us an array of longitude lines and an array
-        //of latitude lines corresponding to the above array respectively
-        double[] latitudes = new double[]
-        {
-            32.066158, 32.082271, 32.080480, 32.818409, 31.784217, 32.063922, 32.175034, 32.166313, 32.014046,
-            32.089771, 31.251810, 32.328516, 31.802418, 31.969633, 31.669258, 32.018748, 31.951569, 32.073253,
-            32.087601, 32.090678, 32.440987, 32.145339, 31.661712, 31.894756, 32.089611, 33.207333, 32.796785,
-            31.803742, 32.071457, 32.061399, 29.55805, 31.973001, 32.785539, 32.070054, 32.788712, 32.110003,
-            32.083762, 32.055893, 32.926099, 32.019313, 32.166313, 31.249872, 31.661712, 32.083307, 31.784217,
-            31.765365, 32.696947, 32.823115, 32.317325, 32.392867
-        };
+    //    //We asked the GPT chat: can you create for us an array of longitude lines and an array
+    //    //of latitude lines corresponding to the above array respectively
+    //    double[] latitudes = new double[]
+    //    {
+    //        32.066158, 32.082271, 32.080480, 32.818409, 31.784217, 32.063922, 32.175034, 32.166313, 32.014046,
+    //        32.089771, 31.251810, 32.328516, 31.802418, 31.969633, 31.669258, 32.018748, 31.951569, 32.073253,
+    //        32.087601, 32.090678, 32.440987, 32.145339, 31.661712, 31.894756, 32.089611, 33.207333, 32.796785,
+    //        31.803742, 32.071457, 32.061399, 29.55805, 31.973001, 32.785539, 32.070054, 32.788712, 32.110003,
+    //        32.083762, 32.055893, 32.926099, 32.019313, 32.166313, 31.249872, 31.661712, 32.083307, 31.784217,
+    //        31.765365, 32.696947, 32.823115, 32.317325, 32.392867
+    //    };
 
-        double[] longitudes = new double[]
-        {
-            34.779808, 34.812548, 34.774989, 34.988507, 35.223391, 34.771805, 34.906552, 34.842972, 34.772101,
-            34.773922, 34.791460, 34.853196, 34.641665, 34.804390, 34.574262, 34.747685, 34.899520, 34.774281,
-            34.791522, 34.887761, 34.923137, 34.838293, 34.571489, 34.812223, 34.834804, 35.570961, 35.003008,
-            34.656998, 34.791613, 34.789561, 34.934200, 34.771497, 34.779572, 34.804868, 35.021502, 35.053653,
-            34.824040, 34.773058, 35.066441, 34.767654, 34.842972, 34.771687, 34.571489, 34.799839, 35.223391,
-            35.219762, 35.308230, 35.002729, 34.919138, 34.876413
-        };
-        var random = new Random();
-        while (true)
-        {
-            for (int i = 0; i < 5; i++)
-            {
-                int place = random.Next(0, addresses.Length);
-                var newCall = new DO.Call
-                {
-                    Description = descriptionsArr[random.Next(0, descriptionsArr.Length)],
-                    Address = addresses[place],
-                    Latitude = latitudes[place],
-                    Longitude = longitudes[place],
-                    OpenTime = AdminManager.Now,
-                    MaxTime = AdminManager.Now.AddMinutes(random.Next(10, 30)),
-                    CarTypeToSend = (DO.CallType)random.Next(0, 3)
-                };
-                lock (AdminManager.BlMutex)
-                    s_dal.Call.Create(newCall);
-            }
-            Task.Delay(TimeSpan.FromMinutes(5));
-        }
-    }
+    //    double[] longitudes = new double[]
+    //    {
+    //        34.779808, 34.812548, 34.774989, 34.988507, 35.223391, 34.771805, 34.906552, 34.842972, 34.772101,
+    //        34.773922, 34.791460, 34.853196, 34.641665, 34.804390, 34.574262, 34.747685, 34.899520, 34.774281,
+    //        34.791522, 34.887761, 34.923137, 34.838293, 34.571489, 34.812223, 34.834804, 35.570961, 35.003008,
+    //        34.656998, 34.791613, 34.789561, 34.934200, 34.771497, 34.779572, 34.804868, 35.021502, 35.053653,
+    //        34.824040, 34.773058, 35.066441, 34.767654, 34.842972, 34.771687, 34.571489, 34.799839, 35.223391,
+    //        35.219762, 35.308230, 35.002729, 34.919138, 34.876413
+    //    };
+    //    var random = new Random();
+    //    while (true)
+    //    {
+    //        for (int i = 0; i < 5; i++)
+    //        {
+    //            int place = random.Next(0, addresses.Length);
+    //            var newCall = new DO.Call
+    //            {
+    //                Description = descriptionsArr[random.Next(0, descriptionsArr.Length)],
+    //                Address = addresses[place],
+    //                Latitude = latitudes[place],
+    //                Longitude = longitudes[place],
+    //                OpenTime = AdminManager.Now,
+    //                MaxTime = AdminManager.Now.AddMinutes(random.Next(10, 30)),
+    //                CarTypeToSend = (DO.CallType)random.Next(0, 3)
+    //            };
+    //            lock (AdminManager.BlMutex)
+    //                s_dal.Call.Create(newCall);
+    //        }
+    //        Task.Delay(TimeSpan.FromMinutes(5));
+    //    }
+    //}
 
 
 }

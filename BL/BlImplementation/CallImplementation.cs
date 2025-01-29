@@ -6,6 +6,7 @@ using Helpers;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
+using System.Xml.Linq;
 
 /// <summary>
 /// Implementation of the logical service entity interface for call management
@@ -84,7 +85,7 @@ internal class CallImplementation : ICall
 
         
     }
-    
+
     /// <summary>
     /// Returns the details of a specific call by its ID.
     /// </summary>
@@ -97,35 +98,39 @@ internal class CallImplementation : ICall
         IEnumerable<DO.Assignment> doAssignments;
 
         lock (AdminManager.BlMutex) //stage 7
-        {
             doCall = _dal.Call.Read(id);
-            if (doCall == null)
-                throw new BO.BlDoesNotExistException("There is no call with this ID.");
+        if (doCall == null)
+            throw new BO.BlDoesNotExistException("There is no call with this ID.");
+        lock (AdminManager.BlMutex) //stage 7
             doAssignments = _dal.Assignment.ReadAll()
                    .Where(a => a.CallId == id);
-        }
-        var boCall = new BO.Call
+        BO.Call boCall;
+        lock (AdminManager.BlMutex) //stage 7
         {
-            Id = doCall.Id,
-            CarTypeToSend = (BO.CallType)doCall.CarTypeToSend,
-            Description = doCall.Description,
-            Address = doCall.Address,
-            Latitude = doCall.Latitude,
-            Longitude = doCall.Longitude,
-            OpenTime = doCall.OpenTime,
-            MaxTime = doCall.MaxTime,
-            Status = CallManager.Status(doCall.Id),
-
-            ListAssignmentsForCalls = doAssignments.Select(a => new BO.CallAssignInList
+            boCall = new BO.Call
             {
-                VolunteerId = a.VolunteerId,  
-                Name = _dal.Volunteer.Read(a.VolunteerId)?.Name,
-                EnterTime = a.EnterTime,
-                EndTime = a.EndTime,
-                TypeEndOfTreatment = a.TypeEndOfTreatment.HasValue ? (BO.EndType)a.TypeEndOfTreatment :null
+                Id = doCall.Id,
+                CarTypeToSend = (BO.CallType)doCall.CarTypeToSend,
+                Description = doCall.Description,
+                Address = doCall.Address,
+                Latitude = doCall.Latitude,
+                Longitude = doCall.Longitude,
+                OpenTime = doCall.OpenTime,
+                MaxTime = doCall.MaxTime,
+                Status = CallManager.Status(doCall.Id),
+           
+                ListAssignmentsForCalls = doAssignments.Select(a => new BO.CallAssignInList
+                {
 
-            }).ToList()
-        };
+                    VolunteerId = a.VolunteerId,
+                    Name = _dal.Volunteer.Read(a.VolunteerId)?.Name,
+                    EnterTime = a.EnterTime,
+                    EndTime = a.EndTime,
+                    TypeEndOfTreatment = a.TypeEndOfTreatment.HasValue ? (BO.EndType)a.TypeEndOfTreatment : null
+
+                }).ToList()
+            };
+        }
 
         return boCall;
     }
@@ -186,12 +191,13 @@ internal class CallImplementation : ICall
         {
             AdminManager.ThrowOnSimulatorIsRunning();  //stage 7
             IEnumerable<DO.Assignment> assignments;
+            DO.Call? callToDelete;
             lock (AdminManager.BlMutex) //stage 7
-            {
-                DO.Call? callToDelete = _dal.Call.Read(id);
-                if (callToDelete == null) throw new BO.BlDoesNotExistException("There is no call with this ID.");
+                   callToDelete = _dal.Call.Read(id);
+            if (callToDelete == null) throw new BO.BlDoesNotExistException("There is no call with this ID.");
+            lock (AdminManager.BlMutex) //stage 7
                 assignments = _dal.Assignment.ReadAll();
-            }
+            
 
             if (assignments != null)
             {
@@ -265,22 +271,22 @@ internal class CallImplementation : ICall
     {
         IEnumerable<DO.Assignment> assignment;
         IEnumerable<DO.Call> calls;
-
+        DO.Volunteer? volunteer;
 
         lock (AdminManager.BlMutex) //stage 7
-        {
-            DO.Volunteer? volunteer = _dal.Volunteer.Read(VolunteerId);
-            if (volunteer == null)
-                throw new BO.BlDoesNotExistException($"Volunteer with {VolunteerId} not found");
-
-             assignment = _dal.Assignment.ReadAll();
+            volunteer = _dal.Volunteer.Read(VolunteerId);
+        if (volunteer == null)
+             throw new BO.BlDoesNotExistException($"Volunteer with {VolunteerId} not found");
+        lock (AdminManager.BlMutex) //stage 7
+            assignment = _dal.Assignment.ReadAll();
             //All the ID of the calls the volunteer took
             var callsVolunteer = from a in assignment
                                  where a.VolunteerId == VolunteerId
                                  select a.CallId;
-            //All calls of the volunteer received as a parameter
+        //All calls of the volunteer received as a parameter
+        lock (AdminManager.BlMutex) //stage 7
             calls = _dal.Call.ReadAll(c => callsVolunteer.Contains(c.Id));
-        }
+        
         var fitCalls = from call in calls
                        where (CallManager.Status(call.Id) == BO.CallStatus.Close
                                                       || CallManager.Status(call.Id) == BO.CallStatus.Expired)

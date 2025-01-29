@@ -91,7 +91,8 @@
 
             <!-- Address -->
             <Label Grid.Row="3" Grid.Column="0" Content="Address:" Margin="5,0,5,0" />
-            <TextBox Grid.Row="3" Grid.Column="1" IsReadOnly="{Binding IsAddressReadOnly}" Text="{Binding CurrentCall.Address, Mode=TwoWay, NotifyOnValidationError=true,  ValidatesOnExceptions=true}" Grid.ColumnSpan="2" Margin="89,5,90,5" />
+            <TextBox Grid.Row="3" Grid.Column="1" IsReadOnly="{Binding IsAddressReadOnly}" Text="{Binding CurrentCall.Address, Mode=TwoWay, NotifyOnValidationError=true, 
+                ValidatesOnExceptions=true}" Grid.ColumnSpan="2" Margin="89,5,90,5" BorderBrush="{Binding CurrentCall.Longitude, Converter={StaticResource BorderColorConverterKey}}"/>
 
             <!-- Open Time -->
             <Label Grid.Row="4" Grid.Column="0" Content="Open Time:" Margin="5,0,5,0" />

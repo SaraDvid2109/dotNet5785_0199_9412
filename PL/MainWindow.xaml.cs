@@ -28,7 +28,12 @@ namespace PL
             DataContext = this;
             StartStopButtonText = "Start Simulator";
         }
-
+        public int CloseStatus { get; set; }
+        public int OpenStatus { get; set; }
+        public int ExpiredStatus { get; set; }
+        public int OpenAtRiskStatus { get; set; }
+        public int TreatmentStatus { get; set; }
+        public int TreatmentOfRiskStatus { get; set; }
         private void SetWindowSizeToImage()
         {
             string imagePath = "Images/starOfDavid.jpg";
@@ -144,6 +149,7 @@ namespace PL
             MaxRiskRange = s_bl.Admin.GetMaxRange();
             s_bl.Admin.AddClockObserver(clockObserver);
             s_bl.Admin.AddConfigObserver(configObserver);
+            s_bl.call.AddObserver(StatusObserver);
 
         }
 
@@ -251,6 +257,8 @@ namespace PL
         {
             s_bl.Admin.RemoveClockObserver(clockObserver);
             s_bl.Admin.RemoveConfigObserver(configObserver);
+            s_bl.call.RemoveObserver(StatusObserver);
+
         }
 
         // Button click handler to open the Volunteer List Window
@@ -322,6 +330,39 @@ namespace PL
             }
         }
 
-        
+        private void TextBox_TextChanged(object sender, TextChangedEventArgs e)
+        {
+
+        }
+        private void StatusObserver()
+        {
+            IEnumerable<int> calls = s_bl.call.CallQuantities();
+            List<int> ListCalls = calls.ToList();
+            OpenStatus = ListCalls[0];
+            TreatmentStatus = ListCalls[1];
+            OpenAtRiskStatus = ListCalls[2];
+            TreatmentOfRiskStatus = ListCalls[3];
+            ExpiredStatus = ListCalls[4];
+            CloseStatus = ListCalls[5];
+
+        }
+
+        private void OpenStatusCalls_Click(object sender, RoutedEventArgs e)
+            =>new CallListWindow(BO.CallStatus.Open).Show();
+
+        private void TreatmentStatusCalls_Click(object sender, RoutedEventArgs e)
+           => new CallListWindow(BO.CallStatus.Treatment).Show();
+
+        private void OpenAtRiskStatusCalls_Click(object sender, RoutedEventArgs e)
+           => new CallListWindow(BO.CallStatus.OpenAtRisk).Show();
+
+        private void TreatmentOfRiskStatusCalls_Click(object sender, RoutedEventArgs e)
+           => new CallListWindow(BO.CallStatus.TreatmentOfRisk).Show();
+
+        private void ExpiredStatusCalls_Click(object sender, RoutedEventArgs e)
+           => new CallListWindow(BO.CallStatus.Expired).Show();
+
+        private void CloseStatusCalls_Click(object sender, RoutedEventArgs e)
+        => new CallListWindow(BO.CallStatus.Close).Show();
     }
 }

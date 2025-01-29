@@ -210,4 +210,18 @@
     <Role>Volunteer</Role>
     <Type>Aerial</Type>
   </Volunteer>
+  <Volunteer>
+    <Id>213899412</Id>
+    <Name>hila</Name>
+    <Phone>0509931788</Phone>
+    <Mail>hila@gmail.com</Mail>
+    <Password>1234Hh!!@</Password>
+    <Address>Moshe Dayan St 3, Ashkelon</Address>
+    <Latitude>31.6794728</Latitude>
+    <Longitude>34.5594087</Longitude>
+    <Active>true</Active>
+    <MaximumDistance>7</MaximumDistance>
+    <Role>Volunteer</Role>
+    <Type>Aerial</Type>
+  </Volunteer>
 </ArrayOfVolunteer>

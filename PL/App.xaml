@@ -23,7 +23,7 @@
         <local:ConvertStatusToVisibility x:Key="ConvertStatusToVisibilityKey" />
         <local:GroupByCollection x:Key="GroupByCollectionKey" />
         <local:CallDeleteVisibilityConverter x:Key="CallDeleteVisibilityConverterKey" />
-
+        <local:BorderColorConverter x:Key="BorderColorConverterKey"/>
 
 
         <!-- Global styles for buttons -->

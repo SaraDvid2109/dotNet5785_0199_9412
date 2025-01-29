@@ -1,4 +1,5 @@
 ﻿using DalApi;
+using DO;
 
 namespace Helpers;
 
@@ -14,11 +15,13 @@ internal static class AssignmentManager
 
     public static IEnumerable<DO.Assignment> findAssignment(int id)
     {
+        IEnumerable<Assignment> assignment;
         lock (AdminManager.BlMutex) //stage 7
         {
-            return s_dal.Assignment.ReadAll()
+           assignment=s_dal.Assignment.ReadAll()
                      .Where(a => a.CallId == id);
         }
+        return assignment;
     }
     // כל המתודות במחלקה יהיו internal static
 }
