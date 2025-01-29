@@ -27,13 +27,81 @@ namespace PL
             InitializeComponent();
             DataContext = this;
             StartStopButtonText = "Start Simulator";
+            StatusObserver();
         }
-        public int CloseStatus { get; set; }
-        public int OpenStatus { get; set; }
-        public int ExpiredStatus { get; set; }
-        public int OpenAtRiskStatus { get; set; }
-        public int TreatmentStatus { get; set; }
-        public int TreatmentOfRiskStatus { get; set; }
+        //public int CloseStatus { get; set; }
+        //public int OpenStatus { get; set; }
+        //public int ExpiredStatus { get; set; }
+        //public int OpenAtRiskStatus { get; set; }
+        //public int TreatmentStatus { get; set; }
+        //public int TreatmentOfRiskStatus { get; set; }
+
+        public int CloseStatus
+        {
+            get { return (int)GetValue(CloseStatusProperty); }
+            set { SetValue(CloseStatusProperty, value); }
+        }
+
+        // Using a DependencyProperty as the backing store for CloseStatus.  This enables animation, styling, binding, etc...
+        public static readonly DependencyProperty CloseStatusProperty =
+            DependencyProperty.Register("CloseStatus", typeof(int), typeof(MainWindow), new PropertyMetadata(0));
+
+
+
+        public int OpenStatus
+        {
+            get { return (int)GetValue(OpenStatusProperty); }
+            set { SetValue(OpenStatusProperty, value); }
+        }
+
+        // Using a DependencyProperty as the backing store for OpenStatus.  This enables animation, styling, binding, etc...
+        public static readonly DependencyProperty OpenStatusProperty =
+            DependencyProperty.Register("OpenStatus", typeof(int), typeof(MainWindow), new PropertyMetadata(0));
+
+
+
+        public int ExpiredStatus
+        {
+            get { return (int)GetValue(ExpiredStatusProperty); }
+            set { SetValue(ExpiredStatusProperty, value); }
+        }
+
+        // Using a DependencyProperty as the backing store for ExpiredStatus.  This enables animation, styling, binding, etc...
+        public static readonly DependencyProperty ExpiredStatusProperty =
+            DependencyProperty.Register("ExpiredStatus", typeof(int), typeof(MainWindow), new PropertyMetadata(0));
+
+        public int OpenAtRiskStatus
+        {
+            get { return (int)GetValue(OpenAtRiskStatusProperty); }
+            set { SetValue(OpenAtRiskStatusProperty, value); }
+        }
+
+        // Using a DependencyProperty as the backing store for OpenAtRiskStatus.  This enables animation, styling, binding, etc...
+        public static readonly DependencyProperty OpenAtRiskStatusProperty =
+            DependencyProperty.Register("OpenAtRiskStatus", typeof(int), typeof(MainWindow), new PropertyMetadata(0));
+
+        public int TreatmentStatus
+        {
+            get { return (int)GetValue(TreatmentStatusProperty); }
+            set { SetValue(TreatmentStatusProperty, value); }
+        }
+
+        // Using a DependencyProperty as the backing store for TreatmentStatus.  This enables animation, styling, binding, etc...
+        public static readonly DependencyProperty TreatmentStatusProperty =
+            DependencyProperty.Register("TreatmentStatus", typeof(int), typeof(MainWindow), new PropertyMetadata(0));
+
+        public int TreatmentOfRiskStatus
+        {
+            get { return (int)GetValue(TreatmentOfRiskStatusProperty); }
+            set { SetValue(TreatmentOfRiskStatusProperty, value); }
+        }
+
+        // Using a DependencyProperty as the backing store for TreatmentOfRiskStatus.  This enables animation, styling, binding, etc...
+        public static readonly DependencyProperty TreatmentOfRiskStatusProperty =
+            DependencyProperty.Register("TreatmentOfRiskStatus", typeof(int), typeof(MainWindow), new PropertyMetadata(0));
+
+
+
         private void SetWindowSizeToImage()
         {
             string imagePath = "Images/starOfDavid.jpg";
