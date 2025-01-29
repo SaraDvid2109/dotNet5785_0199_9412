@@ -13,8 +13,9 @@
         </Style>
         <!--<ImageBrush x:Key="BackgroundImageBrush" ImageSource="Images/starOfDavid.jpg" Stretch="UniformToFill"/>-->
     </Window.Resources>
-
-    <Grid>
+    <!-- Wrap the entire content in a Viewbox -->
+    <Viewbox Stretch="Uniform">
+        <Grid>
         <!-- Define rows and columns in the main Grid -->
         <Grid.RowDefinitions>
             <RowDefinition Height="Auto" />
@@ -88,4 +89,5 @@
             </StackPanel>
             </Grid>
     </Grid>
+  </Viewbox>
 </Window>

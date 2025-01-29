@@ -46,86 +46,89 @@
         </Style>
     </Window.Resources>
 
-    <!-- Scrollable content area -->
-    <ScrollViewer VerticalScrollBarVisibility="Auto" HorizontalScrollBarVisibility="Auto">
-        <Grid Margin="10">
-            <!-- Define grid layout -->
-            <Grid.ColumnDefinitions>
-                <ColumnDefinition Width="Auto" />
-                <ColumnDefinition Width="*" />
-            </Grid.ColumnDefinitions>
+    <!-- Wrap everything inside a Viewbox -->
+    <Viewbox Stretch="Uniform">
+        <!-- Scrollable content area -->
+        <ScrollViewer VerticalScrollBarVisibility="Auto" HorizontalScrollBarVisibility="Auto">
+            <Grid Margin="10">
+                <!-- Define grid layout -->
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="Auto" />
+                    <ColumnDefinition Width="*" />
+                </Grid.ColumnDefinitions>
 
-            <Grid.RowDefinitions>
+                <Grid.RowDefinitions>
+                    <!-- Distance Type row -->
+                    <RowDefinition Height="Auto" />
+                    <RowDefinition Height="Auto" />
+                    <RowDefinition Height="Auto" />
+                    <RowDefinition Height="Auto" />
+                    <RowDefinition Height="Auto" />
+                    <RowDefinition Height="Auto" />
+                    <RowDefinition Height="Auto" />
+                    <RowDefinition Height="Auto" />
+                    <RowDefinition Height="Auto" />
+                    <RowDefinition Height="Auto" />
+                    <RowDefinition Height="Auto" />
+                    <RowDefinition Height="Auto" />
+                    <RowDefinition Height="Auto" />
+                    <!-- Row for Add/Update Button -->
+                </Grid.RowDefinitions>
+
                 <!-- Distance Type row -->
-                <RowDefinition Height="Auto" />
-                <RowDefinition Height="Auto" />
-                <RowDefinition Height="Auto" />
-                <RowDefinition Height="Auto" />
-                <RowDefinition Height="Auto" />
-                <RowDefinition Height="Auto" />
-                <RowDefinition Height="Auto" />
-                <RowDefinition Height="Auto" />
-                <RowDefinition Height="Auto" />
-                <RowDefinition Height="Auto" />
-                <RowDefinition Height="Auto" />
-                <RowDefinition Height="Auto" />
-                <RowDefinition Height="Auto" />
-                <!-- Row for Add/Update Button -->
-            </Grid.RowDefinitions>
 
-            <!-- Distance Type row -->
+                <!-- ID -->
+                <Label Grid.Row="0" Grid.Column="0" Content="ID:" />
+                <TextBox Grid.Row="0" Grid.Column="1" Text="{Binding CurrentVolunteer.Id, Mode=TwoWay, NotifyOnValidationError=true,  ValidatesOnExceptions=true}" />
 
-            <!-- ID -->
-            <Label Grid.Row="0" Grid.Column="0" Content="ID:" />
-            <TextBox Grid.Row="0" Grid.Column="1" Text="{Binding CurrentVolunteer.Id, Mode=TwoWay, NotifyOnValidationError=true,  ValidatesOnExceptions=true}" />
+                <!-- Name -->
+                <Label Grid.Row="1" Grid.Column="0" Content="Name:" />
+                <TextBox Grid.Row="1" Grid.Column="1" Text="{Binding CurrentVolunteer.Name, Mode=TwoWay, NotifyOnValidationError=true,  ValidatesOnExceptions=true}"/>
 
-            <!-- Name -->
-            <Label Grid.Row="1" Grid.Column="0" Content="Name:" />
-            <TextBox Grid.Row="1" Grid.Column="1" Text="{Binding CurrentVolunteer.Name, Mode=TwoWay, NotifyOnValidationError=true,  ValidatesOnExceptions=true}"/>
+                <!-- Phone -->
+                <Label Grid.Row="2" Grid.Column="0" Content="Phone:" />
+                <TextBox Grid.Row="2" Grid.Column="1" Text="{Binding CurrentVolunteer.Phone, Mode=TwoWay, NotifyOnValidationError=true,  ValidatesOnExceptions=true}" />
 
-            <!-- Phone -->
-            <Label Grid.Row="2" Grid.Column="0" Content="Phone:" />
-            <TextBox Grid.Row="2" Grid.Column="1" Text="{Binding CurrentVolunteer.Phone, Mode=TwoWay, NotifyOnValidationError=true,  ValidatesOnExceptions=true}" />
+                <!-- Mail -->
+                <Label Grid.Row="3" Grid.Column="0" Content="Mail:" />
+                <TextBox Grid.Row="3" Grid.Column="1" Text="{Binding CurrentVolunteer.Mail, Mode=TwoWay, NotifyOnValidationError=true,  ValidatesOnExceptions=true}" />
 
-            <!-- Mail -->
-            <Label Grid.Row="3" Grid.Column="0" Content="Mail:" />
-            <TextBox Grid.Row="3" Grid.Column="1" Text="{Binding CurrentVolunteer.Mail, Mode=TwoWay, NotifyOnValidationError=true,  ValidatesOnExceptions=true}" />
+                <!-- Password -->
+                <Label Grid.Row="4" Grid.Column="0" Content="Password:" />
+                <TextBox Grid.Row="4" Grid.Column="1" Text="{Binding CurrentVolunteer.Password, Mode=TwoWay, NotifyOnValidationError=true,  ValidatesOnExceptions=true}" />
 
-            <!-- Password -->
-            <Label Grid.Row="4" Grid.Column="0" Content="Password:" />
-            <TextBox Grid.Row="4" Grid.Column="1" Text="{Binding CurrentVolunteer.Password, Mode=TwoWay, NotifyOnValidationError=true,  ValidatesOnExceptions=true}" />
+                <!-- Address -->
+                <Label Grid.Row="5" Grid.Column="0" Content="Address:" />
+                <TextBox Grid.Row="5" Grid.Column="1" Text="{Binding CurrentVolunteer.Address, Mode=TwoWay, NotifyOnValidationError=true,  ValidatesOnExceptions=true}" />
 
-            <!-- Address -->
-            <Label Grid.Row="5" Grid.Column="0" Content="Address:" />
-            <TextBox Grid.Row="5" Grid.Column="1" Text="{Binding CurrentVolunteer.Address, Mode=TwoWay, NotifyOnValidationError=true,  ValidatesOnExceptions=true}" />
+                <!-- Role -->
+                <Label Grid.Row="8" Grid.Column="0" Content="Role:" />
+                <ComboBox Grid.Row="8" Grid.Column="1" ItemsSource="{Binding Source={StaticResource RolesCollectionKey}}" SelectedItem="{Binding CurrentVolunteer.Role}"  />
 
-            <!-- Role -->
-            <Label Grid.Row="8" Grid.Column="0" Content="Role:" />
-            <ComboBox Grid.Row="8" Grid.Column="1" ItemsSource="{Binding Source={StaticResource RolesCollectionKey}}" SelectedItem="{Binding CurrentVolunteer.Role}"  />
-            
 
-            <!-- Active -->
-            <Label Grid.Row="9" Grid.Column="0" Content="Active:" />
-            <CheckBox Grid.Row="9" IsChecked="{Binding CurrentVolunteer.Active}" HorizontalAlignment="Left"  
+                <!-- Active -->
+                <Label Grid.Row="9" Grid.Column="0" Content="Active:" />
+                <CheckBox Grid.Row="9" IsChecked="{Binding CurrentVolunteer.Active}" HorizontalAlignment="Left"  
                        Margin="24,10,0,12" Grid.Column="1" RenderTransformOrigin="-1.482,0.545"  />
 
-            <!-- Maximum Distance -->
-            <Label Grid.Row="10" Grid.Column="0" Content="Maximum Distance:" />
-            <TextBox Grid.Row="10" Grid.Column="1" Text="{Binding CurrentVolunteer.MaximumDistance, Mode=TwoWay, NotifyOnValidationError=true,  ValidatesOnExceptions=true}" />
+                <!-- Maximum Distance -->
+                <Label Grid.Row="10" Grid.Column="0" Content="Maximum Distance:" />
+                <TextBox Grid.Row="10" Grid.Column="1" Text="{Binding CurrentVolunteer.MaximumDistance, Mode=TwoWay, NotifyOnValidationError=true,  ValidatesOnExceptions=true}" />
 
-            <!-- Distance Type -->
-            <Label Grid.Row="11" Grid.Column="0" Content="Distance Type:" />
-            <ComboBox Grid.Row="11" Grid.Column="1" ItemsSource="{Binding Source={StaticResource DistanceTypeCollectionKey}}"  
+                <!-- Distance Type -->
+                <Label Grid.Row="11" Grid.Column="0" Content="Distance Type:" />
+                <ComboBox Grid.Row="11" Grid.Column="1" ItemsSource="{Binding Source={StaticResource DistanceTypeCollectionKey}}"  
                       SelectedItem="{Binding CurrentVolunteer.Type}" />
 
-            <!-- Add/Update Button -->
-            <Button Grid.Row="12" Grid.Column="0" Grid.ColumnSpan="2" 
+                <!-- Add/Update Button -->
+                <Button Grid.Row="12" Grid.Column="0" Grid.ColumnSpan="2" 
                     Content="{Binding ButtonText}" 
                     Click="btnAddUpdate_Click" 
                     HorizontalAlignment="Center" 
                     VerticalAlignment="Center" 
                     Width="100" Height="50" 
                     Margin="10" />
-        </Grid>
-    </ScrollViewer>
+            </Grid>
+        </ScrollViewer>
+    </Viewbox>
 </Window>

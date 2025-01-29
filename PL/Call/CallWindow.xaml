@@ -46,87 +46,90 @@
         </Style>
     </Window.Resources>
 
-    <!-- Scrollable content area -->
-    <ScrollViewer VerticalScrollBarVisibility="Auto" HorizontalScrollBarVisibility="Auto">
-        <Grid Margin="10">
-            <!-- Define grid layout -->
-            <Grid.ColumnDefinitions>
-                <ColumnDefinition Width="Auto" />
-                <ColumnDefinition Width="25*" />
-                <ColumnDefinition Width="8*"/>
-            </Grid.ColumnDefinitions>
+    <!-- Wrap everything inside a Viewbox -->
+    <Viewbox Stretch="Uniform">
+        <!-- Scrollable content area -->
+        <ScrollViewer VerticalScrollBarVisibility="Auto" HorizontalScrollBarVisibility="Auto">
+            <Grid Margin="10">
+                <!-- Define grid layout -->
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="Auto" />
+                    <ColumnDefinition Width="25*" />
+                    <ColumnDefinition Width="8*"/>
+                </Grid.ColumnDefinitions>
 
-            <Grid.RowDefinitions>
+                <Grid.RowDefinitions>
+                    <!-- Distance Type row -->
+                    <RowDefinition Height="Auto" />
+                    <RowDefinition Height="Auto" />
+                    <RowDefinition Height="Auto" />
+                    <RowDefinition Height="Auto" />
+                    <RowDefinition Height="Auto" />
+                    <RowDefinition Height="Auto" />
+                    <RowDefinition Height="Auto" />
+                    <RowDefinition Height="Auto" />
+                    <RowDefinition Height="Auto" />
+                    <RowDefinition Height="Auto" />
+                    <RowDefinition Height="Auto" />
+                    <RowDefinition Height="Auto" />
+                    <RowDefinition Height="Auto" />
+                    <!-- Row for Add/Update Button -->
+                </Grid.RowDefinitions>
+
                 <!-- Distance Type row -->
-                <RowDefinition Height="Auto" />
-                <RowDefinition Height="Auto" />
-                <RowDefinition Height="Auto" />
-                <RowDefinition Height="Auto" />
-                <RowDefinition Height="Auto" />
-                <RowDefinition Height="Auto" />
-                <RowDefinition Height="Auto" />
-                <RowDefinition Height="Auto" />
-                <RowDefinition Height="Auto" />
-                <RowDefinition Height="Auto" />
-                <RowDefinition Height="Auto" />
-                <RowDefinition Height="Auto" />
-                <RowDefinition Height="Auto" />
-                <!-- Row for Add/Update Button -->
-            </Grid.RowDefinitions>
 
-            <!-- Distance Type row -->
+                <!-- Id -->
+                <Label Grid.Column="0" Content="Id:" Margin="5,0,5,0" />
+                <TextBox Grid.Row="0" Grid.Column="1" Text="{Binding CurrentCall.Id}" IsReadOnly="True" Grid.ColumnSpan="2" Margin="89,5,90,5"/>
 
-            <!-- Id -->
-            <Label Grid.Column="0" Content="Id:" Margin="5,0,5,0" />
-            <TextBox Grid.Row="0" Grid.Column="1" Text="{Binding CurrentCall.Id}" IsReadOnly="True" Grid.ColumnSpan="2" Margin="89,5,90,5"/>
-
-            <!-- Car Type To Send -->
-            <Label Grid.Row="1" Grid.Column="0" Content="Car Type To Send:" Margin="5,0,5,0" />
-            <ComboBox Grid.Row="1" Grid.Column="1" IsEnabled="{Binding IsCarTypeReadOnly, Converter={StaticResource InverseBooleanConverter}}" 
+                <!-- Car Type To Send -->
+                <Label Grid.Row="1" Grid.Column="0" Content="Car Type To Send:" Margin="5,0,5,0" />
+                <ComboBox Grid.Row="1" Grid.Column="1" IsEnabled="{Binding IsCarTypeReadOnly, Converter={StaticResource InverseBooleanConverter}}" 
             ItemsSource="{Binding Source={StaticResource CallTypeCollectionKey}}" SelectedItem="{Binding CurrentCall.CarTypeToSend}" Grid.ColumnSpan="2" Margin="89,5,90,5"/>
 
-            <!-- Description -->
-            <Label Grid.Row="2" Grid.Column="0" Content="Description:" Margin="5,0,5,0" />
-            <TextBox Grid.Row="2" Grid.Column="1" IsReadOnly="{Binding IsDescriptionReadOnly}" Text="{Binding CurrentCall.Description, Mode=TwoWay,  NotifyOnValidationError=true,  ValidatesOnExceptions=true}" Grid.ColumnSpan="2" Margin="89,5,90,5" />
+                <!-- Description -->
+                <Label Grid.Row="2" Grid.Column="0" Content="Description:" Margin="5,0,5,0" />
+                <TextBox Grid.Row="2" Grid.Column="1" IsReadOnly="{Binding IsDescriptionReadOnly}" Text="{Binding CurrentCall.Description, Mode=TwoWay,  NotifyOnValidationError=true,  ValidatesOnExceptions=true}" Grid.ColumnSpan="2" Margin="89,5,90,5" />
 
-            <!-- Address -->
-            <Label Grid.Row="3" Grid.Column="0" Content="Address:" Margin="5,0,5,0" />
-            <TextBox Grid.Row="3" Grid.Column="1" IsReadOnly="{Binding IsAddressReadOnly}" Text="{Binding CurrentCall.Address, Mode=TwoWay, NotifyOnValidationError=true,  ValidatesOnExceptions=true}" Grid.ColumnSpan="2" Margin="89,5,90,5" />
+                <!-- Address -->
+                <Label Grid.Row="3" Grid.Column="0" Content="Address:" Margin="5,0,5,0" />
+                <TextBox Grid.Row="3" Grid.Column="1" IsReadOnly="{Binding IsAddressReadOnly}" Text="{Binding CurrentCall.Address, Mode=TwoWay, NotifyOnValidationError=true,  ValidatesOnExceptions=true}" Grid.ColumnSpan="2" Margin="89,5,90,5" />
 
-            <!-- Open Time -->
-            <Label Grid.Row="4" Grid.Column="0" Content="Open Time:" Margin="5,0,5,0" />
-            <TextBox Grid.Row="4" Grid.Column="1" Text="{Binding CurrentCall.OpenTime, Mode=TwoWay, NotifyOnValidationError=true,  ValidatesOnExceptions=true}" IsReadOnly="True" Grid.ColumnSpan="2" Margin="89,5,90,5" />
+                <!-- Open Time -->
+                <Label Grid.Row="4" Grid.Column="0" Content="Open Time:" Margin="5,0,5,0" />
+                <TextBox Grid.Row="4" Grid.Column="1" Text="{Binding CurrentCall.OpenTime, Mode=TwoWay, NotifyOnValidationError=true,  ValidatesOnExceptions=true}" IsReadOnly="True" Grid.ColumnSpan="2" Margin="89,5,90,5" />
 
-            <!-- Max Time -->
-            <Label Grid.Row="5" Grid.Column="0" Content="Max Time:" Margin="5,0,5,0" />
-            <TextBox Grid.Row="5" Grid.Column="1" IsReadOnly="{Binding IsMaxTimeReadOnly}" Text="{Binding CurrentCall.MaxTime, Mode=TwoWay, NotifyOnValidationError=true,  ValidatesOnExceptions=true}" Grid.ColumnSpan="2" Margin="89,5,90,5" />
+                <!-- Max Time -->
+                <Label Grid.Row="5" Grid.Column="0" Content="Max Time:" Margin="5,0,5,0" />
+                <TextBox Grid.Row="5" Grid.Column="1" IsReadOnly="{Binding IsMaxTimeReadOnly}" Text="{Binding CurrentCall.MaxTime, Mode=TwoWay, NotifyOnValidationError=true,  ValidatesOnExceptions=true}" Grid.ColumnSpan="2" Margin="89,5,90,5" />
 
-            <!-- Status -->
-            <Label Grid.Row="6" Grid.Column="0" Content="Status:" Margin="5,0,5,0" />
-            <TextBox Grid.Row="6" Grid.Column="1" Text="{Binding CurrentCall.Status}" IsReadOnly="True" Grid.ColumnSpan="2" Margin="89,5,90,5"/>
+                <!-- Status -->
+                <Label Grid.Row="6" Grid.Column="0" Content="Status:" Margin="5,0,5,0" />
+                <TextBox Grid.Row="6" Grid.Column="1" Text="{Binding CurrentCall.Status}" IsReadOnly="True" Grid.ColumnSpan="2" Margin="89,5,90,5"/>
 
-            <!-- List Assignments -->
-            <StackPanel Grid.Row="7" Grid.Column="0" Grid.ColumnSpan="2" Margin="0,5,0,5">
-                <Label Content="List Assignments:" Margin="5,0,5,0" Visibility="{Binding IsUpdatingAndHasAssignments}" />
-                <DataGrid ItemsSource="{Binding CurrentCall.ListAssignmentsForCalls}" AutoGenerateColumns="False" Margin="0,5,0,5"
+                <!-- List Assignments -->
+                <StackPanel Grid.Row="7" Grid.Column="0" Grid.ColumnSpan="2" Margin="0,5,0,5">
+                    <Label Content="List Assignments:" Margin="5,0,5,0" Visibility="{Binding IsUpdatingAndHasAssignments}" />
+                    <DataGrid ItemsSource="{Binding CurrentCall.ListAssignmentsForCalls}" AutoGenerateColumns="False" Margin="0,5,0,5"
               CanUserAddRows="False" Visibility="{Binding IsUpdatingAndHasAssignments}" Width="521">
-                    <DataGrid.Columns>
-                        <DataGridTextColumn Header="Volunteer ID" Binding="{Binding VolunteerId}" Visibility="{Binding IsUpdatingAndHasAssignments}" />
-                        <DataGridTextColumn Header="Volunteer Name" Binding="{Binding Name}" Visibility="{Binding IsUpdatingAndHasAssignments}"/>
-                        <DataGridTextColumn Header="Assignment Time" Binding="{Binding EnterTime, StringFormat={}{0:dd/MM/yyyy HH:mm}}" Visibility="{Binding IsUpdatingAndHasAssignments}" />
-                        <DataGridTextColumn Header="Completion Time" Binding="{Binding EndTime, StringFormat={}{0:dd/MM/yyyy HH:mm}}" Visibility="{Binding IsUpdatingAndHasAssignments}"/>
-                        <DataGridTextColumn Header="Type End Of Treatment" Binding="{Binding TypeEndOfTreatment}" Visibility="{Binding IsUpdatingAndHasAssignments}"/>
-                    </DataGrid.Columns>
-                </DataGrid>
-            </StackPanel>
+                        <DataGrid.Columns>
+                            <DataGridTextColumn Header="Volunteer ID" Binding="{Binding VolunteerId}" Visibility="{Binding IsUpdatingAndHasAssignments}" />
+                            <DataGridTextColumn Header="Volunteer Name" Binding="{Binding Name}" Visibility="{Binding IsUpdatingAndHasAssignments}"/>
+                            <DataGridTextColumn Header="Assignment Time" Binding="{Binding EnterTime, StringFormat={}{0:dd/MM/yyyy HH:mm}}" Visibility="{Binding IsUpdatingAndHasAssignments}" />
+                            <DataGridTextColumn Header="Completion Time" Binding="{Binding EndTime, StringFormat={}{0:dd/MM/yyyy HH:mm}}" Visibility="{Binding IsUpdatingAndHasAssignments}"/>
+                            <DataGridTextColumn Header="Type End Of Treatment" Binding="{Binding TypeEndOfTreatment}" Visibility="{Binding IsUpdatingAndHasAssignments}"/>
+                        </DataGrid.Columns>
+                    </DataGrid>
+                </StackPanel>
 
-            <!-- Add/Update Button -->
-            <Button Grid.Row="12" Grid.Column="1" 
+                <!-- Add/Update Button -->
+                <Button Grid.Row="12" Grid.Column="1" 
                     Content="{Binding ButtonText}" 
                     Click="btnAddUpdate_Click" 
-                    HorizontalAlignment="Center" 
-                    VerticalAlignment="Center" 
-                    Width="100" Height="50" />
-        </Grid>
-    </ScrollViewer>
+                    HorizontalAlignment="Left" 
+                    VerticalAlignment="Top" 
+                    Width="100" Height="50" Margin="109,9,0,0" />
+            </Grid>
+        </ScrollViewer>
+    </Viewbox>
 </Window>

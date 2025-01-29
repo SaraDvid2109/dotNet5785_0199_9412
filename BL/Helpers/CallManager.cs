@@ -81,20 +81,21 @@ internal static class CallManager
         DO.Call? call;
         lock (AdminManager.BlMutex) //stage 7
             call = s_dal.Call.Read(callId);
+        BO.CallStatus status;
         var assignments = GetAssignmentCall(callId);
         if (assignments == null || !assignments.Any())
         {
             lock (AdminManager.BlMutex) //stage 7
             {
                 if ((AdminManager.Now <= call!.MaxTime) && (call!.MaxTime - AdminManager.Now <= s_dal.Config.RiskRange))
-                    return BO.CallStatus.OpenAtRisk;
+                    status = BO.CallStatus.OpenAtRisk;
 
                 else
                 {
                     if (AdminManager.Now <= call!.MaxTime)
-                        return BO.CallStatus.Open;
+                        status = BO.CallStatus.Open;
                     else
-                        return BO.CallStatus.Expired;
+                        status = BO.CallStatus.Expired;
                 }
             }
         }
@@ -111,24 +112,26 @@ internal static class CallManager
                 lock (AdminManager.BlMutex) //stage 7
                 {
                     if ((call!.MaxTime - AdminManager.Now) <= s_dal.Config.RiskRange)
-                        return BO.CallStatus.TreatmentOfRisk;
+                        status = BO.CallStatus.TreatmentOfRisk;
                     else
-                        return BO.CallStatus.Treatment;
+                        status = BO.CallStatus.Treatment;
                 }
             }
             else
             {
                 if (assignment.TypeEndOfTreatment == DO.EndType.Treated)
-                    return BO.CallStatus.Close;
+                    status = BO.CallStatus.Close;
                 else
                 {
-                    if (assignment.TypeEndOfTreatment == DO.EndType.SelfCancellation)
-                        return BO.CallStatus.Open;
+                    if (assignment.TypeEndOfTreatment == DO.EndType.SelfCancellation && AdminManager.Now <= call!.MaxTime)
+                        status = BO.CallStatus.Open;
                     else
-                        return BO.CallStatus.Expired;
+                        status = BO.CallStatus.Expired;
                 }
             }
         }
+
+        return status;
     }
 
     /// <summary>
@@ -448,9 +451,9 @@ internal static class CallManager
                 CallId = call.Id,
                 CallType = (BO.CallType)call.CarTypeToSend,
                 OpenTime = call.OpenTime,
-                TimeLeftToFinish = null,
+                TimeLeftToFinish = call.MaxTime - AdminManager.Now > TimeSpan.Zero ? call.MaxTime - AdminManager.Now : TimeSpan.Zero,
                 LastVolunteer = null,
-                TreatmentTimeLeft = null,
+                TreatmentTimeLeft =null,
                 Status = Status(call.Id),
                 TotalAssignments = 0
             };
@@ -458,10 +461,10 @@ internal static class CallManager
         DO.Volunteer? volunteer;
         lock (AdminManager.BlMutex) //stage 7
             volunteer = s_dal.Volunteer.Read(assignmentOfCall.VolunteerId);
-        TimeSpan? time = null;
+        TimeSpan? time = TimeSpan.Zero;
         if (assignmentOfCall.EndTime != null)
         {
-            time = assignmentOfCall.EndTime - assignmentOfCall.EnterTime;
+            time = assignmentOfCall.EndTime != null ? assignmentOfCall.EnterTime - assignmentOfCall.EndTime : TimeSpan.Zero;
         }
         return new BO.CallInList
         {
@@ -469,14 +472,13 @@ internal static class CallManager
             CallId = call.Id,
             CallType = (BO.CallType)call.CarTypeToSend,
             OpenTime = call.OpenTime,
-            TimeLeftToFinish = AdminManager.Now - call.MaxTime > TimeSpan.Zero ? AdminManager.Now - call.MaxTime : TimeSpan.Zero,
+            TimeLeftToFinish = call.MaxTime - AdminManager.Now  > TimeSpan.Zero ? call.MaxTime - AdminManager.Now  : TimeSpan.Zero,
             LastVolunteer = volunteer?.Name, // Add null check here
-            TreatmentTimeLeft = time,
+            TreatmentTimeLeft = assignmentOfCall.EndTime != null ? assignmentOfCall.EndTime - assignmentOfCall.EnterTime : TimeSpan.Zero,
             Status = Status(call.Id),
             TotalAssignments = assignments.Count()
         };
     }
-
 
     /// <summary>
     /// Returns a list of open calls available for selection by a specific volunteer, with optional filtering and sorting.

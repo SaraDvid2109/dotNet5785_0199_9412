@@ -20,10 +20,8 @@ public static class Initialization
     //private static ICall? s_dalCall; // Data Access Layer (DAL) for calls.
     //private static IVolunteer? s_dalVolunteer; // Data Access Layer (DAL) for volunteers.
     //private static IConfig? s_dalConfig; // Data Access Layer (DAL) for configuration settings.
-
     private static IDal? s_dal; //stage 2
     private static readonly Random s_rand = new(); // Random number generator for generating random data.
-
     //public static object DataSource { get; private set; } // next stage
 
     /// <summary>
@@ -36,7 +34,7 @@ public static class Initialization
     {
         //We asked the GPT chat: can you create for us an array of 15 names
         string[] VolunteerNames =
-        { 
+        {
             "Amit Cohen", "Noa Levi", "Yonatan Mizrahi", "Maya Azulay", "Daniel Gold",
             "Hila Shalom", "Tomer Kaplan", "Yael Ben-David", "Eitan Sade", "Shira Hadad",
             "Lior Oren", "Roni Peretz", "Yaakov Azulay", "Eden Dayan", "Talia Mor"
@@ -48,14 +46,14 @@ public static class Initialization
         //We asked the GPT chat: can you create for us an array of 15 addresses in Israel
         string[] addresses =
         {
-           "Herzl St 10, Tel Aviv", "Ben Gurion St 5, Ramat Gan",
-           "Dizengoff St 25, Tel Aviv", "Allenby St 40, Haifa",
-           "Jaffa St 60, Jerusalem", "Rothschild Blvd 16, Tel Aviv",
-           "Weizmann St 12, Kfar Saba", "HaNasi St 8, Herzliya",
-           "Sokolov St 30, Holon", "Ben Yehuda St 100, Tel Aviv",
-           "Ehad HaAm St 50, Beersheba", "Herzliya St 15, Netanya",
-           "Keren HaYesod St 22, Ashdod", "Herzl St 45, Rishon LeZion",
-           "Moshe Dayan St 3, Ashkelon"
+           "Herzl St 10, Tel Aviv, 6523701", "Ben Gurion St 5, Ramat Gan, 5222002",
+           "Dizengoff St 25, Tel Aviv, 6311701", "Allenby St 40, Haifa, 3313302",
+           "Jaffa St 60, Jerusalem, 9434101", "Rothschild Blvd 16, Tel Aviv, 6688112",
+           "Weizmann St 12, Kfar Saba, 4428104", "HaNasi St 8, Herzliya, 4650403",
+           "Sokolov St 30, Holon, 5831801", "Ben Yehuda St 100, Tel Aviv, 6347511",
+           "Ehad HaAm St 50, Beersheba, 8455802", "Herzliya St 15, Netanya, 4241102",
+           "Keren HaYesod St 22, Ashdod, 7728203", "Herzl St 45, Rishon LeZion, 7522001",
+           "Moshe Dayan St 3, Ashkelon, 7878203"
         };
 
         //We asked the GPT chat: can you create for us an array of longitude lines and an array
@@ -66,7 +64,7 @@ public static class Initialization
            32.063922, 32.175034, 32.166313, 32.014046, 32.089771,
            31.251810, 32.328516, 31.802418, 31.969633, 31.669258
         };
-        
+
         double[]? longitudes =
         {
             34.779808, 34.812548, 34.774989, 34.988507, 35.223391,
@@ -74,14 +72,8 @@ public static class Initialization
             34.791460, 34.853196, 34.641665, 34.804390, 34.574262
         };
 
-        int[] id_numbers = {123456782, 234567893, 345678904, 456789015, 567890126,
-                            678901237, 789012348, 890123459, 901234560, 123450782,
-                            234561893, 345672904, 456783015, 567894126, 678905237,
-                            789016348, 890127459, 901238560, 123406782, 234517893};
-    
         // Allowed characters for generating passwords.
         //string allCharacters = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789!@#$%^&*()";
-
         string lowerCaseLetters = "abcdefghijklmnopqrstuvwxyz";
         string upperCaseLetters = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
         string digits = "0123456789";
@@ -98,8 +90,6 @@ public static class Initialization
         int i = 0;
         foreach (string volunteerName in VolunteerNames)
         {
-            //id = s_rand.Next(200000000, 400000000);
-            id = id_numbers[i];
 
             //We asked the GPT chat: how to remove spaces and convert names to lowercase letters
             email = $"{VolunteerNames[i].Replace(" ", "").ToLower()}@gmail.com";
@@ -107,34 +97,34 @@ public static class Initialization
             prefix = prefixes[s_rand.Next(prefixes.Length)];
             phoneNumber = prefix;
             for (int j = 0; j < 7; j++) { phoneNumber += s_rand.Next(0, 10); }
-            if (i != 0)
-            { // We asked the GPT chat: How to build a random password using a StringBuilder object
-            StringBuilder passwordBuilder = new StringBuilder();
-            passwordBuilder.Append(lowerCaseLetters[s_rand.Next(lowerCaseLetters.Length)]);
-            passwordBuilder.Append(upperCaseLetters[s_rand.Next(upperCaseLetters.Length)]);
-            passwordBuilder.Append(digits[s_rand.Next(digits.Length)]);
-            passwordBuilder.Append(specialCharacters[s_rand.Next(specialCharacters.Length)]);
-            for (int j = 0; j < 4; j++) { passwordBuilder.Append(allCharacters[s_rand.Next(allCharacters.Length)]); }// chat gpt
-                password = passwordBuilder.ToString();
+            if (i != 0) 
+            { 
+                // We asked the GPT chat: How to build a random password using a StringBuilder object
+                StringBuilder passwordBuilder = new StringBuilder();
+                passwordBuilder.Append(lowerCaseLetters[s_rand.Next(lowerCaseLetters.Length)]);
+                passwordBuilder.Append(upperCaseLetters[s_rand.Next(upperCaseLetters.Length)]);
+                passwordBuilder.Append(digits[s_rand.Next(digits.Length)]);
+                passwordBuilder.Append(specialCharacters[s_rand.Next(specialCharacters.Length)]);
+                for (int j = 0; j < 4; j++) { passwordBuilder.Append(allCharacters[s_rand.Next(allCharacters.Length)]); }// chat gpt
+                    password = passwordBuilder.ToString();
+
+                //id = s_rand.Next(200000000, 400000000);
+                id = GenerateValidId();
             }
             else
             {
                 password = "12!@MAnager";
+                id = 123456782;
             }
-            
-            double MaximumDistance = s_rand.Next(0, 15);
+
+            double MaximumDistance = s_rand.Next(0, 10);
             role = (i == 0) ? Roles.Manager : Roles.Volunteer;
             if (i >= 10)
                 Active = false;
-            try
-            {
-                s_dal!.Volunteer.Create(new(id, volunteerName, phoneNumber, email, password, addresses[i],
+
+            s_dal!.Volunteer.Create(new(id, volunteerName, phoneNumber, email, password, addresses[i],
                         latitudes[i], longitudes[i], Active, MaximumDistance, role, DistanceType.Aerial));
-            }
-            catch (Exception ex)
-            {
-                Console.WriteLine(ex.Message);
-            }
+
             i++;
         }
 
@@ -225,8 +215,6 @@ public static class Initialization
         DateTime? MaxTime;
         CallType type;
 
-        DateTime start = new DateTime(s_dal!.Config.Clock.Year - 0, 1, 1); //stage 1
-        int range = (s_dal!.Config.Clock - start).Days; //stage 1
 
         int i = 0;
         foreach (string address in addresses)
@@ -236,18 +224,18 @@ public static class Initialization
             Latitude = latitudes[i];
             Longitude = longitudes[i];
 
-            type = (CallType)s_rand.Next(0, 2);
-
-            if ((i >= 5 && i < 20) || (i >= 50))
+            if ((i >= 5 && i < 20) || (i >= 35 && i < 40))
             {
-                OpenTime = s_dal!.Config.Clock.AddMinutes(s_rand.Next(-5, -2));
-                MaxTime = s_dal!.Config.Clock.AddMinutes(s_rand.Next(5, 20));
+                OpenTime = s_dal!.Config.Clock.AddMinutes(s_rand.Next(-7, -2));
+                MaxTime = s_dal!.Config.Clock.AddMinutes(s_rand.Next(5, 40));
             }
             else
             {
-                OpenTime = s_dal!.Config.Clock.AddMinutes(s_rand.Next(-50, -8));
-                MaxTime = OpenTime.AddMinutes(s_rand.Next(2, 6));
+                OpenTime = s_dal!.Config.Clock.AddDays(s_rand.Next(-50, -8)).AddMinutes(s_rand.Next(0, 60));
+                MaxTime = OpenTime.AddMinutes(s_rand.Next(5, 40));
             }
+
+            type = (CallType)s_rand.Next(0, 2);
 
             s_dal!.Call.Create(new(0, Description, Address, Latitude, Longitude, OpenTime, MaxTime, type));
 
@@ -336,25 +324,15 @@ public static class Initialization
             35.219762, 35.308230, 35.002729, 34.919138, 34.876413
         };
 
-        int[] id_numbers = {123456782, 234567893, 345678904, 456789015, 567890126,
-                            678901237, 789012348, 890123459, 901234560, 123450782,
-                            234561893, 345672904, 456783015, 567894126, 678905237,
-                            789016348, 890127459, 901238560, 123406782, 234517893};
-
-        //int CallId;
-        //int VolunteerId = 0;
-        //DateTime? EnterTime;
-        //DateTime? EndTime;
-        //EndType? TypeEndOfTreatment;
 
         IEnumerable<Call> CopyCalls = s_dal!.Call.ReadAll();
         IEnumerable<Volunteer> CopyVolunteers = s_dal!.Volunteer.ReadAll();
 
         for (int i = 0; i < 5; i++)
         {
-            int callId = i;
-            int volunteerId = id_numbers[i];
-            DateTime entryTime = s_dal!.Call.Read(i)!.OpenTime.AddMinutes(9 * i);
+            int callId = CopyCalls.ElementAt(i).Id;
+            int volunteerId = CopyVolunteers.ElementAt(i).Id;
+            DateTime entryTime = s_dal!.Call.Read(i)!.OpenTime.AddMinutes(9 * i) <= s_dal!.Call.Read(i)!.MaxTime ? s_dal!.Call.Read(i)!.OpenTime.AddMinutes(9 * i) : s_dal!.Call.Read(i)!.MaxTime ?? DateTime.MaxValue;
             DateTime closeTime = s_dal!.Call.Read(i)!.MaxTime ?? DateTime.MaxValue;
             EndType endType = EndType.ExpiredCancellation;
 
@@ -363,19 +341,21 @@ public static class Initialization
 
         for (int i = 8; i < 20; i++)
         {
-            int callId = i - 3;
-            int volunteerId = id_numbers[i - 8];
-            DateTime entryTime = s_dal!.Call.Read(i - 3)!.OpenTime.AddMinutes(i);
+            int callId = CopyCalls.ElementAt(i - 3).Id;
+            int volunteerId = CopyVolunteers.ElementAt(i - 8).Id;
+            DateTime systemClock = s_dal.Config.Clock;
+            DateTime entryTime = s_dal!.Call.Read(i - 3)!.OpenTime.AddMinutes(i / 3) < s_dal!.Call.Read(i - 3)!.MaxTime ? s_dal!.Call.Read(i - 3)!.OpenTime.AddMinutes(i / 3) : s_dal!.Call.Read(i - 3)!.OpenTime.AddMinutes(5);
+            if (entryTime >= systemClock) entryTime = systemClock;
 
             s_dal!.Assignment.Create(new Assignment(0, callId, volunteerId, entryTime, null, null));
         }
 
         for (int i = 20; i < 30; i++)
         {
-            int callId = i;
-            int volunteerId = id_numbers[i - 20];
-            DateTime entryTime = s_dal!.Call.Read(i)!.OpenTime.AddMinutes(i);
-            DateTime closeTime = s_dal!.Call.Read(i)!.MaxTime?.AddMinutes(-i) ?? DateTime.MaxValue;
+            int callId = CopyCalls.ElementAt(i).Id;
+            int volunteerId = CopyVolunteers.ElementAt(i - 20).Id;
+            DateTime entryTime = s_dal!.Call.Read(i)!.OpenTime.AddMinutes(i) <= s_dal!.Call.Read(i)!.MaxTime ? s_dal!.Call.Read(i)!.OpenTime.AddMinutes(i) : s_dal!.Call.Read(i)!.MaxTime ?? DateTime.MaxValue;
+            DateTime closeTime = (s_dal!.Call.Read(i)!.MaxTime?.AddMinutes(-i) > entryTime ? s_dal!.Call.Read(i)!.MaxTime?.AddMinutes(-i) : s_dal!.Call.Read(i)!.MaxTime) ?? DateTime.MaxValue;
             EndType endType = EndType.Treated;
 
             s_dal!.Assignment.Create(new Assignment(0, callId, volunteerId, entryTime, closeTime, endType));
@@ -383,24 +363,27 @@ public static class Initialization
 
         for (int i = 30; i < 40; i++)
         {
-            int callId = i;
-            int volunteerId = id_numbers[i - 30];
-            DateTime entryTime = s_dal!.Call.Read(i)!.OpenTime.AddMinutes(i / 4);
-            DateTime closeTime = s_dal!.Call.Read(i)!.MaxTime?.AddMinutes(-i / 4) ?? DateTime.MaxValue;
-            EndType endType = EndType.SelfCancellation;  
+            int callId = CopyCalls.ElementAt(i).Id;
+            int volunteerId = CopyVolunteers.ElementAt(i - 30).Id;
+            DateTime systemClock = s_dal.Config.Clock;
+            DateTime entryTime = s_dal!.Call.Read(i)!.OpenTime.AddMinutes(i / 10) <= s_dal!.Call.Read(i)!.MaxTime ? s_dal!.Call.Read(i)!.OpenTime.AddMinutes(i / 10) : s_dal!.Call.Read(i)!.MaxTime ?? DateTime.MaxValue;
+            DateTime closeTime = (s_dal!.Call.Read(i)!.MaxTime?.AddMinutes(-i / 10) > entryTime? s_dal!.Call.Read(i)!.MaxTime?.AddMinutes(-i / 10) : s_dal!.Call.Read(i)!.MaxTime) ?? DateTime.MaxValue;
+            if (entryTime >= systemClock) entryTime = systemClock;
+            if (closeTime >= systemClock) closeTime = systemClock;
+            EndType endType = EndType.SelfCancellation;
 
             s_dal!.Assignment.Create(new Assignment(0, callId, volunteerId, entryTime, closeTime, endType));
         }
 
-        for (int i = 40; i < 50; i++)
+        for (int i = 40; i < 48; i++)
         {
-            int callId = i;
-            int volunteerId = id_numbers[i - 40];
+            int callId = CopyCalls.ElementAt(i).Id;
+            int volunteerId = CopyVolunteers.ElementAt(i - 40).Id;
             var call = s_dal!.Call.Read(i);
             if (call != null)
             {
-                DateTime entryTime = call.OpenTime.AddMinutes(1);
-                DateTime closeTime = call.MaxTime?.AddMinutes(-i / 4) ?? DateTime.MaxValue;
+                DateTime entryTime = call.OpenTime.AddMinutes(1) <= call.MaxTime  ? s_dal!.Call.Read(i)!.OpenTime.AddMinutes(1) : call.MaxTime ?? DateTime.MaxValue;
+                DateTime closeTime = (call.MaxTime?.AddMinutes(-i / 4) > entryTime ? call.MaxTime?.AddMinutes(-i / 4) : call.MaxTime) ?? DateTime.MaxValue;
                 EndType endType = EndType.AdminCancellation;
 
                 s_dal!.Assignment.Create(new Assignment(0, callId, volunteerId, entryTime, closeTime, endType));
@@ -411,45 +394,6 @@ public static class Initialization
                 Console.WriteLine($"Call with index {i} not found.");
             }
         }
-
-
-
-        //foreach (var call in CopyCalls)
-        //{
-        //    if (i > 50) break;
-
-        //    CallId = call.Id;
-        //    if (CopyVolunteers.Any())
-        //    {
-        //        int randomIndex = s_rand.Next(CopyVolunteers.Count());
-        //        VolunteerId = CopyVolunteers.ElementAt(randomIndex).Id;
-        //    }
-        //    //if (CopyVolunteers.Count > 0)
-        //    //{
-        //    //    int randomIndex = s_rand.Next(CopyVolunteers.Count);
-        //    //    VolunteerId = CopyVolunteers[randomIndex].Id;
-        //    //}
-
-        //    //We asked the GPT chat: how to calculate the TimeSpan between the opening time
-        //    //of a call (OpenTime) and the maximum time (MaxTime) with treatment in the case that MaxTime is not defined
-        //    DateTime maxTime = call.MaxTime ?? DateTime.MaxValue;
-        //    TimeSpan timeSpan = maxTime - call.OpenTime;
-
-        //    //We asked the GPT chat: how to add random minutes to a certain time
-        //    //(like OpenTime) and create an end time (EndTime)
-        //    int randomMinutes = s_rand.Next(0, (int)timeSpan.TotalMinutes);
-        //    EnterTime = call.OpenTime.AddMinutes(randomMinutes);
-        //    EndTime = EnterTime.Value.AddMinutes(s_rand.Next(0, 60));
-
-        //    if (EndTime <= maxTime)
-        //        TypeEndOfTreatment = (EndType)s_rand.Next(0, 2);
-        //    else
-        //        TypeEndOfTreatment = EndType.ExpiredCancellation;
-
-        //    s_dal!.Assignment.Create(new(0, CallId, VolunteerId, EnterTime ?? DateTime.MinValue, EndTime, TypeEndOfTreatment));
-
-        //    i++;
-        //}
 
     }
 
@@ -478,16 +422,13 @@ public static class Initialization
         //s_dalConfig = dalConfig ?? throw new NullReferenceException("DAL object can not be null!");// check if we need it
 
         //s_dal = dal ?? throw new DalNullReferenceException("DAL object can not be null!"); // stage 2
-
         s_dal = DalApi.Factory.Get; //stage 4
 
+        Console.WriteLine("Reset Configuration values and List values.");
         //s_dalConfig.Reset(); //stage 1
         //s_dalVolunteer.DeleteAll(); //stage 1
         //s_dalAssignment.DeleteAll();
         //s_dalCall.DeleteAll();
-
-        Console.WriteLine("Reset Configuration values and List values.");
-
         s_dal.ResetDB();//stage 2
 
         Console.WriteLine("Initializing Volunteers list.");
@@ -509,7 +450,7 @@ public static class Initialization
         int checkDigit = CalculateCheckDigit(baseId);
 
         // append the check digit to the end of the number
-        return baseId * 10 + checkDigit; 
+        return baseId * 10 + checkDigit;
     }
     static int CalculateCheckDigit(int baseId)
     {

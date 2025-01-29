@@ -265,10 +265,20 @@ namespace PL
             var result = MessageBox.Show("Are you sure you want to initialize the database?", "Database initialization", MessageBoxButton.YesNo, MessageBoxImage.Question);
             if (result == MessageBoxResult.Yes)
             {
-                CloseAllWindowsExceptThis();
                 Mouse.OverrideCursor = Cursors.Wait;
-                s_bl.Admin.InitializeDB();
-                Mouse.OverrideCursor = null;
+                try
+                {
+                    s_bl.Admin.InitializeDB();
+                    MessageBox.Show("Database initialization completed successfully!", "Success", MessageBoxButton.OK, MessageBoxImage.Information);
+                }
+                catch (Exception ex)
+                {
+                    MessageBox.Show($"An error occurred during initialization: {ex.Message}", "Error", MessageBoxButton.OK, MessageBoxImage.Error);
+                }
+                finally
+                {
+                    Mouse.OverrideCursor = null;
+                }
             }
             //if (result == MessageBoxResult.Yes)
             //{
@@ -295,13 +305,23 @@ namespace PL
         // Button click handler to reset the database
         private void DatabaseReset_Click(object sender, RoutedEventArgs e)
         {
-            var result=MessageBox.Show("Are you sure you want to reset the data?", "Database reset", MessageBoxButton.YesNo, MessageBoxImage.Question);
+            var result = MessageBox.Show("Are you sure you want to reset the data?", "Database reset", MessageBoxButton.YesNo, MessageBoxImage.Question);
             if (result == MessageBoxResult.Yes)
             {
-                CloseAllWindowsExceptThis();
                 Mouse.OverrideCursor = Cursors.Wait;
-                s_bl.Admin.ResetDB();
-                Mouse.OverrideCursor = null;
+                try
+                {
+                    s_bl.Admin.ResetDB();
+                    MessageBox.Show("Database reset completed successfully!", "Success", MessageBoxButton.OK, MessageBoxImage.Information);
+                }
+                catch (Exception ex)
+                {
+                    MessageBox.Show($"An error occurred during reset: {ex.Message}", "Error", MessageBoxButton.OK, MessageBoxImage.Error);
+                }
+                finally
+                {
+                    Mouse.OverrideCursor = null;
+                }
             }
 
         }

@@ -6,13 +6,16 @@
         xmlns:local="clr-namespace:PL.Volunteer"
         mc:Ignorable="d"
         Title="VolunteerListWindow" Height="450" Width="800" DataContext="{Binding RelativeSource={RelativeSource Mode=Self}}" 
-       Loaded="Window_Loaded" Closed="Window_Closed">
+        Loaded="Window_Loaded" Closed="Window_Closed">
     <Window.Resources>
         <Style TargetType="Button"
              BasedOn="{StaticResource ButtonStyle}">
         </Style>
     </Window.Resources>
-    <!-- Main Grid structure -->
+
+    <!-- Wrap everything inside a Viewbox -->
+    <Viewbox Stretch="Uniform">
+        <!-- Main Grid structure -->
     <Grid>
 
         <Grid.RowDefinitions>
@@ -29,7 +32,7 @@
             </Grid.ColumnDefinitions>
 
             <Label Content="Filter By" HorizontalAlignment="Center" VerticalAlignment="Top" Grid.Column="0"/>
-            <ComboBox Grid.Column="1" SelectedValue="{Binding SelectedFiled,Mode=TwoWay}" ItemsSource="{Binding Source={StaticResource CallTypeCollectionKey}}"
+            <ComboBox Grid.Column="1" Width="150" SelectedValue="{Binding SelectedFiled,Mode=TwoWay}" ItemsSource="{Binding Source={StaticResource CallTypeCollectionKey}}"
                             HorizontalAlignment="Stretch" VerticalAlignment="Stretch" SelectionChanged="ComboBox_SelectionChanged"/>
 
         </Grid>
@@ -71,6 +74,6 @@
         <!-- Add button -->
         <Button  Content="Add" Grid.Row="2" HorizontalAlignment="Center" Height="50" Width="100" Click="BtnAdd_Click"/>
     </Grid>
-
+</Viewbox>
 </Window>
 
