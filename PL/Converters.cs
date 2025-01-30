@@ -217,7 +217,7 @@ public class CallTypeColorConverter : IValueConverter
             case BO.CallType.RegularVehicle:
                 return Brushes.LightGreen;
             default:
-                return Brushes.Yellow;
+                return Brushes.LightGray;
         }
 
     }

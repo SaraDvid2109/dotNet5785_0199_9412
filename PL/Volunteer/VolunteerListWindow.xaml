@@ -58,9 +58,17 @@
                 <DataGridTextColumn Binding="{Binding TotalCallsCanceled}" Header="TotalCallsCanceled" Width="Auto"/>
                 <DataGridTextColumn Binding="{Binding TotalCallsChosenHandleExpired}" Header="TotalCallsChosenHandleExpired" Width="Auto"/>
                 <DataGridTextColumn Binding="{Binding CallHandledId}" Header="CallHandledId" Width="Auto"/>
-                <DataGridTextColumn Binding="{Binding CallHandledType}" Header="CallHandledType" Width="Auto"/>
-
-                <!-- Delete button -->
+                <!--<DataGridTextColumn Binding="{Binding CallHandledType}" Header="CallHandledType" Width="Auto"/>-->
+                    <DataGridTemplateColumn Header="CallHandledType" Width="Auto">
+                        <DataGridTemplateColumn.CellTemplate>
+                            <DataTemplate>
+                                <TextBlock Text="{Binding CallHandledType}" 
+                                   Background="{Binding CallHandledType, Converter={StaticResource CallTypeColorConverterKey}}"
+                                   VerticalAlignment="Center" Padding="5"/>
+                            </DataTemplate>
+                        </DataGridTemplateColumn.CellTemplate>
+                    </DataGridTemplateColumn>
+                    <!-- Delete button -->
                 <DataGridTemplateColumn Header="Delete" Width="Auto">
                     <DataGridTemplateColumn.CellTemplate>
                         <DataTemplate>
