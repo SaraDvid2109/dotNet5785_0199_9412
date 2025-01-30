@@ -15,7 +15,7 @@
     </Window.Resources>
 
     <Window.Background>
-        <ImageBrush ImageSource="pack://application:,,,/Images/starofdavid.jpg" Opacity="0.9"/>
+        <ImageBrush ImageSource="pack://application:,,,/Images/starofdavid.jpg" Opacity="0.9" Stretch="UniformToFill"/>
     </Window.Background>
     
     

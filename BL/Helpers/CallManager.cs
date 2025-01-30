@@ -123,8 +123,12 @@ internal static class CallManager
                     status = BO.CallStatus.Close;
                 else
                 {
-                    if (assignment.TypeEndOfTreatment == DO.EndType.SelfCancellation && AdminManager.Now <= call!.MaxTime)
+                    if ((AdminManager.Now <= call!.MaxTime) && (call!.MaxTime - AdminManager.Now <= s_dal.Config.RiskRange))
+                        status = BO.CallStatus.OpenAtRisk;
+
+                    else if (assignment.TypeEndOfTreatment == DO.EndType.SelfCancellation && AdminManager.Now <= call!.MaxTime)
                         status = BO.CallStatus.Open;
+
                     else
                         status = BO.CallStatus.Expired;
                 }
@@ -586,7 +590,7 @@ internal static class CallManager
 
         CallManager.Observers.NotifyListUpdated();  //stage 5
         CallManager.Observers.NotifyItemUpdated(volunteerId);
-
+        Observers.NotifyItemUpdated(callId);
     }
 
     /// <summary>
@@ -622,7 +626,7 @@ internal static class CallManager
                 s_dal.Assignment.Update(assignmentToUpdate);
             CallManager.Observers.NotifyItemUpdated(volunteerId);  //stage 5
             CallManager.Observers.NotifyListUpdated();  //stage 5
-
+            CallManager.Observers.NotifyItemUpdated(assignment.CallId);
 
         }
         catch (DO.DalDoesNotExistException ex)
@@ -668,7 +672,7 @@ internal static class CallManager
                 s_dal.Assignment.Update(assignmentToUpdate);
             CallManager.Observers.NotifyItemUpdated(volunteerId);  //stage 5
             CallManager.Observers.NotifyListUpdated();  //stage 5
-
+            CallManager.Observers.NotifyItemUpdated(assignment.CallId);
 
         }
         catch (DO.DalDoesNotExistException ex)
