@@ -166,6 +166,67 @@ public class BorderColorConverter : IValueConverter
         throw new NotImplementedException();
     }
 }
+public class StatusColorConverter : IValueConverter
+{
+    public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
+    {
+        BO.CallStatus visibilty = (BO.CallStatus)value;
+        switch (visibilty)
+        {
+            case BO.CallStatus.Open:
+                return Brushes.Pink;
+
+            case BO.CallStatus.OpenAtRisk:
+                return Brushes.DeepSkyBlue;
+
+            case BO.CallStatus.Treatment:
+                return Brushes.Turquoise;
+
+            case BO.CallStatus.TreatmentOfRisk:
+                return Brushes.SkyBlue;
+
+            case BO.CallStatus.Expired:
+                return Brushes.LightGray;
+
+            case BO.CallStatus.Close:
+                return Brushes.LightGreen;
+            default:
+                return Brushes.Yellow;  
+        }
+
+    }
+
+    public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture)
+    {
+        throw new NotImplementedException();
+    }
+}
+public class CallTypeColorConverter : IValueConverter
+{
+    public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
+    {
+        BO.CallType visibilty = (BO.CallType)value;
+        switch (visibilty)
+        {
+            case BO.CallType.IntensiveCareAmbulance:
+                return Brushes.LightSkyBlue;
+
+            case BO.CallType.Ambulance:
+                return Brushes.LightGoldenrodYellow;
+
+            case BO.CallType.RegularVehicle:
+                return Brushes.LightGreen;
+            default:
+                return Brushes.Yellow;
+        }
+
+    }
+
+    public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture)
+    {
+        throw new NotImplementedException();
+    }
+}
 
 
 

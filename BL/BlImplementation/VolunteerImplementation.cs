@@ -135,16 +135,7 @@ internal class volunteerImplementation : IVolunteer
     /// <exception cref="BO.BlDoesNotExistException">Thrown if no volunteer is found with the given ID.</exception>
     public BO.Volunteer GetVolunteerDetails(int id)
     {
-        return VolunteerManager.GetVolunteerDetails(id);
-        //DO.Volunteer? volunteer;
-        //lock (AdminManager.BlMutex) //stage 7
-        //    volunteer = _dal.Volunteer.Read(id);
-        //if (volunteer == null)
-        //{
-        //    throw new BO.BlDoesNotExistException("There is no volunteer with this ID.");
-        //}
-        //BO.Volunteer BoVolunteer = VolunteerManager.ToBOVolunteer(volunteer);
-        //return BoVolunteer;
+        return VolunteerManager.GetVolunteerDetails(id);        
 
     }
     

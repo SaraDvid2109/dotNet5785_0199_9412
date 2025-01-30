@@ -6,6 +6,7 @@
         xmlns:local="clr-namespace:PL.Volunteer"
         mc:Ignorable="d"
         SizeToContent="WidthAndHeight"
+        Icon="pack://application:,,,/Images/Red Star of David.jpg"
         Title="VolunteerProfile" Height="1000" Width="450"  DataContext="{Binding RelativeSource={RelativeSource Mode=Self}}" 
         Loaded="Window_Loaded" Closed="Window_Closed">
 

@@ -6,7 +6,12 @@
         xmlns:local="clr-namespace:PL"
         mc:Ignorable="d"
         Title="Login" Height="470" Width="400"  DataContext="{Binding RelativeSource={RelativeSource Mode=Self}}" 
+        Icon="pack://application:,,,/Images/Red Star of David.jpg"
         Loaded="Window_Loaded" Closed="Window_Closed">
+   
+        <!--<Window.Background>
+        <ImageBrush ImageSource="pack://application:,,,/Images/Red Star of David.jpg"/>
+    </Window.Background>-->
     <Window.Resources>
         <Style TargetType="Button"
           BasedOn="{StaticResource ButtonStyle}">
@@ -17,9 +22,18 @@
             <Setter Property="BorderBrush" Value="#FF0000"/>
             <Setter Property="BorderThickness" Value="2"/>
         </Style>
+        <ImageBrush x:Key="BackgroundImageBrush" ImageSource="pack://application:,,,/Images/Red Star of David.jpg"  Opacity="0.5" Stretch="Fill" AlignmentX="Center"
+            AlignmentY="Center"/>
 
     </Window.Resources>
-    <Grid>
+
+    <Grid Background="{StaticResource BackgroundImageBrush}">
+        <TextBlock  FontWeight="Bold" FontSize="22" Foreground="#FF0000" Margin="10,30,0,0" FontFamily="Cooper Black">
+            <TextBlock.Effect>
+                <DropShadowEffect ShadowDepth="3" Color="Yellow" BlurRadius="0" Opacity="1" />
+                 </TextBlock.Effect>
+                 <Run Text="Welcome !  Please Log In " />
+            </TextBlock>
         <Label Content="id:" HorizontalAlignment="Left" Margin="46,83,0,0" VerticalAlignment="Top" Width="51" Height="30"/>
         <TextBox Text="{Binding VolunteerId}" HorizontalAlignment="Left" Margin="127,89,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="150"/>
         <!-- Password Field with Eye Icon -->
@@ -32,7 +46,7 @@
 
         <!--<Label Content="password:"  HorizontalAlignment="Left" Margin="46,135,0,0" VerticalAlignment="Top"/>-->
         <!--<TextBox Text="{Binding Password}" HorizontalAlignment="Left" Margin="127,140,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="120"/>-->
-        <Button Content="Login" HorizontalAlignment="Left" Margin="46,196,0,0" VerticalAlignment="Top" Height="25" Width="201" Click="Login_Click"/>
+        <Button Content="Login" HorizontalAlignment="Left" Margin="96,196,0,0" VerticalAlignment="Top" Height="25" Width="201" Click="Login_Click"/>
         <!--אפשרויות למנהל-->
         <StackPanel Orientation="Horizontal" HorizontalAlignment="Center" VerticalAlignment="Top" Margin="0,250,0,0"
                Visibility="{Binding IsManager, Converter={StaticResource ConvertboolToVisibiltyKey}}" Width="354">

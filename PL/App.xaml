@@ -24,18 +24,19 @@
         <local:GroupByCollection x:Key="GroupByCollectionKey" />
         <local:CallDeleteVisibilityConverter x:Key="CallDeleteVisibilityConverterKey" />
         <local:BorderColorConverter x:Key="BorderColorConverterKey"/>
-
+        <local:StatusColorConverter x:Key="StatusColorConverterKey"/>
+        <local:CallTypeColorConverter x:Key="CallTypeColorConverterKey"/>
 
         <!-- Global styles for buttons -->
         <Style x:Key="ButtonStyle" TargetType="Button">
             <Setter Property="Background" Value="#0072CE"/>
             <Setter Property="Foreground" Value="White"/>
             <Setter Property="FontWeight" Value="Bold"/>
-            <Setter Property="Effect">
+            <!--<Setter Property="Effect">
                 <Setter.Value>
                     <DropShadowEffect Color="#0072CE" BlurRadius="10" ShadowDepth="2"/>
                 </Setter.Value>
-            </Setter>
+            </Setter>-->
         </Style>
 
         <!-- Global styles for labels -->
