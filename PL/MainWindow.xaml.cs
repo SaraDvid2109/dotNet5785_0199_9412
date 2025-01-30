@@ -137,7 +137,7 @@ namespace PL
 
         // Using a DependencyProperty as the backing store for Interval.  This enables animation, styling, binding, etc...
         public static readonly DependencyProperty IntervalProperty =
-            DependencyProperty.Register("Interval", typeof(int), typeof(MainWindow)/*, new PropertyMetadata(DateTime.Now)*/);
+            DependencyProperty.Register("Interval", typeof(int), typeof(MainWindow), new PropertyMetadata(1));
 
         private bool _isSimulatorRunning;
 
@@ -157,19 +157,26 @@ namespace PL
 
         private void OnStartStopButton_Click(object sender, RoutedEventArgs e)
         {
-            if (IsSimulatorRunning)
+            try
             {
-                // Stop the simulator
-                s_bl.Admin.StopSimulator();
-                IsSimulatorRunning = false;
-                StartStopButtonText = "Start Simulator";
+                if (IsSimulatorRunning)
+                {
+                    // Stop the simulator
+                    s_bl.Admin.StopSimulator();
+                    IsSimulatorRunning = false;
+                    StartStopButtonText = "Start Simulator";
+                }
+                else
+                {
+                    // Start the simulator
+                    s_bl.Admin.StartSimulator(Interval);
+                    IsSimulatorRunning = true;
+                    StartStopButtonText = "Stop Simulator";
+                }
             }
-            else
+            catch (BO.BLTemporaryNotAvailableException ex)
             {
-                // Start the simulator
-                s_bl.Admin.StartSimulator(Interval);
-                IsSimulatorRunning = true;
-                StartStopButtonText = "Stop Simulator";
+                MessageBox.Show(ex.Message, "Operation Failed", MessageBoxButton.OK, MessageBoxImage.Error);
             }
         }
 
@@ -405,10 +412,10 @@ namespace PL
         // Method to close all windows except for the main window
         private void CloseAllWindowsExceptThis()
         {
-            // השגת החלון הראשי
+            // Get the main window
             var mainWindow = Application.Current.MainWindow;
 
-            // סגירת כל החלונות פרט לחלון הראשי
+            // Close all windows except the main window
             foreach (Window window in Application.Current.Windows)
             {
                 if (window != mainWindow)
@@ -416,11 +423,6 @@ namespace PL
                     window.Close();
                 }
             }
-        }
-
-        private void TextBox_TextChanged(object sender, TextChangedEventArgs e)
-        {
-
         }
         private void StatusObserver()
         {

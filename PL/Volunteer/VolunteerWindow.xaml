@@ -6,6 +6,7 @@
         xmlns:local="clr-namespace:PL.Volunteer"
         mc:Ignorable="d"
         Title="VolunteerWindow" Height="500" Width="450"
+        Icon="pack://application:,,,/Images/Red Star of David.jpg"
         DataContext="{Binding RelativeSource={RelativeSource Mode=Self}}" Loaded="Window_Loaded" Closed="Window_Closed">
 
     <!-- Define global styles for controls -->

@@ -311,6 +311,7 @@ internal static class VolunteerManager
         return BoVolunteer;
 
     }
+    
     internal static void SimulateCallRegistration() //stage 7
     {
         List<DO.Volunteer> doVolunteerList;
@@ -331,13 +332,14 @@ internal static class VolunteerManager
                     int randomIndex = random.Next(openCalls.Count());
                     try
                     {
-                        if (Random.Shared.NextDouble() <= 0.2)
+                        if (Random.Shared.NextDouble() <= 0.2)//20 percent probability
                             CallManager.ChooseCallForHandling(doVolunteer.Id, openCalls[randomIndex].Id);
                     }
                     catch (BO.BLTemporaryNotAvailableException ex)
                     {
                         // Handle the exception, e.g., log it or notify the user
-                        Console.WriteLine(ex.Message);
+                        //Console.WriteLine(ex.Message);
+                        throw new BO.BLTemporaryNotAvailableException(ex.Message);
                     }
                 }
             }
@@ -349,13 +351,13 @@ internal static class VolunteerManager
                 {
                     minutes = boVolunteer.Progress.Distance + 20;
 
-                    if (AdminManager.Now >= assignment.EnterTime.AddMinutes(minutes))
+                    if (AdminManager.Now >= assignment.EnterTime.AddMinutes(minutes))//If enough time has passed since the start of treatment
                     {
                         CallManager.UpdateEndOfTreatmentCall(doVolunteer.Id, assignment.Id);
                     }
                     else
                     {
-                        if (Random.Shared.NextDouble() <= 0.1)
+                        if (Random.Shared.NextDouble() <= 0.1)//10 percent probability
                             CallManager.CancelCallHandling(doVolunteer.Id, assignment.Id);
                     }
                 }

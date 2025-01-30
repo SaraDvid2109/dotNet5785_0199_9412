@@ -6,7 +6,7 @@
         xmlns:local="clr-namespace:PL.Call"
         mc:Ignorable="d"
         Title="CallListWindow" Height="450" Width="1000" DataContext="{Binding RelativeSource={RelativeSource Mode=Self}}" 
-
+        Icon="pack://application:,,,/Images/Red Star of David.jpg"
        Loaded="Window_Loaded" Closed="Window_Closed">
 
     <Window.Resources>
@@ -61,13 +61,30 @@
             <DataGrid.Columns>
                 <!-- call details columns -->
                 <DataGridTextColumn Binding="{Binding Id}" Header="Id" Width="Auto"/>
-                <DataGridTextColumn Binding="{Binding CallId}" Header="CallId" Width="Auto" />
-                <DataGridTextColumn Binding="{Binding CallType}" Header="CallType" Width="Auto"/>
+                <DataGridTextColumn Binding="{Binding CallId}" Header="CallId" Width="Auto"/>
+                <!--<DataGridTextColumn Binding="{Binding CallType}" Header="CallType" Width="Auto"/>-->
+                <DataGridTemplateColumn Header="CallType" Width="Auto">
+                    <DataGridTemplateColumn.CellTemplate>
+                        <DataTemplate>
+                            <TextBlock Text="{Binding CallType}" 
+                            Background="{Binding CallType, Converter={StaticResource CallTypeColorConverterKey}}"
+                            VerticalAlignment="Center" Padding="5"/>
+                        </DataTemplate>
+                    </DataGridTemplateColumn.CellTemplate>
+                </DataGridTemplateColumn>
                 <DataGridTextColumn Binding="{Binding OpenTime}" Header="OpenTime" Width="Auto"/>
                 <DataGridTextColumn Binding="{Binding TimeLeftToFinish}" Header="TimeLeftToFinish" Width="Auto"/>
                 <DataGridTextColumn Binding="{Binding LastVolunteer}" Header="LastVolunteer" Width="Auto"/>
                 <DataGridTextColumn Binding="{Binding TreatmentTimeLeft}" Header="TreatmentTimeLeft" Width="Auto"/>
-                <DataGridTextColumn Binding="{Binding Status}" Header="Status" Width="Auto"/>
+                <DataGridTemplateColumn Header="Status" Width="Auto">
+                    <DataGridTemplateColumn.CellTemplate>
+                        <DataTemplate>
+                            <TextBlock Text="{Binding Status}" 
+                              Background="{Binding Status, Converter={StaticResource StatusColorConverterKey}}"
+                                 VerticalAlignment="Center" Padding="5"/>
+                        </DataTemplate>
+                    </DataGridTemplateColumn.CellTemplate>
+                </DataGridTemplateColumn>
                 <DataGridTextColumn Binding="{Binding TotalAssignments}" Header="TotalAssignments" Width="Auto"/>
 
                 <!-- Delete button -->

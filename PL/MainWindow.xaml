@@ -7,21 +7,23 @@
         mc:Ignorable="d"
         WindowState="Maximized"
         Title="MainWindow" Height="450" Width="800"
+        Icon="pack://application:,,,/Images/Red Star of David.jpg"
         DataContext="{Binding RelativeSource={RelativeSource Mode=Self}}" Loaded="InitializeMainWindow" Closed="CleanupOnWindowClose" >
     <Window.Resources>
         <Style TargetType="Button"
           BasedOn="{StaticResource ButtonStyle}">
         </Style>
+        <ImageBrush x:Key="BackgroundImageBrush" ImageSource="pack://application:,,,/Images/starofdavid.jpg"  Opacity="0.4" Stretch="Uniform"/>
+
     </Window.Resources>
 
-    <Window.Background>
-        <ImageBrush ImageSource="pack://application:,,,/Images/starofdavid.jpg" Opacity="0.9"/>
-    </Window.Background>
-    
-    
+    <!--<Window.Background>
+        <ImageBrush ImageSource="pack://application:,,,/Images/starofdavid.jpg" Opacity="0.4"/>
+    </Window.Background>-->
+
     <!-- Wrap the entire content in a Viewbox -->
     <Viewbox Stretch="Uniform">
-        <Grid>
+        <Grid Background="{StaticResource BackgroundImageBrush}">
         <!-- Define rows and columns in the main Grid -->
         <Grid.RowDefinitions>
             <RowDefinition Height="Auto" />

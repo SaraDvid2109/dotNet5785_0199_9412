@@ -235,7 +235,7 @@ public static class Initialization
                 MaxTime = OpenTime.AddMinutes(s_rand.Next(5, 40));
             }
 
-            type = (CallType)s_rand.Next(0, 2);
+            type = (CallType)s_rand.Next(0, 3);
 
             s_dal!.Call.Create(new(0, Description, Address, Latitude, Longitude, OpenTime, MaxTime, type));
 
