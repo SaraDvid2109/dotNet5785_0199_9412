@@ -363,26 +363,7 @@ namespace PL
                     Mouse.OverrideCursor = null;
                 }
             }
-            //if (result == MessageBoxResult.Yes)
-            //{
-            //    CloseAllWindowsExceptThis();
-            //    Mouse.OverrideCursor = Cursors.Wait;
-            //    try
-            //    {
-            //        // אתחול בסיס הנתונים ברקע
-            //        s_bl.Admin.InitializeDB();
-            //        MessageBox.Show("Database initialization completed successfully!", "Success", MessageBoxButton.OK, MessageBoxImage.Information);
-            //    }
-            //    catch (Exception ex)
-            //    {
-            //        MessageBox.Show($"An error occurred during initialization: {ex.Message}", "Error", MessageBoxButton.OK, MessageBoxImage.Error);
-            //    }
-            //    finally
-            //    {
-            //        // החזרת הסמן למצב רגיל
-            //        Mouse.OverrideCursor = null;
-            //    }
-            //}
+          
         }
 
         // Button click handler to reset the database

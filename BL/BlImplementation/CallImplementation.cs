@@ -37,9 +37,7 @@ internal class CallImplementation : ICall
         }
 
         return result;
-        //var calls = _dal.Call.ReadAll();
-        //var groupedCalls = calls.GroupBy(c => CallManager.Status(c.Id));
-        //return groupedCalls.ToArray();
+      
     }
 
     /// <summary>
@@ -81,6 +79,7 @@ internal class CallImplementation : ICall
                 _ => filterCalls.OrderBy(c => c.CallId)
             };
         }
+
         return sortCalls;
 
         

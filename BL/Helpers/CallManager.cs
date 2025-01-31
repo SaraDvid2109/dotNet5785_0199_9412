@@ -134,7 +134,7 @@ internal static class CallManager
                 }
             }
         }
-
+        Observers.NotifyItemUpdated(callId);
         return status;
     }
 
@@ -187,6 +187,7 @@ internal static class CallManager
             volunteer = s_dal.Volunteer.Read(last.VolunteerId);
         if(volunteer==null)
             throw new BO.BlNullPropertyException("No volunteer found for the given call.");
+
         return volunteer.Name;
     }
 
