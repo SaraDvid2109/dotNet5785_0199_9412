@@ -479,7 +479,7 @@ internal static class CallManager
             CallType = (BO.CallType)call.CarTypeToSend,
             OpenTime = call.OpenTime,
             TimeLeftToFinish = call.MaxTime - AdminManager.Now  > TimeSpan.Zero ? call.MaxTime - AdminManager.Now  : TimeSpan.Zero,
-            LastVolunteer = volunteer?.Name, // Add null check here
+            LastVolunteer = getLastVolunteer(call), // Add null check here
             TreatmentTimeLeft = assignmentOfCall.EndTime != null ? assignmentOfCall.EndTime - assignmentOfCall.EnterTime : TimeSpan.Zero,
             Status = Status(call.Id),
             TotalAssignments = assignments.Count()
@@ -591,6 +591,7 @@ internal static class CallManager
         CallManager.Observers.NotifyListUpdated();  //stage 5
         CallManager.Observers.NotifyItemUpdated(volunteerId);
         Observers.NotifyItemUpdated(callId);
+        AssignmentManager.Observers.NotifyItemUpdated(volunteerId);
     }
 
     /// <summary>
@@ -627,7 +628,7 @@ internal static class CallManager
             CallManager.Observers.NotifyItemUpdated(volunteerId);  //stage 5
             CallManager.Observers.NotifyListUpdated();  //stage 5
             CallManager.Observers.NotifyItemUpdated(assignment.CallId);
-
+            AssignmentManager.Observers.NotifyItemUpdated(volunteerId);
         }
         catch (DO.DalDoesNotExistException ex)
         {
@@ -673,6 +674,8 @@ internal static class CallManager
             CallManager.Observers.NotifyItemUpdated(volunteerId);  //stage 5
             CallManager.Observers.NotifyListUpdated();  //stage 5
             CallManager.Observers.NotifyItemUpdated(assignment.CallId);
+            AssignmentManager.Observers.NotifyItemUpdated(volunteerId);
+
 
         }
         catch (DO.DalDoesNotExistException ex)

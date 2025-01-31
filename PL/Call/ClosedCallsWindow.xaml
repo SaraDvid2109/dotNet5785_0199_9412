@@ -6,7 +6,7 @@
         xmlns:local="clr-namespace:PL.Call"
         mc:Ignorable="d"
         Icon="pack://application:,,,/Images/Red Star of David.jpg"
-        Title="ClosedCallsWindow" Height="450" Width="800" DataContext="{Binding RelativeSource={RelativeSource Mode=Self}}" Closed="Window_Closed" Loaded="Window_Loaded">
+        Title="ClosedCallsWindow" Height="450" Width="846" DataContext="{Binding RelativeSource={RelativeSource Mode=Self}}" Closed="Window_Closed" Loaded="Window_Loaded">
     <Grid>
         <Grid>
             <Grid.RowDefinitions>

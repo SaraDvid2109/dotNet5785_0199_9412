@@ -139,8 +139,15 @@ namespace PL
         /// </summary>
         private void VolunteerScreen_Click(object sender, RoutedEventArgs e)
         {
-            VolunteerProfile volunteerWindow = new VolunteerProfile(VolunteerId);
-            volunteerWindow.Show();
+            if (this.OwnedWindows.Count == 0) // אם אין חלון כזה בבעלות החלון הראשי
+            {
+                VolunteerProfile volunteerWindow = new VolunteerProfile(VolunteerId) { Owner = this };
+                volunteerWindow.Show();
+            }
+            else
+            {
+                this.OwnedWindows[0].Activate(); // מביא את החלון הפתוח לקדמת המסך
+            }
         }
         
         /// <summary>
@@ -148,8 +155,15 @@ namespace PL
         /// </summary>
         private void MainManagementScreen_Click(object sender, RoutedEventArgs e)
         {
-            MainWindow mainWindow = new MainWindow();
-            mainWindow.Show();
+            if (this.OwnedWindows.Count == 0) // אם אין חלון כזה בבעלות החלון הראשי
+            {
+                MainWindow mainWindow = new MainWindow { Owner = this };
+                mainWindow.Show();
+            }
+            else
+            {
+                this.OwnedWindows[0].Activate(); // מביא את החלון הפתוח לקדמת המסך
+            }
         }
 
         private volatile DispatcherOperation? _observerOperation = null; //stage 7

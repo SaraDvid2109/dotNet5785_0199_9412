@@ -124,6 +124,7 @@ namespace PL.Volunteer
                     VolunteerCall = s_bl.call.GetCallDetails(call.CallId) ?? new BO.Call(); //The call the volunteer is currently handling
                     BindingOperations.GetBindingExpression(this, CurrentVolunteerProperty)?.UpdateTarget();
                     BindingOperations.GetBindingExpression(this, VolunteerCallProperty)?.UpdateTarget();
+                    getMap();
                 });
         }
 
@@ -162,72 +163,7 @@ namespace PL.Volunteer
                 s_bl.call.AddObserver(CurrentVolunteer.Id, VolunteerObserver);
             }
 
-            var latitudeVolunteer = CurrentVolunteer?.Latitude??0;
-            var longitudeVolunteer = CurrentVolunteer?.Longitude??0;
-           
-
-            var latitudeCall = VolunteerCall?.Latitude??0; 
-            var longitudeCall = VolunteerCall?.Longitude??0;
-
-            // Creating HTML content with a Leaflet-based map
-            string htmlContent = $@"<!DOCTYPE html>
-            <html>
-              <head>
-               <meta charset='utf-8' />
-                <title>Leaflet Map</title>
-                  <link rel='stylesheet' href='https://unpkg.com/leaflet@1.7.1/dist/leaflet.css' />
-                  <script src='https://unpkg.com/leaflet@1.7.1/dist/leaflet.js'></script>
-                  <style>
-                     #map 
-                     {{
-                        width: 100%;
-                        height: 500px; 
-                     }}
-                 </style>
-               </head>
-              <body>
-               <div id='map'></div>
-               <script>
-                 // Volunteer coordinates
-                  var latitudeVolunteer = parseFloat({latitudeVolunteer});
-                  var longitudeVolunteer = parseFloat({longitudeVolunteer});
-  
-                  // Call coordinates
-                  var latitudeCall = parseFloat({latitudeCall});
-                  var longitudeCall = parseFloat({longitudeCall});
-
-                 // Creating a map
-                 if (latitudeVolunteer!==0 && latitudeVolunteer!==0) 
-                 {{
-                    var map = L.map('map').setView([latitudeVolunteer, longitudeVolunteer], 13);
-                    L.tileLayer('https://{{s}}.tile.openstreetmap.org/{{z}}/{{x}}/{{y}}.png', {{
-                    attribution: '&copy; <a href=""https://www.openstreetmap.org/copyright"">OpenStreetMap</a> contributors'
-                     }}).addTo(map);
-                  }}
-
-
-                 //Add a marker for the volunteer
-                 L.marker([latitudeVolunteer, longitudeVolunteer]).addTo(map)
-                .bindPopup('Volunteer location')
-                .openPopup();
-        
-                //Checking if there are locations for the call.
-                if (parseFloat(latitudeCall)!==0 && parseFloat(longitudeCall)!==0) 
-                 {{  
-                     L.marker([latitudeCall, longitudeCall]).addTo(map).bindPopup('Call location')
-                     // Adjusting the map to display both locations
-                     var bounds = L.latLngBounds(
-                     [latitudeVolunteer, longitudeVolunteer],
-                     [latitudeCall, longitudeCall] );
-                 }}
-            
-                   map.fitBounds(bounds);
-                </script>
-               </body>
-            </html>";
-
-            // Display the HTML content in the WebBrowser
-            mapWebBrowser.NavigateToString(htmlContent);
+            getMap();
         }
 
         /// <summary>
@@ -318,6 +254,85 @@ namespace PL.Volunteer
                 MessageBox.Show($"Unexpected error: {ex.Message}", "error", MessageBoxButton.OK, MessageBoxImage.Error);
 
             }
+        }
+
+        private void getMap()
+        {
+            var latitudeVolunteer = CurrentVolunteer?.Latitude ?? 0;
+            var longitudeVolunteer = CurrentVolunteer?.Longitude ?? 0;
+
+
+            var latitudeCall = VolunteerCall?.Latitude ?? null;
+            var longitudeCall = VolunteerCall?.Longitude ?? null;
+
+            // Creating HTML content with a Leaflet-based map
+            string htmlContent = $@"<!DOCTYPE html>
+            <html>
+              <head>
+               <meta charset='utf-8' />
+                <title>Leaflet Map</title>
+                  <link rel='stylesheet' href='https://unpkg.com/leaflet@1.7.1/dist/leaflet.css' />
+                  <script src='https://unpkg.com/leaflet@1.7.1/dist/leaflet.js'></script>
+                  <style>
+                     #map 
+                     {{
+                        width: 100%;
+                        height: 500px; 
+                     }}
+                 </style>
+               </head>
+              <body>
+               <div id='map'></div>
+               <script>
+                 // Volunteer coordinates
+                  var latitudeVolunteer = parseFloat({latitudeVolunteer});
+                  var longitudeVolunteer = parseFloat({longitudeVolunteer});
+  
+                  // Call coordinates
+                
+                      var latitudeCall = parseFloat({latitudeCall});
+                      var longitudeCall = parseFloat({longitudeCall});
+                if (latitudeCall!==null && longitudeCall!==null) 
+                {{
+                     // Creating a map
+                     if (latitudeVolunteer!==0 && latitudeVolunteer!==0) 
+                     {{
+                        var map = L.map('map').setView([latitudeVolunteer, longitudeVolunteer], 13);
+                        L.tileLayer('https://{{s}}.tile.openstreetmap.org/{{z}}/{{x}}/{{y}}.png', {{
+                        attribution: '&copy; <a href=""https://www.openstreetmap.org/copyright"">OpenStreetMap</a> contributors'
+                         }}).addTo(map);
+                      }}
+                   }}
+                else
+                {{
+                    var map = L.map('map').setView([latitudeVolunteer], 13);
+                    L.tileLayer('https://{{s}}.tile.openstreetmap.org/{{z}}/{{x}}/{{y}}.png', {{
+                    attribution: '&copy; <a href=""https://www.openstreetmap.org/copyright"">OpenStreetMap</a> contributors'
+                    }}).addTo(map);
+                }}
+
+                 //Add a marker for the volunteer
+                 L.marker([latitudeVolunteer, longitudeVolunteer]).addTo(map)
+                .bindPopup('Volunteer location')
+                .openPopup();
+        
+                //Checking if there are locations for the call.
+                if (parseFloat(latitudeCall)!==0 && parseFloat(longitudeCall)!==0) 
+                 {{  
+                     L.marker([latitudeCall, longitudeCall]).addTo(map).bindPopup('Call location')
+                     // Adjusting the map to display both locations
+                     var bounds = L.latLngBounds(
+                     [latitudeVolunteer, longitudeVolunteer],
+                     [latitudeCall, longitudeCall] );
+                 }}
+            
+                   map.fitBounds(bounds);
+                </script>
+               </body>
+            </html>";
+
+            // Display the HTML content in the WebBrowser
+            mapWebBrowser.NavigateToString(htmlContent);
         }
     }
 }

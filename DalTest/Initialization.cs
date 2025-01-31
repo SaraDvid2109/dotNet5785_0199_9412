@@ -44,33 +44,75 @@ public static class Initialization
         string[] prefixes = { "050", "052", "053", "054", "055", "058" };
 
         //We asked the GPT chat: can you create for us an array of 15 addresses in Israel
-        string[] addresses =
-        {
-           "Herzl St 10, Tel Aviv, 6523701", "Ben Gurion St 5, Ramat Gan, 5222002",
-           "Dizengoff St 25, Tel Aviv, 6311701", "Allenby St 40, Haifa, 3313302",
-           "Jaffa St 60, Jerusalem, 9434101", "Rothschild Blvd 16, Tel Aviv, 6688112",
-           "Weizmann St 12, Kfar Saba, 4428104", "HaNasi St 8, Herzliya, 4650403",
-           "Sokolov St 30, Holon, 5831801", "Ben Yehuda St 100, Tel Aviv, 6347511",
-           "Ehad HaAm St 50, Beersheba, 8455802", "Herzliya St 15, Netanya, 4241102",
-           "Keren HaYesod St 22, Ashdod, 7728203", "Herzl St 45, Rishon LeZion, 7522001",
-           "Moshe Dayan St 3, Ashkelon, 7878203"
-        };
+        string[] addresses = {
+    "15 HaNevi'im St, Jerusalem, Israel",
+    "100 Dizengoff St, Tel Aviv, Israel",
+    "50 Herzl St, Haifa, Israel",
+    "5 Ben Gurion St, Herzliya, Israel",
+    "20 Rothschild Blvd, Tel Aviv, Israel",
+    "30 Hillel St, Jerusalem, Israel",
+    "10 Weizmann St, Kfar Saba, Israel",
+    "45 Allenby St, Tel Aviv, Israel",
+    "1 Rothschild Blvd, Tel Aviv, Israel",
+    "22 Derech HaShalom, Givatayim, Israel",
+    "8 HaMelacha St, Netanya, Israel",
+    "55 HaAtzmaut Blvd, Bat Yam, Israel",
+    "12 Shaul HaMelech Blvd, Tel Aviv, Israel",
+    "7 Keren Hayesod St, Jerusalem, Israel",
+    "3 Begin Rd, Ramat Gan, Israel",
+    "14 Ibn Gabirol St, Tel Aviv, Israel",
+    "11 Jabotinsky St, Petah Tikva, Israel",
+    "9 Nordau Blvd, Haifa, Israel",
+    "6 King George St, Jerusalem, Israel",
+    "4 Eilat St, Tel Aviv, Israel",
+    "13 HaPalmach St, Beersheba, Israel",
+    "27 HaYarkon St, Tel Aviv, Israel",
+    "17 Ahad Ha'am St, Tel Aviv, Israel",
+    "29 Sokolov St, Herzliya, Israel",
+    "39 Rambam St, Bnei Brak, Israel",
+    "33 HaHagana St, Ashdod, Israel",
+    "21 Arlozorov St, Rishon LeZion, Israel",
+    "47 David Remez St, Jerusalem, Israel",
+    "19 Yehuda Halevi St, Tel Aviv, Israel",
+    "25 HaHistadrut St, Haifa, Israel",
+    "36 HaAliya St, Netanya, Israel",
+    "42 HaRav Kook St, Tiberias, Israel",
+    "18 Bialik St, Ramat Gan, Israel",
+    "32 Kaplan St, Tel Aviv, Israel",
+    "44 Menachem Begin Blvd, Ramat Gan, Israel",
+    "48 Yigal Alon St, Tel Aviv, Israel",
+    "53 Jaffa St, Jerusalem, Israel",
+    "60 HaNasi St, Beersheba, Israel",
+    "37 Moriah Blvd, Haifa, Israel",
+    "8 Herzl St, Rehovot, Israel",
+    "5 Hahashmonaim St, Modi'in, Israel",
+    "22 HaTayasim Blvd, Holon, Israel",
+    "31 Yehuda St, Petah Tikva, Israel",
+    "26 Kdoshei HaShoa St, Ashkelon, Israel",
+    "14 HaTzoran St, Kiryat Ata, Israel",
+    "28 Sheshet HaYamim St, Rosh HaAyin, Israel",
+    "9 HaShalom Rd, Herzliya, Israel",
+    "34 Eshkol Blvd, Ashdod, Israel",
+    "50 Ramat Yam St, Herzliya, Israel",
+    "43 Hativat Golani St, Eilat, Israel"
+};
 
-        //We asked the GPT chat: can you create for us an array of longitude lines and an array
-        //of latitude lines corresponding to the above array respectively
-        double[]? latitudes =
-        {
-           32.066158, 32.082271, 32.080480, 32.818409, 31.784217,
-           32.063922, 32.175034, 32.166313, 32.014046, 32.089771,
-           31.251810, 32.328516, 31.802418, 31.969633, 31.669258
-        };
+        double[] longitudes = {
+    35.2223, 34.7745, 34.9896, 34.8337, 34.7732, 35.2207, 34.9065, 34.7706, 34.7719, 34.8106,
+    34.8576, 34.7518, 34.7822, 35.2201, 34.8123, 34.7827, 34.8832, 34.9891, 35.2209, 34.7624,
+    34.7915, 34.7664, 34.7731, 34.8412, 34.8307, 34.6508, 34.7702, 35.2253, 34.7715, 34.9906,
+    34.8589, 35.5432, 34.8108, 34.7813, 34.8016, 34.8109, 35.2203, 34.7922, 34.9897, 34.8102,
+    34.9098, 34.7819, 34.8675, 35.0721, 34.9564, 34.8290, 34.7824, 34.8293, 34.9893, 34.9547
+};
 
-        double[]? longitudes =
-        {
-            34.779808, 34.812548, 34.774989, 34.988507, 35.223391,
-            34.771805, 34.906552, 34.842972, 34.772101, 34.773922,
-            34.791460, 34.853196, 34.641665, 34.804390, 34.574262
-        };
+        double[] latitudes = {
+    31.7801, 32.0869, 32.8153, 32.1613, 32.0650, 31.7798, 32.1773, 32.0614, 32.0624, 32.0697,
+    32.3220, 32.0171, 32.0736, 31.7768, 32.0732, 32.0863, 32.0912, 32.8175, 31.7779, 32.0631,
+    31.2521, 32.0800, 32.0663, 32.1646, 32.0847, 31.7953, 31.9616, 31.7645, 32.0629, 32.7953,
+    32.3394, 32.7897, 32.0824, 32.0682, 32.0849, 32.0675, 31.7785, 32.0739, 31.2525, 32.0725,
+    31.8954, 32.0072, 31.6622, 32.8421, 32.0998, 31.8192, 32.1754, 32.1896, 29.5577, 29.5554
+};
+
 
         // Allowed characters for generating passwords.
         //string allCharacters = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789!@#$%^&*()";
@@ -164,48 +206,75 @@ public static class Initialization
         };
 
         //We asked the GPT chat: can you create for us an array of 50 addresses in Israel
-        string[] addresses = new string[]
-        {
-            "Herzl St 10, Tel Aviv", "Ben Gurion St 5, Ramat Gan", "Dizengoff St 25, Tel Aviv",
-            "Allenby St 40, Haifa", "Jaffa St 60, Jerusalem", "Rothschild Blvd 16, Tel Aviv",
-            "Weizmann St 12, Kfar Saba", "HaNasi St 8, Herzliya", "Sokolov St 30, Holon",
-            "Ben Yehuda St 100, Tel Aviv", "Ehad HaAm St 50, Beersheba", "Herzliya St 15, Netanya",
-            "Keren HaYesod St 22, Ashdod", "Herzl St 45, Rishon LeZion", "Moshe Dayan St 3, Ashkelon",
-            "Ben Tsvi St 10, Bat Yam", "Yitzhak Rabin St 20, Lod", "King George St 45, Tel Aviv",
-            "Arlozorov St 100, Tel Aviv", "Aluf David St 5, Petah Tikva", "Habanim St 12, Hadera",
-            "Shabazi St 18, Ramat Hasharon", "Levi Eshkol St 40, Ashkelon", "Weizmann St 6, Rehovot",
-            "Jabotinsky St 15, Bnei Brak", "HaGalil St 10, Kiryat Shmona", "HaNasi Weizmann St 35, Haifa",
-            "Moshe Dayan St 1, Ashdod", "Menachem Begin Blvd 55, Tel Aviv", "Hashalom Rd 10, Tel Aviv",
-            "Shderot Chen St 45, Eilat", "Ayalon St 5, Rishon LeZion", "King Solomon St 20, Tiberias",
-            "Rothschild Blvd 80, Tel Aviv", "Yigal Allon St 55, Ramat Gan", "Neve Shaanan St 3, Haifa",
-            "Einstein St 12, Haifa", "Bar Ilan St 4, Givat Shmuel", "Yehuda Halevi St 40, Tel Aviv",
-            "Haifa Rd 10, Acre", "Nahum St 1, Holon", "Eliezer Kaplan St 5, Herzliya",
-            "Dov Hoz St 20, Be'er Sheva", "Moshe Sharet St 15, Ashkelon", "Haneviim St 60, Jerusalem",
-            "Emek Refaim St 12, Jerusalem", "HaSolel St 1, Nazareth", "Hanamal St 4, Haifa",
-            "HaKibbutz HaMeuhad St 6, Kfar Yona"
-        };
+        string[] addresses = {
+    "15 HaNevi'im St, Jerusalem, Israel",
+    "100 Dizengoff St, Tel Aviv, Israel",
+    "50 Herzl St, Haifa, Israel",
+    "5 Ben Gurion St, Herzliya, Israel",
+    "20 Rothschild Blvd, Tel Aviv, Israel",
+    "30 Hillel St, Jerusalem, Israel",
+    "10 Weizmann St, Kfar Saba, Israel",
+    "45 Allenby St, Tel Aviv, Israel",
+    "1 Rothschild Blvd, Tel Aviv, Israel",
+    "22 Derech HaShalom, Givatayim, Israel",
+    "8 HaMelacha St, Netanya, Israel",
+    "55 HaAtzmaut Blvd, Bat Yam, Israel",
+    "12 Shaul HaMelech Blvd, Tel Aviv, Israel",
+    "7 Keren Hayesod St, Jerusalem, Israel",
+    "3 Begin Rd, Ramat Gan, Israel",
+    "14 Ibn Gabirol St, Tel Aviv, Israel",
+    "11 Jabotinsky St, Petah Tikva, Israel",
+    "9 Nordau Blvd, Haifa, Israel",
+    "6 King George St, Jerusalem, Israel",
+    "4 Eilat St, Tel Aviv, Israel",
+    "13 HaPalmach St, Beersheba, Israel",
+    "27 HaYarkon St, Tel Aviv, Israel",
+    "17 Ahad Ha'am St, Tel Aviv, Israel",
+    "29 Sokolov St, Herzliya, Israel",
+    "39 Rambam St, Bnei Brak, Israel",
+    "33 HaHagana St, Ashdod, Israel",
+    "21 Arlozorov St, Rishon LeZion, Israel",
+    "47 David Remez St, Jerusalem, Israel",
+    "19 Yehuda Halevi St, Tel Aviv, Israel",
+    "25 HaHistadrut St, Haifa, Israel",
+    "36 HaAliya St, Netanya, Israel",
+    "42 HaRav Kook St, Tiberias, Israel",
+    "18 Bialik St, Ramat Gan, Israel",
+    "32 Kaplan St, Tel Aviv, Israel",
+    "44 Menachem Begin Blvd, Ramat Gan, Israel",
+    "48 Yigal Alon St, Tel Aviv, Israel",
+    "53 Jaffa St, Jerusalem, Israel",
+    "60 HaNasi St, Beersheba, Israel",
+    "37 Moriah Blvd, Haifa, Israel",
+    "8 Herzl St, Rehovot, Israel",
+    "5 Hahashmonaim St, Modi'in, Israel",
+    "22 HaTayasim Blvd, Holon, Israel",
+    "31 Yehuda St, Petah Tikva, Israel",
+    "26 Kdoshei HaShoa St, Ashkelon, Israel",
+    "14 HaTzoran St, Kiryat Ata, Israel",
+    "28 Sheshet HaYamim St, Rosh HaAyin, Israel",
+    "9 HaShalom Rd, Herzliya, Israel",
+    "34 Eshkol Blvd, Ashdod, Israel",
+    "50 Ramat Yam St, Herzliya, Israel",
+    "43 Hativat Golani St, Eilat, Israel"
+};
 
-        //We asked the GPT chat: can you create for us an array of longitude lines and an array
-        //of latitude lines corresponding to the above array respectively
-        double[] latitudes = new double[]
-        {
-            32.066158, 32.082271, 32.080480, 32.818409, 31.784217, 32.063922, 32.175034, 32.166313, 32.014046,
-            32.089771, 31.251810, 32.328516, 31.802418, 31.969633, 31.669258, 32.018748, 31.951569, 32.073253,
-            32.087601, 32.090678, 32.440987, 32.145339, 31.661712, 31.894756, 32.089611, 33.207333, 32.796785,
-            31.803742, 32.071457, 32.061399, 29.55805, 31.973001, 32.785539, 32.070054, 32.788712, 32.110003,
-            32.083762, 32.055893, 32.926099, 32.019313, 32.166313, 31.249872, 31.661712, 32.083307, 31.784217,
-            31.765365, 32.696947, 32.823115, 32.317325, 32.392867
-        };
+        double[] longitudes = {
+    35.2223, 34.7745, 34.9896, 34.8337, 34.7732, 35.2207, 34.9065, 34.7706, 34.7719, 34.8106,
+    34.8576, 34.7518, 34.7822, 35.2201, 34.8123, 34.7827, 34.8832, 34.9891, 35.2209, 34.7624,
+    34.7915, 34.7664, 34.7731, 34.8412, 34.8307, 34.6508, 34.7702, 35.2253, 34.7715, 34.9906,
+    34.8589, 35.5432, 34.8108, 34.7813, 34.8016, 34.8109, 35.2203, 34.7922, 34.9897, 34.8102,
+    34.9098, 34.7819, 34.8675, 35.0721, 34.9564, 34.8290, 34.7824, 34.8293, 34.9893, 34.9547
+};
 
-        double[] longitudes = new double[]
-        {
-            34.779808, 34.812548, 34.774989, 34.988507, 35.223391, 34.771805, 34.906552, 34.842972, 34.772101,
-            34.773922, 34.791460, 34.853196, 34.641665, 34.804390, 34.574262, 34.747685, 34.899520, 34.774281,
-            34.791522, 34.887761, 34.923137, 34.838293, 34.571489, 34.812223, 34.834804, 35.570961, 35.003008,
-            34.656998, 34.791613, 34.789561, 34.934200, 34.771497, 34.779572, 34.804868, 35.021502, 35.053653,
-            34.824040, 34.773058, 35.066441, 34.767654, 34.842972, 34.771687, 34.571489, 34.799839, 35.223391,
-            35.219762, 35.308230, 35.002729, 34.919138, 34.876413
-        };
+        double[] latitudes = {
+    31.7801, 32.0869, 32.8153, 32.1613, 32.0650, 31.7798, 32.1773, 32.0614, 32.0624, 32.0697,
+    32.3220, 32.0171, 32.0736, 31.7768, 32.0732, 32.0863, 32.0912, 32.8175, 31.7779, 32.0631,
+    31.2521, 32.0800, 32.0663, 32.1646, 32.0847, 31.7953, 31.9616, 31.7645, 32.0629, 32.7953,
+    32.3394, 32.7897, 32.0824, 32.0682, 32.0849, 32.0675, 31.7785, 32.0739, 31.2525, 32.0725,
+    31.8954, 32.0072, 31.6622, 32.8421, 32.0998, 31.8192, 32.1754, 32.1896, 29.5577, 29.5554
+};
+
 
         string? Description;
         string Address;
@@ -281,48 +350,74 @@ public static class Initialization
         };
 
         //We asked the GPT chat: can you create for us an array of 50 addresses in Israel, the same arr as CreateCalls
-        string[] addresses = new string[]
-        {
-            "Herzl St 10, Tel Aviv", "Ben Gurion St 5, Ramat Gan", "Dizengoff St 25, Tel Aviv",
-            "Allenby St 40, Haifa", "Jaffa St 60, Jerusalem", "Rothschild Blvd 16, Tel Aviv",
-            "Weizmann St 12, Kfar Saba", "HaNasi St 8, Herzliya", "Sokolov St 30, Holon",
-            "Ben Yehuda St 100, Tel Aviv", "Ehad HaAm St 50, Beersheba", "Herzliya St 15, Netanya",
-            "Keren HaYesod St 22, Ashdod", "Herzl St 45, Rishon LeZion", "Moshe Dayan St 3, Ashkelon",
-            "Ben Tsvi St 10, Bat Yam", "Yitzhak Rabin St 20, Lod", "King George St 45, Tel Aviv",
-            "Arlozorov St 100, Tel Aviv", "Aluf David St 5, Petah Tikva", "Habanim St 12, Hadera",
-            "Shabazi St 18, Ramat Hasharon", "Levi Eshkol St 40, Ashkelon", "Weizmann St 6, Rehovot",
-            "Jabotinsky St 15, Bnei Brak", "HaGalil St 10, Kiryat Shmona", "HaNasi Weizmann St 35, Haifa",
-            "Moshe Dayan St 1, Ashdod", "Menachem Begin Blvd 55, Tel Aviv", "Hashalom Rd 10, Tel Aviv",
-            "Shderot Chen St 45, Eilat", "Ayalon St 5, Rishon LeZion", "King Solomon St 20, Tiberias",
-            "Rothschild Blvd 80, Tel Aviv", "Yigal Allon St 55, Ramat Gan", "Neve Shaanan St 3, Haifa",
-            "Einstein St 12, Haifa", "Bar Ilan St 4, Givat Shmuel", "Yehuda Halevi St 40, Tel Aviv",
-            "Haifa Rd 10, Acre", "Nahum St 1, Holon", "Eliezer Kaplan St 5, Herzliya",
-            "Dov Hoz St 20, Be'er Sheva", "Moshe Sharet St 15, Ashkelon", "Haneviim St 60, Jerusalem",
-            "Emek Refaim St 12, Jerusalem", "HaSolel St 1, Nazareth", "Hanamal St 4, Haifa",
-            "HaKibbutz HaMeuhad St 6, Kfar Yona"
-        };
+        string[] addresses = {
+    "15 HaNevi'im St, Jerusalem, Israel",
+    "100 Dizengoff St, Tel Aviv, Israel",
+    "50 Herzl St, Haifa, Israel",
+    "5 Ben Gurion St, Herzliya, Israel",
+    "20 Rothschild Blvd, Tel Aviv, Israel",
+    "30 Hillel St, Jerusalem, Israel",
+    "10 Weizmann St, Kfar Saba, Israel",
+    "45 Allenby St, Tel Aviv, Israel",
+    "1 Rothschild Blvd, Tel Aviv, Israel",
+    "22 Derech HaShalom, Givatayim, Israel",
+    "8 HaMelacha St, Netanya, Israel",
+    "55 HaAtzmaut Blvd, Bat Yam, Israel",
+    "12 Shaul HaMelech Blvd, Tel Aviv, Israel",
+    "7 Keren Hayesod St, Jerusalem, Israel",
+    "3 Begin Rd, Ramat Gan, Israel",
+    "14 Ibn Gabirol St, Tel Aviv, Israel",
+    "11 Jabotinsky St, Petah Tikva, Israel",
+    "9 Nordau Blvd, Haifa, Israel",
+    "6 King George St, Jerusalem, Israel",
+    "4 Eilat St, Tel Aviv, Israel",
+    "13 HaPalmach St, Beersheba, Israel",
+    "27 HaYarkon St, Tel Aviv, Israel",
+    "17 Ahad Ha'am St, Tel Aviv, Israel",
+    "29 Sokolov St, Herzliya, Israel",
+    "39 Rambam St, Bnei Brak, Israel",
+    "33 HaHagana St, Ashdod, Israel",
+    "21 Arlozorov St, Rishon LeZion, Israel",
+    "47 David Remez St, Jerusalem, Israel",
+    "19 Yehuda Halevi St, Tel Aviv, Israel",
+    "25 HaHistadrut St, Haifa, Israel",
+    "36 HaAliya St, Netanya, Israel",
+    "42 HaRav Kook St, Tiberias, Israel",
+    "18 Bialik St, Ramat Gan, Israel",
+    "32 Kaplan St, Tel Aviv, Israel",
+    "44 Menachem Begin Blvd, Ramat Gan, Israel",
+    "48 Yigal Alon St, Tel Aviv, Israel",
+    "53 Jaffa St, Jerusalem, Israel",
+    "60 HaNasi St, Beersheba, Israel",
+    "37 Moriah Blvd, Haifa, Israel",
+    "8 Herzl St, Rehovot, Israel",
+    "5 Hahashmonaim St, Modi'in, Israel",
+    "22 HaTayasim Blvd, Holon, Israel",
+    "31 Yehuda St, Petah Tikva, Israel",
+    "26 Kdoshei HaShoa St, Ashkelon, Israel",
+    "14 HaTzoran St, Kiryat Ata, Israel",
+    "28 Sheshet HaYamim St, Rosh HaAyin, Israel",
+    "9 HaShalom Rd, Herzliya, Israel",
+    "34 Eshkol Blvd, Ashdod, Israel",
+    "50 Ramat Yam St, Herzliya, Israel",
+    "43 Hativat Golani St, Eilat, Israel"
+};
 
-        //We asked the GPT chat: can you create for us an array of longitude lines and an array
-        //of latitude lines corresponding to the above array respectively, the same arrs as CreateCalls
-        double[] latitudes = new double[]
-        {
-            32.066158, 32.082271, 32.080480, 32.818409, 31.784217, 32.063922, 32.175034, 32.166313, 32.014046,
-            32.089771, 31.251810, 32.328516, 31.802418, 31.969633, 31.669258, 32.018748, 31.951569, 32.073253,
-            32.087601, 32.090678, 32.440987, 32.145339, 31.661712, 31.894756, 32.089611, 33.207333, 32.796785,
-            31.803742, 32.071457, 32.061399, 29.55805, 31.973001, 32.785539, 32.070054, 32.788712, 32.110003,
-            32.083762, 32.055893, 32.926099, 32.019313, 32.166313, 31.249872, 31.661712, 32.083307, 31.784217,
-            31.765365, 32.696947, 32.823115, 32.317325, 32.392867
-        };
+        double[] longitudes = {
+    35.2223, 34.7745, 34.9896, 34.8337, 34.7732, 35.2207, 34.9065, 34.7706, 34.7719, 34.8106,
+    34.8576, 34.7518, 34.7822, 35.2201, 34.8123, 34.7827, 34.8832, 34.9891, 35.2209, 34.7624,
+    34.7915, 34.7664, 34.7731, 34.8412, 34.8307, 34.6508, 34.7702, 35.2253, 34.7715, 34.9906,
+    34.8589, 35.5432, 34.8108, 34.7813, 34.8016, 34.8109, 35.2203, 34.7922, 34.9897, 34.8102,
+    34.9098, 34.7819, 34.8675, 35.0721, 34.9564, 34.8290, 34.7824, 34.8293, 34.9893, 34.9547
+};
 
-        double[] longitudes = new double[]
-        {
-            34.779808, 34.812548, 34.774989, 34.988507, 35.223391, 34.771805, 34.906552, 34.842972, 34.772101,
-            34.773922, 34.791460, 34.853196, 34.641665, 34.804390, 34.574262, 34.747685, 34.899520, 34.774281,
-            34.791522, 34.887761, 34.923137, 34.838293, 34.571489, 34.812223, 34.834804, 35.570961, 35.003008,
-            34.656998, 34.791613, 34.789561, 34.934200, 34.771497, 34.779572, 34.804868, 35.021502, 35.053653,
-            34.824040, 34.773058, 35.066441, 34.767654, 34.842972, 34.771687, 34.571489, 34.799839, 35.223391,
-            35.219762, 35.308230, 35.002729, 34.919138, 34.876413
-        };
+        double[] latitudes = {
+    31.7801, 32.0869, 32.8153, 32.1613, 32.0650, 31.7798, 32.1773, 32.0614, 32.0624, 32.0697,
+    32.3220, 32.0171, 32.0736, 31.7768, 32.0732, 32.0863, 32.0912, 32.8175, 31.7779, 32.0631,
+    31.2521, 32.0800, 32.0663, 32.1646, 32.0847, 31.7953, 31.9616, 31.7645, 32.0629, 32.7953,
+    32.3394, 32.7897, 32.0824, 32.0682, 32.0849, 32.0675, 31.7785, 32.0739, 31.2525, 32.0725,
+    31.8954, 32.0072, 31.6622, 32.8421, 32.0998, 31.8192, 32.1754, 32.1896, 29.5577, 29.5554
+};
 
 
         IEnumerable<Call> CopyCalls = s_dal!.Call.ReadAll();
