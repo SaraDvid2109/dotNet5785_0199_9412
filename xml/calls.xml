@@ -2,492 +2,502 @@
 <ArrayOfCall xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
   <Call>
     <Id>0</Id>
-    <Description>Fall on stairs</Description>
-    <Address>Herzl St 10, Tel Aviv</Address>
-    <Latitude>32.066158</Latitude>
-    <Longitude>34.779808</Longitude>
-    <OpenTime>2024-12-21T02:17:23</OpenTime>
-    <MaxTime>2024-12-21T02:30:23</MaxTime>
+    <Description>Scheduled check-up visit</Description>
+    <Address>15 HaNevi'im St, Jerusalem, Israel</Address>
+    <Latitude>31.7801</Latitude>
+    <Longitude>35.2223</Longitude>
+    <OpenTime>2024-12-15T14:06:31</OpenTime>
+    <MaxTime>2024-12-15T14:27:31</MaxTime>
     <CarTypeToSend>Ambulance</CarTypeToSend>
   </Call>
   <Call>
     <Id>1</Id>
-    <Description>Road accident with injuries</Description>
-    <Address>Ben Gurion St 5, Ramat Gan</Address>
-    <Latitude>32.082271</Latitude>
-    <Longitude>34.812548</Longitude>
-    <OpenTime>2025-01-07T02:10:23</OpenTime>
-    <MaxTime>2025-01-07T02:17:23</MaxTime>
-    <CarTypeToSend>IntensiveCareAmbulance</CarTypeToSend>
-  </Call>
-  <Call>
-    <Id>2</Id>
-    <Description>Minor wound dressing change</Description>
-    <Address>Dizengoff St 25, Tel Aviv</Address>
-    <Latitude>32.08048</Latitude>
-    <Longitude>34.774989</Longitude>
-    <OpenTime>2025-01-10T02:27:23</OpenTime>
-    <MaxTime>2025-01-10T02:44:23</MaxTime>
+    <Description>Minor electric shock</Description>
+    <Address>100 Dizengoff St, Tel Aviv, Israel</Address>
+    <Latitude>32.0869</Latitude>
+    <Longitude>34.7745</Longitude>
+    <OpenTime>2025-01-24T13:43:31</OpenTime>
+    <MaxTime>2025-01-24T14:05:31</MaxTime>
     <CarTypeToSend>RegularVehicle</CarTypeToSend>
   </Call>
   <Call>
+    <Id>2</Id>
+    <Description>Diabetes management support</Description>
+    <Address>50 Herzl St, Haifa, Israel</Address>
+    <Latitude>32.8153</Latitude>
+    <Longitude>34.9896</Longitude>
+    <OpenTime>2024-12-19T13:51:31</OpenTime>
+    <MaxTime>2024-12-19T14:13:31</MaxTime>
+    <CarTypeToSend>IntensiveCareAmbulance</CarTypeToSend>
+  </Call>
+  <Call>
     <Id>3</Id>
-    <Description>Fall on stairs</Description>
-    <Address>Allenby St 40, Haifa</Address>
-    <Latitude>32.818409</Latitude>
-    <Longitude>34.988507</Longitude>
-    <OpenTime>2025-01-13T02:16:23</OpenTime>
-    <MaxTime>2025-01-13T02:47:23</MaxTime>
-    <CarTypeToSend>Ambulance</CarTypeToSend>
+    <Description>Dehydration symptoms</Description>
+    <Address>5 Ben Gurion St, Herzliya, Israel</Address>
+    <Latitude>32.1613</Latitude>
+    <Longitude>34.8337</Longitude>
+    <OpenTime>2025-01-10T14:05:31</OpenTime>
+    <MaxTime>2025-01-10T14:44:31</MaxTime>
+    <CarTypeToSend>IntensiveCareAmbulance</CarTypeToSend>
   </Call>
   <Call>
     <Id>4</Id>
-    <Description>Broken leg in accident</Description>
-    <Address>Jaffa St 60, Jerusalem</Address>
-    <Latitude>31.784217</Latitude>
-    <Longitude>35.223391</Longitude>
-    <OpenTime>2024-12-22T01:36:23</OpenTime>
-    <MaxTime>2024-12-22T01:48:23</MaxTime>
-    <CarTypeToSend>Ambulance</CarTypeToSend>
+    <Description>Infant not breathing</Description>
+    <Address>20 Rothschild Blvd, Tel Aviv, Israel</Address>
+    <Latitude>32.065</Latitude>
+    <Longitude>34.7732</Longitude>
+    <OpenTime>2024-12-30T13:21:31</OpenTime>
+    <MaxTime>2024-12-30T13:43:31</MaxTime>
+    <CarTypeToSend>IntensiveCareAmbulance</CarTypeToSend>
   </Call>
   <Call>
     <Id>5</Id>
-    <Description>Head injury</Description>
-    <Address>Rothschild Blvd 16, Tel Aviv</Address>
-    <Latitude>32.063922</Latitude>
-    <Longitude>34.771805</Longitude>
-    <OpenTime>2025-01-31T01:29:23</OpenTime>
-    <MaxTime>2025-01-31T01:44:23</MaxTime>
+    <Description>Severe burns</Description>
+    <Address>30 Hillel St, Jerusalem, Israel</Address>
+    <Latitude>31.7798</Latitude>
+    <Longitude>35.2207</Longitude>
+    <OpenTime>2025-02-02T13:08:31</OpenTime>
+    <MaxTime>2025-02-02T13:34:31</MaxTime>
     <CarTypeToSend>IntensiveCareAmbulance</CarTypeToSend>
   </Call>
   <Call>
     <Id>6</Id>
-    <Description>Routine elderly health assessment</Description>
-    <Address>Weizmann St 12, Kfar Saba</Address>
-    <Latitude>32.175034</Latitude>
-    <Longitude>34.906552</Longitude>
-    <OpenTime>2025-01-31T01:27:23</OpenTime>
-    <MaxTime>2025-01-31T01:43:23</MaxTime>
-    <CarTypeToSend>Ambulance</CarTypeToSend>
+    <Description>Guidance on post-surgery care</Description>
+    <Address>10 Weizmann St, Kfar Saba, Israel</Address>
+    <Latitude>32.1773</Latitude>
+    <Longitude>34.9065</Longitude>
+    <OpenTime>2025-02-02T13:07:31</OpenTime>
+    <MaxTime>2025-02-02T13:40:31</MaxTime>
+    <CarTypeToSend>IntensiveCareAmbulance</CarTypeToSend>
   </Call>
   <Call>
     <Id>7</Id>
-    <Description>Gunshot wound</Description>
-    <Address>HaNasi St 8, Herzliya</Address>
-    <Latitude>32.166313</Latitude>
-    <Longitude>34.842972</Longitude>
-    <OpenTime>2025-01-31T01:27:23</OpenTime>
-    <MaxTime>2025-01-31T01:57:23</MaxTime>
-    <CarTypeToSend>RegularVehicle</CarTypeToSend>
+    <Description>Broken leg in accident</Description>
+    <Address>45 Allenby St, Tel Aviv, Israel</Address>
+    <Latitude>32.0614</Latitude>
+    <Longitude>34.7706</Longitude>
+    <OpenTime>2025-02-02T13:07:31</OpenTime>
+    <MaxTime>2025-02-02T13:30:31</MaxTime>
+    <CarTypeToSend>IntensiveCareAmbulance</CarTypeToSend>
   </Call>
   <Call>
     <Id>8</Id>
-    <Description>High fever and seizures</Description>
-    <Address>Sokolov St 30, Holon</Address>
-    <Latitude>32.014046</Latitude>
-    <Longitude>34.772101</Longitude>
-    <OpenTime>2025-01-31T01:30:23</OpenTime>
-    <MaxTime>2025-01-31T01:53:23</MaxTime>
-    <CarTypeToSend>Ambulance</CarTypeToSend>
+    <Description>Assault with sharp object</Description>
+    <Address>1 Rothschild Blvd, Tel Aviv, Israel</Address>
+    <Latitude>32.0624</Latitude>
+    <Longitude>34.7719</Longitude>
+    <OpenTime>2025-02-02T13:07:31</OpenTime>
+    <MaxTime>2025-02-02T13:44:31</MaxTime>
+    <CarTypeToSend>RegularVehicle</CarTypeToSend>
   </Call>
   <Call>
     <Id>9</Id>
-    <Description>Chronic pain management</Description>
-    <Address>Ben Yehuda St 100, Tel Aviv</Address>
-    <Latitude>32.089771</Latitude>
-    <Longitude>34.773922</Longitude>
-    <OpenTime>2025-01-31T01:27:23</OpenTime>
-    <MaxTime>2025-01-31T01:43:23</MaxTime>
+    <Description>Request for flu vaccination</Description>
+    <Address>22 Derech HaShalom, Givatayim, Israel</Address>
+    <Latitude>32.0697</Latitude>
+    <Longitude>34.8106</Longitude>
+    <OpenTime>2025-02-02T13:09:31</OpenTime>
+    <MaxTime>2025-02-02T13:35:31</MaxTime>
     <CarTypeToSend>RegularVehicle</CarTypeToSend>
   </Call>
   <Call>
     <Id>10</Id>
-    <Description>Acute heart attack</Description>
-    <Address>Ehad HaAm St 50, Beersheba</Address>
-    <Latitude>31.25181</Latitude>
-    <Longitude>34.79146</Longitude>
-    <OpenTime>2025-01-31T01:28:23</OpenTime>
-    <MaxTime>2025-01-31T02:09:23</MaxTime>
+    <Description>Stab wound in abdomen</Description>
+    <Address>8 HaMelacha St, Netanya, Israel</Address>
+    <Latitude>32.322</Latitude>
+    <Longitude>34.8576</Longitude>
+    <OpenTime>2025-02-02T13:05:31</OpenTime>
+    <MaxTime>2025-02-02T13:40:31</MaxTime>
     <CarTypeToSend>Ambulance</CarTypeToSend>
   </Call>
   <Call>
     <Id>11</Id>
-    <Description>Gunshot wound</Description>
-    <Address>Herzliya St 15, Netanya</Address>
-    <Latitude>32.328516</Latitude>
-    <Longitude>34.853196</Longitude>
-    <OpenTime>2025-01-31T01:28:23</OpenTime>
-    <MaxTime>2025-01-31T01:47:23</MaxTime>
-    <CarTypeToSend>IntensiveCareAmbulance</CarTypeToSend>
+    <Description>Sports injury</Description>
+    <Address>55 HaAtzmaut Blvd, Bat Yam, Israel</Address>
+    <Latitude>32.0171</Latitude>
+    <Longitude>34.7518</Longitude>
+    <OpenTime>2025-02-02T13:08:31</OpenTime>
+    <MaxTime>2025-02-02T13:24:31</MaxTime>
+    <CarTypeToSend>Ambulance</CarTypeToSend>
   </Call>
   <Call>
     <Id>12</Id>
-    <Description>Minor burn from gas explosion</Description>
-    <Address>Keren HaYesod St 22, Ashdod</Address>
-    <Latitude>31.802418</Latitude>
-    <Longitude>34.641665</Longitude>
-    <OpenTime>2025-01-31T01:27:23</OpenTime>
-    <MaxTime>2025-01-31T02:11:23</MaxTime>
-    <CarTypeToSend>Ambulance</CarTypeToSend>
-  </Call>
-  <Call>
-    <Id>13</Id>
-    <Description>Request for tetanus shot</Description>
-    <Address>Herzl St 45, Rishon LeZion</Address>
-    <Latitude>31.969633</Latitude>
-    <Longitude>34.80439</Longitude>
-    <OpenTime>2025-01-31T01:29:23</OpenTime>
-    <MaxTime>2025-01-31T01:43:23</MaxTime>
-    <CarTypeToSend>Ambulance</CarTypeToSend>
-  </Call>
-  <Call>
-    <Id>14</Id>
-    <Description>Stab wound in abdomen</Description>
-    <Address>Moshe Dayan St 3, Ashkelon</Address>
-    <Latitude>31.669258</Latitude>
-    <Longitude>34.574262</Longitude>
-    <OpenTime>2025-01-31T01:30:23</OpenTime>
-    <MaxTime>2025-01-31T02:01:23</MaxTime>
-    <CarTypeToSend>IntensiveCareAmbulance</CarTypeToSend>
-  </Call>
-  <Call>
-    <Id>15</Id>
-    <Description>Severe burns</Description>
-    <Address>Ben Tsvi St 10, Bat Yam</Address>
-    <Latitude>32.018748</Latitude>
-    <Longitude>34.747685</Longitude>
-    <OpenTime>2025-01-31T01:31:23</OpenTime>
-    <MaxTime>2025-01-31T02:12:23</MaxTime>
-    <CarTypeToSend>IntensiveCareAmbulance</CarTypeToSend>
-  </Call>
-  <Call>
-    <Id>16</Id>
-    <Description>Deep cut on hand</Description>
-    <Address>Yitzhak Rabin St 20, Lod</Address>
-    <Latitude>31.951569</Latitude>
-    <Longitude>34.89952</Longitude>
-    <OpenTime>2025-01-31T01:28:23</OpenTime>
-    <MaxTime>2025-01-31T01:57:23</MaxTime>
-    <CarTypeToSend>Ambulance</CarTypeToSend>
-  </Call>
-  <Call>
-    <Id>17</Id>
-    <Description>Routine blood sugar test</Description>
-    <Address>King George St 45, Tel Aviv</Address>
-    <Latitude>32.073253</Latitude>
-    <Longitude>34.774281</Longitude>
-    <OpenTime>2025-01-31T01:31:23</OpenTime>
-    <MaxTime>2025-01-31T02:09:23</MaxTime>
+    <Description>Severe allergic reaction</Description>
+    <Address>12 Shaul HaMelech Blvd, Tel Aviv, Israel</Address>
+    <Latitude>32.0736</Latitude>
+    <Longitude>34.7822</Longitude>
+    <OpenTime>2025-02-02T13:07:31</OpenTime>
+    <MaxTime>2025-02-02T13:30:31</MaxTime>
     <CarTypeToSend>RegularVehicle</CarTypeToSend>
   </Call>
   <Call>
-    <Id>18</Id>
-    <Description>Deep cut on hand</Description>
-    <Address>Arlozorov St 100, Tel Aviv</Address>
-    <Latitude>32.087601</Latitude>
-    <Longitude>34.791522</Longitude>
-    <OpenTime>2025-01-31T01:30:23</OpenTime>
-    <MaxTime>2025-01-31T01:54:23</MaxTime>
+    <Id>13</Id>
+    <Description>Heart rate monitoring device setup</Description>
+    <Address>7 Keren Hayesod St, Jerusalem, Israel</Address>
+    <Latitude>31.7768</Latitude>
+    <Longitude>35.2201</Longitude>
+    <OpenTime>2025-02-02T13:09:31</OpenTime>
+    <MaxTime>2025-02-02T13:42:31</MaxTime>
     <CarTypeToSend>IntensiveCareAmbulance</CarTypeToSend>
   </Call>
   <Call>
+    <Id>14</Id>
+    <Description>Fall on stairs</Description>
+    <Address>3 Begin Rd, Ramat Gan, Israel</Address>
+    <Latitude>32.0732</Latitude>
+    <Longitude>34.8123</Longitude>
+    <OpenTime>2025-02-02T13:07:31</OpenTime>
+    <MaxTime>2025-02-02T13:45:31</MaxTime>
+    <CarTypeToSend>Ambulance</CarTypeToSend>
+  </Call>
+  <Call>
+    <Id>15</Id>
+    <Description>Chronic pain management</Description>
+    <Address>14 Ibn Gabirol St, Tel Aviv, Israel</Address>
+    <Latitude>32.0863</Latitude>
+    <Longitude>34.7827</Longitude>
+    <OpenTime>2025-02-02T13:06:31</OpenTime>
+    <MaxTime>2025-02-02T13:45:31</MaxTime>
+    <CarTypeToSend>RegularVehicle</CarTypeToSend>
+  </Call>
+  <Call>
+    <Id>16</Id>
+    <Description>Dietitian consultation request</Description>
+    <Address>11 Jabotinsky St, Petah Tikva, Israel</Address>
+    <Latitude>32.0912</Latitude>
+    <Longitude>34.8832</Longitude>
+    <OpenTime>2025-02-02T13:06:31</OpenTime>
+    <MaxTime>2025-02-02T13:31:31</MaxTime>
+    <CarTypeToSend>IntensiveCareAmbulance</CarTypeToSend>
+  </Call>
+  <Call>
+    <Id>17</Id>
+    <Description>Assault with sharp object</Description>
+    <Address>9 Nordau Blvd, Haifa, Israel</Address>
+    <Latitude>32.8175</Latitude>
+    <Longitude>34.9891</Longitude>
+    <OpenTime>2025-02-02T13:08:31</OpenTime>
+    <MaxTime>2025-02-02T13:49:31</MaxTime>
+    <CarTypeToSend>Ambulance</CarTypeToSend>
+  </Call>
+  <Call>
+    <Id>18</Id>
+    <Description>Pregnancy check-up</Description>
+    <Address>6 King George St, Jerusalem, Israel</Address>
+    <Latitude>31.7779</Latitude>
+    <Longitude>35.2209</Longitude>
+    <OpenTime>2025-02-02T13:06:31</OpenTime>
+    <MaxTime>2025-02-02T13:47:31</MaxTime>
+    <CarTypeToSend>Ambulance</CarTypeToSend>
+  </Call>
+  <Call>
     <Id>19</Id>
-    <Description>Fall from bicycle</Description>
-    <Address>Aluf David St 5, Petah Tikva</Address>
-    <Latitude>32.090678</Latitude>
-    <Longitude>34.887761</Longitude>
-    <OpenTime>2025-01-31T01:29:23</OpenTime>
-    <MaxTime>2025-01-31T01:58:23</MaxTime>
+    <Description>Request for tetanus shot</Description>
+    <Address>4 Eilat St, Tel Aviv, Israel</Address>
+    <Latitude>32.0631</Latitude>
+    <Longitude>34.7624</Longitude>
+    <OpenTime>2025-02-02T13:06:31</OpenTime>
+    <MaxTime>2025-02-02T13:38:31</MaxTime>
     <CarTypeToSend>Ambulance</CarTypeToSend>
   </Call>
   <Call>
     <Id>20</Id>
-    <Description>Assault with sharp object</Description>
-    <Address>Habanim St 12, Hadera</Address>
-    <Latitude>32.440987</Latitude>
-    <Longitude>34.923137</Longitude>
-    <OpenTime>2024-12-29T01:56:23</OpenTime>
-    <MaxTime>2024-12-29T02:28:23</MaxTime>
+    <Description>Work clearance health screening</Description>
+    <Address>13 HaPalmach St, Beersheba, Israel</Address>
+    <Latitude>31.2521</Latitude>
+    <Longitude>34.7915</Longitude>
+    <OpenTime>2025-01-19T13:38:31</OpenTime>
+    <MaxTime>2025-01-19T13:49:31</MaxTime>
     <CarTypeToSend>IntensiveCareAmbulance</CarTypeToSend>
   </Call>
   <Call>
     <Id>21</Id>
-    <Description>High fever and seizures</Description>
-    <Address>Shabazi St 18, Ramat Hasharon</Address>
-    <Latitude>32.145339</Latitude>
-    <Longitude>34.838293</Longitude>
-    <OpenTime>2025-01-17T02:31:23</OpenTime>
-    <MaxTime>2025-01-17T03:02:23</MaxTime>
+    <Description>Heavy bleeding</Description>
+    <Address>27 HaYarkon St, Tel Aviv, Israel</Address>
+    <Latitude>32.08</Latitude>
+    <Longitude>34.7664</Longitude>
+    <OpenTime>2024-12-15T14:08:31</OpenTime>
+    <MaxTime>2024-12-15T14:44:31</MaxTime>
     <CarTypeToSend>Ambulance</CarTypeToSend>
   </Call>
   <Call>
     <Id>22</Id>
-    <Description>Unconscious person</Description>
-    <Address>Levi Eshkol St 40, Ashkelon</Address>
-    <Latitude>31.661712</Latitude>
-    <Longitude>34.571489</Longitude>
-    <OpenTime>2025-01-11T02:16:23</OpenTime>
-    <MaxTime>2025-01-11T02:21:23</MaxTime>
-    <CarTypeToSend>RegularVehicle</CarTypeToSend>
-  </Call>
-  <Call>
-    <Id>23</Id>
-    <Description>Stroke symptoms</Description>
-    <Address>Weizmann St 6, Rehovot</Address>
-    <Latitude>31.894756</Latitude>
-    <Longitude>34.812223</Longitude>
-    <OpenTime>2025-01-09T01:51:23</OpenTime>
-    <MaxTime>2025-01-09T02:08:23</MaxTime>
+    <Description>Prescription refill assistance</Description>
+    <Address>17 Ahad Ha'am St, Tel Aviv, Israel</Address>
+    <Latitude>32.0663</Latitude>
+    <Longitude>34.7731</Longitude>
+    <OpenTime>2024-12-22T13:56:31</OpenTime>
+    <MaxTime>2024-12-22T14:29:31</MaxTime>
     <CarTypeToSend>IntensiveCareAmbulance</CarTypeToSend>
   </Call>
   <Call>
-    <Id>24</Id>
-    <Description>Dietitian consultation request</Description>
-    <Address>Jabotinsky St 15, Bnei Brak</Address>
-    <Latitude>32.089611</Latitude>
-    <Longitude>34.834804</Longitude>
-    <OpenTime>2025-01-05T02:18:23</OpenTime>
-    <MaxTime>2025-01-05T02:26:23</MaxTime>
+    <Id>23</Id>
+    <Description>Sports injury</Description>
+    <Address>29 Sokolov St, Herzliya, Israel</Address>
+    <Latitude>32.1646</Latitude>
+    <Longitude>34.8412</Longitude>
+    <OpenTime>2025-01-09T13:20:31</OpenTime>
+    <MaxTime>2025-01-09T13:50:31</MaxTime>
     <CarTypeToSend>RegularVehicle</CarTypeToSend>
+  </Call>
+  <Call>
+    <Id>24</Id>
+    <Description>Head injury</Description>
+    <Address>39 Rambam St, Bnei Brak, Israel</Address>
+    <Latitude>32.0847</Latitude>
+    <Longitude>34.8307</Longitude>
+    <OpenTime>2025-01-19T13:15:31</OpenTime>
+    <MaxTime>2025-01-19T13:42:31</MaxTime>
+    <CarTypeToSend>IntensiveCareAmbulance</CarTypeToSend>
   </Call>
   <Call>
     <Id>25</Id>
-    <Description>Physical fitness assessment</Description>
-    <Address>HaGalil St 10, Kiryat Shmona</Address>
-    <Latitude>33.207333</Latitude>
-    <Longitude>35.570961</Longitude>
-    <OpenTime>2024-12-14T01:55:23</OpenTime>
-    <MaxTime>2024-12-14T02:33:23</MaxTime>
-    <CarTypeToSend>RegularVehicle</CarTypeToSend>
+    <Description>Consultation for mild allergy</Description>
+    <Address>33 HaHagana St, Ashdod, Israel</Address>
+    <Latitude>31.7953</Latitude>
+    <Longitude>34.6508</Longitude>
+    <OpenTime>2025-01-17T13:44:31</OpenTime>
+    <MaxTime>2025-01-17T14:02:31</MaxTime>
+    <CarTypeToSend>IntensiveCareAmbulance</CarTypeToSend>
   </Call>
   <Call>
     <Id>26</Id>
-    <Description>Drowning</Description>
-    <Address>HaNasi Weizmann St 35, Haifa</Address>
-    <Latitude>32.796785</Latitude>
-    <Longitude>35.003008</Longitude>
-    <OpenTime>2024-12-13T01:45:23</OpenTime>
-    <MaxTime>2024-12-13T02:22:23</MaxTime>
-    <CarTypeToSend>RegularVehicle</CarTypeToSend>
+    <Description>Medication side effect inquiry</Description>
+    <Address>21 Arlozorov St, Rishon LeZion, Israel</Address>
+    <Latitude>31.9616</Latitude>
+    <Longitude>34.7702</Longitude>
+    <OpenTime>2024-12-16T13:50:31</OpenTime>
+    <MaxTime>2024-12-16T13:58:31</MaxTime>
+    <CarTypeToSend>IntensiveCareAmbulance</CarTypeToSend>
   </Call>
   <Call>
     <Id>27</Id>
-    <Description>Stab wound in abdomen</Description>
-    <Address>Moshe Dayan St 1, Ashdod</Address>
-    <Latitude>31.803742</Latitude>
-    <Longitude>34.656998</Longitude>
-    <OpenTime>2024-12-15T01:46:23</OpenTime>
-    <MaxTime>2024-12-15T02:03:23</MaxTime>
-    <CarTypeToSend>RegularVehicle</CarTypeToSend>
+    <Description>Heart rate monitoring device setup</Description>
+    <Address>47 David Remez St, Jerusalem, Israel</Address>
+    <Latitude>31.7645</Latitude>
+    <Longitude>35.2253</Longitude>
+    <OpenTime>2025-01-11T13:34:31</OpenTime>
+    <MaxTime>2025-01-11T13:52:31</MaxTime>
+    <CarTypeToSend>Ambulance</CarTypeToSend>
   </Call>
   <Call>
     <Id>28</Id>
-    <Description>Food poisoning</Description>
-    <Address>Menachem Begin Blvd 55, Tel Aviv</Address>
-    <Latitude>32.071457</Latitude>
-    <Longitude>34.791613</Longitude>
-    <OpenTime>2025-01-13T01:47:23</OpenTime>
-    <MaxTime>2025-01-13T02:12:23</MaxTime>
+    <Description>Routine elderly health assessment</Description>
+    <Address>19 Yehuda Halevi St, Tel Aviv, Israel</Address>
+    <Latitude>32.0629</Latitude>
+    <Longitude>34.7715</Longitude>
+    <OpenTime>2025-01-12T14:03:31</OpenTime>
+    <MaxTime>2025-01-12T14:13:31</MaxTime>
     <CarTypeToSend>Ambulance</CarTypeToSend>
   </Call>
   <Call>
     <Id>29</Id>
-    <Description>Drowning</Description>
-    <Address>Hashalom Rd 10, Tel Aviv</Address>
-    <Latitude>32.061399</Latitude>
-    <Longitude>34.789561</Longitude>
-    <OpenTime>2024-12-29T01:56:23</OpenTime>
-    <MaxTime>2024-12-29T02:13:23</MaxTime>
-    <CarTypeToSend>RegularVehicle</CarTypeToSend>
+    <Description>Pregnancy check-up</Description>
+    <Address>25 HaHistadrut St, Haifa, Israel</Address>
+    <Latitude>32.7953</Latitude>
+    <Longitude>34.9906</Longitude>
+    <OpenTime>2024-12-15T13:14:31</OpenTime>
+    <MaxTime>2024-12-15T13:27:31</MaxTime>
+    <CarTypeToSend>IntensiveCareAmbulance</CarTypeToSend>
   </Call>
   <Call>
     <Id>30</Id>
-    <Description>Routine child vaccination</Description>
-    <Address>Shderot Chen St 45, Eilat</Address>
-    <Latitude>29.55805</Latitude>
-    <Longitude>34.9342</Longitude>
-    <OpenTime>2025-01-22T02:32:23</OpenTime>
-    <MaxTime>2025-01-22T03:08:23</MaxTime>
+    <Description>Minor electric shock</Description>
+    <Address>36 HaAliya St, Netanya, Israel</Address>
+    <Latitude>32.3394</Latitude>
+    <Longitude>34.8589</Longitude>
+    <OpenTime>2025-01-13T13:13:31</OpenTime>
+    <MaxTime>2025-01-13T13:32:31</MaxTime>
     <CarTypeToSend>IntensiveCareAmbulance</CarTypeToSend>
   </Call>
   <Call>
     <Id>31</Id>
-    <Description>Prescription refill assistance</Description>
-    <Address>Ayalon St 5, Rishon LeZion</Address>
-    <Latitude>31.973001</Latitude>
-    <Longitude>34.771497</Longitude>
-    <OpenTime>2025-01-10T02:16:23</OpenTime>
-    <MaxTime>2025-01-10T02:31:23</MaxTime>
-    <CarTypeToSend>Ambulance</CarTypeToSend>
-  </Call>
-  <Call>
-    <Id>32</Id>
-    <Description>Heart rate monitoring device setup</Description>
-    <Address>King Solomon St 20, Tiberias</Address>
-    <Latitude>32.785539</Latitude>
-    <Longitude>34.779572</Longitude>
-    <OpenTime>2024-12-25T02:06:23</OpenTime>
-    <MaxTime>2024-12-25T02:15:23</MaxTime>
-    <CarTypeToSend>RegularVehicle</CarTypeToSend>
-  </Call>
-  <Call>
-    <Id>33</Id>
-    <Description>Minor wound dressing change</Description>
-    <Address>Rothschild Blvd 80, Tel Aviv</Address>
-    <Latitude>32.070054</Latitude>
-    <Longitude>34.804868</Longitude>
-    <OpenTime>2025-01-13T02:27:23</OpenTime>
-    <MaxTime>2025-01-13T03:02:23</MaxTime>
-    <CarTypeToSend>Ambulance</CarTypeToSend>
-  </Call>
-  <Call>
-    <Id>34</Id>
-    <Description>Acute heart attack</Description>
-    <Address>Yigal Allon St 55, Ramat Gan</Address>
-    <Latitude>32.788712</Latitude>
-    <Longitude>35.021502</Longitude>
-    <OpenTime>2025-01-12T02:12:23</OpenTime>
-    <MaxTime>2025-01-12T02:26:23</MaxTime>
-    <CarTypeToSend>Ambulance</CarTypeToSend>
-  </Call>
-  <Call>
-    <Id>35</Id>
-    <Description>Assistance with medical equipment setup</Description>
-    <Address>Neve Shaanan St 3, Haifa</Address>
-    <Latitude>32.110003</Latitude>
-    <Longitude>35.053653</Longitude>
-    <OpenTime>2025-01-31T01:29:23</OpenTime>
-    <MaxTime>2025-01-31T02:07:23</MaxTime>
+    <Description>Work clearance health screening</Description>
+    <Address>42 HaRav Kook St, Tiberias, Israel</Address>
+    <Latitude>32.7897</Latitude>
+    <Longitude>35.5432</Longitude>
+    <OpenTime>2024-12-19T14:00:31</OpenTime>
+    <MaxTime>2024-12-19T14:22:31</MaxTime>
     <CarTypeToSend>IntensiveCareAmbulance</CarTypeToSend>
   </Call>
   <Call>
-    <Id>36</Id>
+    <Id>32</Id>
     <Description>Minor electric shock</Description>
-    <Address>Einstein St 12, Haifa</Address>
-    <Latitude>32.083762</Latitude>
-    <Longitude>34.82404</Longitude>
-    <OpenTime>2025-01-31T01:28:23</OpenTime>
-    <MaxTime>2025-01-31T01:45:23</MaxTime>
-    <CarTypeToSend>Ambulance</CarTypeToSend>
+    <Address>18 Bialik St, Ramat Gan, Israel</Address>
+    <Latitude>32.0824</Latitude>
+    <Longitude>34.8108</Longitude>
+    <OpenTime>2025-01-16T13:45:31</OpenTime>
+    <MaxTime>2025-01-16T13:54:31</MaxTime>
+    <CarTypeToSend>IntensiveCareAmbulance</CarTypeToSend>
+  </Call>
+  <Call>
+    <Id>33</Id>
+    <Description>Snake bite</Description>
+    <Address>32 Kaplan St, Tel Aviv, Israel</Address>
+    <Latitude>32.0682</Latitude>
+    <Longitude>34.7813</Longitude>
+    <OpenTime>2024-12-23T13:41:31</OpenTime>
+    <MaxTime>2024-12-23T14:08:31</MaxTime>
+    <CarTypeToSend>IntensiveCareAmbulance</CarTypeToSend>
+  </Call>
+  <Call>
+    <Id>34</Id>
+    <Description>Fall from bicycle</Description>
+    <Address>44 Menachem Begin Blvd, Ramat Gan, Israel</Address>
+    <Latitude>32.0849</Latitude>
+    <Longitude>34.8016</Longitude>
+    <OpenTime>2024-12-22T13:17:31</OpenTime>
+    <MaxTime>2024-12-22T13:22:31</MaxTime>
+    <CarTypeToSend>RegularVehicle</CarTypeToSend>
+  </Call>
+  <Call>
+    <Id>35</Id>
+    <Description>Acute heart attack</Description>
+    <Address>48 Yigal Alon St, Tel Aviv, Israel</Address>
+    <Latitude>32.0675</Latitude>
+    <Longitude>34.8109</Longitude>
+    <OpenTime>2025-02-02T13:08:31</OpenTime>
+    <MaxTime>2025-02-02T13:33:31</MaxTime>
+    <CarTypeToSend>RegularVehicle</CarTypeToSend>
+  </Call>
+  <Call>
+    <Id>36</Id>
+    <Description>Request for mobility aid assistance</Description>
+    <Address>53 Jaffa St, Jerusalem, Israel</Address>
+    <Latitude>31.7785</Latitude>
+    <Longitude>35.2203</Longitude>
+    <OpenTime>2025-02-02T13:05:31</OpenTime>
+    <MaxTime>2025-02-02T13:38:31</MaxTime>
+    <CarTypeToSend>RegularVehicle</CarTypeToSend>
   </Call>
   <Call>
     <Id>37</Id>
-    <Description>Assistance with medical equipment setup</Description>
-    <Address>Bar Ilan St 4, Givat Shmuel</Address>
-    <Latitude>32.055893</Latitude>
-    <Longitude>34.773058</Longitude>
-    <OpenTime>2025-01-31T01:31:23</OpenTime>
-    <MaxTime>2025-01-31T02:11:23</MaxTime>
+    <Description>Physiotherapy session request</Description>
+    <Address>60 HaNasi St, Beersheba, Israel</Address>
+    <Latitude>32.0739</Latitude>
+    <Longitude>34.7922</Longitude>
+    <OpenTime>2025-02-02T13:07:31</OpenTime>
+    <MaxTime>2025-02-02T13:47:31</MaxTime>
     <CarTypeToSend>RegularVehicle</CarTypeToSend>
   </Call>
   <Call>
     <Id>38</Id>
-    <Description>Workplace injury</Description>
-    <Address>Yehuda Halevi St 40, Tel Aviv</Address>
-    <Latitude>32.926099</Latitude>
-    <Longitude>35.066441</Longitude>
-    <OpenTime>2025-01-31T01:30:23</OpenTime>
-    <MaxTime>2025-01-31T02:09:23</MaxTime>
-    <CarTypeToSend>RegularVehicle</CarTypeToSend>
-  </Call>
-  <Call>
-    <Id>39</Id>
-    <Description>Pregnancy check-up</Description>
-    <Address>Haifa Rd 10, Acre</Address>
-    <Latitude>32.019313</Latitude>
-    <Longitude>34.767654</Longitude>
-    <OpenTime>2025-01-31T01:27:23</OpenTime>
-    <MaxTime>2025-01-31T01:56:23</MaxTime>
-    <CarTypeToSend>IntensiveCareAmbulance</CarTypeToSend>
-  </Call>
-  <Call>
-    <Id>40</Id>
-    <Description>Consultation for ongoing symptoms</Description>
-    <Address>Nahum St 1, Holon</Address>
-    <Latitude>32.166313</Latitude>
-    <Longitude>34.842972</Longitude>
-    <OpenTime>2024-12-12T02:00:23</OpenTime>
-    <MaxTime>2024-12-12T02:32:23</MaxTime>
+    <Description>Assistance with medical equipment setup</Description>
+    <Address>37 Moriah Blvd, Haifa, Israel</Address>
+    <Latitude>31.2525</Latitude>
+    <Longitude>34.9897</Longitude>
+    <OpenTime>2025-02-02T13:06:31</OpenTime>
+    <MaxTime>2025-02-02T13:24:31</MaxTime>
     <CarTypeToSend>Ambulance</CarTypeToSend>
   </Call>
   <Call>
+    <Id>39</Id>
+    <Description>Stroke symptoms</Description>
+    <Address>8 Herzl St, Rehovot, Israel</Address>
+    <Latitude>32.0725</Latitude>
+    <Longitude>34.8102</Longitude>
+    <OpenTime>2025-02-02T13:08:31</OpenTime>
+    <MaxTime>2025-02-02T13:50:31</MaxTime>
+    <CarTypeToSend>Ambulance</CarTypeToSend>
+  </Call>
+  <Call>
+    <Id>40</Id>
+    <Description>Snake bite</Description>
+    <Address>5 Hahashmonaim St, Modi'in, Israel</Address>
+    <Latitude>31.8954</Latitude>
+    <Longitude>34.9098</Longitude>
+    <OpenTime>2025-01-17T13:48:31</OpenTime>
+    <MaxTime>2025-01-17T14:03:31</MaxTime>
+    <CarTypeToSend>RegularVehicle</CarTypeToSend>
+  </Call>
+  <Call>
     <Id>41</Id>
-    <Description>Acute heart attack</Description>
-    <Address>Eliezer Kaplan St 5, Herzliya</Address>
-    <Latitude>31.249872</Latitude>
-    <Longitude>34.771687</Longitude>
-    <OpenTime>2024-12-21T01:58:23</OpenTime>
-    <MaxTime>2024-12-21T02:04:23</MaxTime>
-    <CarTypeToSend>IntensiveCareAmbulance</CarTypeToSend>
+    <Description>Severe burns</Description>
+    <Address>22 HaTayasim Blvd, Holon, Israel</Address>
+    <Latitude>32.0072</Latitude>
+    <Longitude>34.7819</Longitude>
+    <OpenTime>2025-01-07T14:02:31</OpenTime>
+    <MaxTime>2025-01-07T14:30:31</MaxTime>
+    <CarTypeToSend>Ambulance</CarTypeToSend>
   </Call>
   <Call>
     <Id>42</Id>
-    <Description>Sports injury</Description>
-    <Address>Dov Hoz St 20, Be'er Sheva</Address>
-    <Latitude>31.661712</Latitude>
-    <Longitude>34.571489</Longitude>
-    <OpenTime>2025-01-22T02:09:23</OpenTime>
-    <MaxTime>2025-01-22T02:47:23</MaxTime>
-    <CarTypeToSend>IntensiveCareAmbulance</CarTypeToSend>
+    <Description>Severe allergic reaction</Description>
+    <Address>31 Yehuda St, Petah Tikva, Israel</Address>
+    <Latitude>31.6622</Latitude>
+    <Longitude>34.8675</Longitude>
+    <OpenTime>2025-01-08T13:44:31</OpenTime>
+    <MaxTime>2025-01-08T14:17:31</MaxTime>
+    <CarTypeToSend>RegularVehicle</CarTypeToSend>
   </Call>
   <Call>
     <Id>43</Id>
-    <Description>Health education session</Description>
-    <Address>Moshe Sharet St 15, Ashkelon</Address>
-    <Latitude>32.083307</Latitude>
-    <Longitude>34.799839</Longitude>
-    <OpenTime>2024-12-23T02:04:23</OpenTime>
-    <MaxTime>2024-12-23T02:40:23</MaxTime>
+    <Description>Wellness check for remote patient</Description>
+    <Address>26 Kdoshei HaShoa St, Ashkelon, Israel</Address>
+    <Latitude>32.8421</Latitude>
+    <Longitude>35.0721</Longitude>
+    <OpenTime>2024-12-28T13:23:31</OpenTime>
+    <MaxTime>2024-12-28T13:31:31</MaxTime>
     <CarTypeToSend>RegularVehicle</CarTypeToSend>
   </Call>
   <Call>
     <Id>44</Id>
     <Description>Routine blood test</Description>
-    <Address>Haneviim St 60, Jerusalem</Address>
-    <Latitude>31.784217</Latitude>
-    <Longitude>35.223391</Longitude>
-    <OpenTime>2025-01-19T02:07:23</OpenTime>
-    <MaxTime>2025-01-19T02:16:23</MaxTime>
+    <Address>14 HaTzoran St, Kiryat Ata, Israel</Address>
+    <Latitude>32.0998</Latitude>
+    <Longitude>34.9564</Longitude>
+    <OpenTime>2024-12-29T13:53:31</OpenTime>
+    <MaxTime>2024-12-29T14:15:31</MaxTime>
     <CarTypeToSend>IntensiveCareAmbulance</CarTypeToSend>
   </Call>
   <Call>
     <Id>45</Id>
-    <Description>Stab wound in abdomen</Description>
-    <Address>Emek Refaim St 12, Jerusalem</Address>
-    <Latitude>31.765365</Latitude>
-    <Longitude>35.219762</Longitude>
-    <OpenTime>2025-01-11T02:09:23</OpenTime>
-    <MaxTime>2025-01-11T02:25:23</MaxTime>
+    <Description>Work clearance health screening</Description>
+    <Address>28 Sheshet HaYamim St, Rosh HaAyin, Israel</Address>
+    <Latitude>31.8192</Latitude>
+    <Longitude>34.829</Longitude>
+    <OpenTime>2024-12-23T13:26:31</OpenTime>
+    <MaxTime>2024-12-23T14:04:31</MaxTime>
     <CarTypeToSend>Ambulance</CarTypeToSend>
   </Call>
   <Call>
     <Id>46</Id>
-    <Description>Minor burn from gas explosion</Description>
-    <Address>HaSolel St 1, Nazareth</Address>
-    <Latitude>32.696947</Latitude>
-    <Longitude>35.30823</Longitude>
-    <OpenTime>2024-12-13T02:32:23</OpenTime>
-    <MaxTime>2024-12-13T03:08:23</MaxTime>
-    <CarTypeToSend>Ambulance</CarTypeToSend>
+    <Description>Wellness check for remote patient</Description>
+    <Address>9 HaShalom Rd, Herzliya, Israel</Address>
+    <Latitude>32.1754</Latitude>
+    <Longitude>34.7824</Longitude>
+    <OpenTime>2024-12-17T13:52:31</OpenTime>
+    <MaxTime>2024-12-17T14:06:31</MaxTime>
+    <CarTypeToSend>IntensiveCareAmbulance</CarTypeToSend>
   </Call>
   <Call>
     <Id>47</Id>
-    <Description>Frostbite while outdoors</Description>
-    <Address>Hanamal St 4, Haifa</Address>
-    <Latitude>32.823115</Latitude>
-    <Longitude>35.002729</Longitude>
-    <OpenTime>2024-12-17T02:12:23</OpenTime>
-    <MaxTime>2024-12-17T02:22:23</MaxTime>
-    <CarTypeToSend>IntensiveCareAmbulance</CarTypeToSend>
+    <Description>Routine elderly health assessment</Description>
+    <Address>34 Eshkol Blvd, Ashdod, Israel</Address>
+    <Latitude>32.1896</Latitude>
+    <Longitude>34.8293</Longitude>
+    <OpenTime>2025-01-02T13:27:31</OpenTime>
+    <MaxTime>2025-01-02T13:34:31</MaxTime>
+    <CarTypeToSend>RegularVehicle</CarTypeToSend>
   </Call>
   <Call>
     <Id>48</Id>
-    <Description>Dietitian consultation request</Description>
-    <Address>HaKibbutz HaMeuhad St 6, Kfar Yona</Address>
-    <Latitude>32.317325</Latitude>
-    <Longitude>34.919138</Longitude>
-    <OpenTime>2024-12-16T01:44:23</OpenTime>
-    <MaxTime>2024-12-16T02:20:23</MaxTime>
-    <CarTypeToSend>IntensiveCareAmbulance</CarTypeToSend>
+    <Description>Blood pressure measurement request</Description>
+    <Address>50 Ramat Yam St, Herzliya, Israel</Address>
+    <Latitude>29.5577</Latitude>
+    <Longitude>34.9893</Longitude>
+    <OpenTime>2025-01-24T13:32:31</OpenTime>
+    <MaxTime>2025-01-24T14:07:31</MaxTime>
+    <CarTypeToSend>RegularVehicle</CarTypeToSend>
+  </Call>
+  <Call>
+    <Id>49</Id>
+    <Description>Minor electric shock</Description>
+    <Address>43 Hativat Golani St, Eilat, Israel</Address>
+    <Latitude>29.5554</Latitude>
+    <Longitude>34.9547</Longitude>
+    <OpenTime>2024-12-16T13:38:31</OpenTime>
+    <MaxTime>2024-12-16T14:16:31</MaxTime>
+    <CarTypeToSend>RegularVehicle</CarTypeToSend>
   </Call>
 </ArrayOfCall>

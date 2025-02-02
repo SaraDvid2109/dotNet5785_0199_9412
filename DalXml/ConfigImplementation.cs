@@ -13,6 +13,7 @@ internal class ConfigImplementation : IConfig
     /// <summary>
     /// Gets the next available call ID from the configuration. 
     /// </summary>
+  
     public int nextCallId
     {
         get => Config.NextCallId;

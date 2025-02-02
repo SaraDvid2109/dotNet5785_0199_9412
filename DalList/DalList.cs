@@ -12,6 +12,7 @@ sealed internal class DalList : IDal
     {
         internal static readonly DalList instance = new DalList();
     }
+
     /// <summary>
     /// Provides access to CRUD operations for Volunteer entities.
     /// </summary>

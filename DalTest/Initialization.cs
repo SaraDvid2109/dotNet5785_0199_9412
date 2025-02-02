@@ -139,7 +139,7 @@ public static class Initialization
             prefix = prefixes[s_rand.Next(prefixes.Length)];
             phoneNumber = prefix;
             for (int j = 0; j < 7; j++) { phoneNumber += s_rand.Next(0, 10); }
-            if (i != 0) 
+            if (i > 2) 
             { 
                 // We asked the GPT chat: How to build a random password using a StringBuilder object
                 StringBuilder passwordBuilder = new StringBuilder();
@@ -155,8 +155,21 @@ public static class Initialization
             }
             else
             {
-                password = "12!@MAnager";
-                id = 123456782;
+                if (i == 0)
+                {
+                    password = "12!@MAnager";
+                    id = 123456782;
+                }
+                else if (i == 1)
+                {
+                    password = "vK2^*m!L";
+                    id = 218311280;
+                }
+                else
+                {
+                    password = "dZ5!K!)}";
+                    id = 289163735;
+                }
             }
 
             double MaximumDistance = s_rand.Next(0, 10);
