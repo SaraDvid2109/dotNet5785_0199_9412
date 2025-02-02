@@ -54,6 +54,7 @@ internal class volunteerImplementation : IVolunteer
         return boVolunteer.Role;
     }
 
+    
     /// <summary>
     /// Filters and sorts the volunteers based on the given activity status and sorting field, then returns the filtered and sorted list.
     /// </summary>
@@ -148,12 +149,6 @@ internal class volunteerImplementation : IVolunteer
     public void UpdatingVolunteerDetails(int id, BO.Volunteer volunteer)
     {
         AdminManager.ThrowOnSimulatorIsRunning();  //stage 7
-        //if (!string.IsNullOrEmpty(volunteer.Address))
-        //{
-        //    var coordinate = Helpers.Tools.GetAddressCoordinates(volunteer.Address);
-        //    volunteer.Latitude = coordinate.Latitude;
-        //    volunteer.Longitude = coordinate.Longitude;
-        //}
 
         Helpers.VolunteerManager.IntegrityCheck(volunteer);
         try

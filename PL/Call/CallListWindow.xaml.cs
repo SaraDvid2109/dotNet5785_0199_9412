@@ -202,10 +202,6 @@ public partial class CallListWindow : Window, INotifyPropertyChanged
     }
 
     /// <summary>
-    /// Handles the selection change in the DataGrid to update the visibility of the delete button.
-    /// </summary>
-
-    /// <summary>
     /// Applies the selected filter to the call list.
     /// </summary>
     private void ApplyFilterButton_Click(object sender, RoutedEventArgs e)

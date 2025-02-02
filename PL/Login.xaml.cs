@@ -139,15 +139,8 @@ namespace PL
         /// </summary>
         private void VolunteerScreen_Click(object sender, RoutedEventArgs e)
         {
-            if (this.OwnedWindows.Count == 0) // אם אין חלון כזה בבעלות החלון הראשי
-            {
-                VolunteerProfile volunteerWindow = new VolunteerProfile(VolunteerId) { Owner = this };
+            VolunteerProfile volunteerWindow = new VolunteerProfile(VolunteerId) { Owner = this };
                 volunteerWindow.Show();
-            }
-            else
-            {
-                this.OwnedWindows[0].Activate(); // מביא את החלון הפתוח לקדמת המסך
-            }
         }
         
         /// <summary>

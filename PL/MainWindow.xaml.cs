@@ -109,8 +109,9 @@ namespace PL
         public static readonly DependencyProperty TreatmentOfRiskStatusProperty =
             DependencyProperty.Register("TreatmentOfRiskStatus", typeof(int), typeof(MainWindow), new PropertyMetadata(0));
 
-
-
+        /// <summary>
+        /// Sets the window size to match the dimensions of an image.
+        /// </summary>
         private void SetWindowSizeToImage()
         {
             string imagePath = "Images/starOfDavid.jpg";
@@ -120,8 +121,11 @@ namespace PL
             this.Height = bitmap.PixelHeight;
         }
 
-
         private string _startStopButtonText = "Start Simulator";
+       
+        /// <summary>
+        /// Gets or sets the text displayed on the Start/Stop button.
+        /// </summary>
         public string StartStopButtonText
         {
             get => _startStopButtonText;
@@ -135,7 +139,6 @@ namespace PL
                 }
             }
         }
-
 
         /// <summary>
         /// Interval property with dependency property support for binding
@@ -152,6 +155,9 @@ namespace PL
 
         private bool _isSimulatorRunning;
 
+        /// <summary>
+        /// Gets or sets a value indicating whether the simulator is running.
+        /// </summary>
         public bool IsSimulatorRunning
         {
             get => _isSimulatorRunning;
@@ -164,8 +170,12 @@ namespace PL
                 }
             }
         }
+
         public event PropertyChangedEventHandler? PropertyChanged;
 
+        /// <summary>
+        /// Handles the click event of the Start/Stop button to start or stop the simulator.
+        /// </summary>
         private void OnStartStopButton_Click(object sender, RoutedEventArgs e)
         {
             try
@@ -191,13 +201,23 @@ namespace PL
             }
         }
 
+        /// <summary>
+        /// Gets a value indicating whether the buttons are enabled based on the simulator's running state.
+        /// </summary>
         public bool ButtonsEnabled => !IsSimulatorRunning;
 
+        /// <summary>
+        /// Raises the PropertyChanged event.
+        /// </summary>
+        /// <param name="propertyName">The name of the property that changed.</param>
         protected void OnPropertyChanged(string propertyName)
         {
             PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
         }
 
+        /// <summary>
+        /// Handles the event when the window is closed to stop the simulator if it is running.
+        /// </summary>
         private void Window_Closed(object sender, EventArgs e)
         {
             if (IsSimulatorRunning)
@@ -442,6 +462,7 @@ namespace PL
                 }
             }
         }
+
         /// <summary>
         /// Updates dependency properties with the number of calls per status. 
         /// </summary>

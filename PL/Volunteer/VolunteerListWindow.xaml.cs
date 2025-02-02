@@ -73,7 +73,6 @@ public partial class VolunteerListWindow : Window
 
     }
 
-
     // Add observer when the window loads
     private void Window_Loaded(object sender, RoutedEventArgs e)
     {
