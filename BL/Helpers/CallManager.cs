@@ -56,19 +56,7 @@ internal static class CallManager
             throw new BO.BlFormatException("Address cannot be null or empty.");
         }
 
-        //var coordinates = Helpers.Tools.GetAddressCoordinates(call.Address);
-        //if (coordinates == (0, 0))
-        //{
-        //    throw new BO.BlFormatException("Invalid address.");
-        //}
-        //if (call.Latitude != coordinates.Latitude)
-        //{
-        //    throw new BO.BlFormatException("Invalid Latitude.");
-        //}
-        //if (call.Longitude != coordinates.Longitude)
-        //{
-        //    throw new BO.BlFormatException("Invalid Longitude.");
-        //}
+        
     }
 
     /// <summary>

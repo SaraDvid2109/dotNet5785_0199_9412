@@ -72,19 +72,6 @@ internal static class VolunteerManager
             throw new BO.BlFormatException("The MaximumDistance must be 0–10 kilometer.");
         }
 
-        //if (!string.IsNullOrEmpty(volunteer.Address))
-        //{
-        //    var coordinate = Helpers.Tools.GetAddressCoordinates(volunteer.Address);
-        //    if (volunteer.Latitude != coordinate.Latitude)
-        //    {
-        //        throw new BO.BlFormatException("Invalid Latitude.");
-        //    }
-        //    if (volunteer.Longitude != coordinate.Longitude)
-        //    {
-        //        throw new BO.BlFormatException("Invalid Longitude.");
-        //    }
-        //}
-
     }
 
     /// <summary>
@@ -94,28 +81,28 @@ internal static class VolunteerManager
     /// <returns>True if the phone number is valid, otherwise false.</returns>
     public static bool IsValidIsraeliPhoneNumber(string? phoneNumber)
     {
-        // אם מספר הטלפון הוא null, הוא אינו תקין
+        // If the phone number is null, it is invalid
         if (string.IsNullOrEmpty(phoneNumber))
         {
             return true;
         }
 
-        // הסרה של רווחים ולוכסן 
+        
         phoneNumber = phoneNumber.Trim().Replace(" ", "").Replace("-", "");
 
-        // בדיקת אורך: מספר טלפון ישראלי הוא 10 ספרות
+        // Check that the length is 10 digits
         if (phoneNumber.Length != 10)
         {
             return false;
         }
 
-        // בדיקה שהמספר מכיל רק ספרות
+        // Check that the number contains only digits
         if (!phoneNumber.All(char.IsDigit))
         {
             return false;
         }
 
-        // בדיקת קידומות חוקיות
+        // Checking for valid prefixes
         string[] validPrefixes = { "050", "051", "052", "053", "054", "055", "056", "057", "058", "059" };
         string prefix = phoneNumber.Substring(0, 3);
 
@@ -124,7 +111,7 @@ internal static class VolunteerManager
             return false;
         }
 
-        return true; // מספר הטלפון תקין
+        return true; // The phone number is valid.
     }
 
     /// <summary>
@@ -134,24 +121,24 @@ internal static class VolunteerManager
     /// <returns>True if the ID is valid, otherwise false.</returns>
     public static bool IsValidIsraeliID(string id)
     {
-        // בדיקה ראשונית: האם הקלט מורכב מספרות בלבד ובעל אורך חוקי
+        // Initial check: Does the input consist of only numbers and has a valid length?
         if (string.IsNullOrWhiteSpace(id) || id.Length < 5 || id.Length > 9 || !long.TryParse(id, out _))
         {
             return false;
         }
 
-        // השלמת המספר ל-9 ספרות על ידי הוספת אפסים משמאל
+        // Complete the number to 9 digits by adding zeros to the left
         id = id.PadLeft(9, '0');
 
         int sum = 0;
 
         for (int i = 0; i < id.Length; i++)
         {
-            int digit = id[i] - '0'; // המרת התו לספרה
-            int value = digit * (i % 2 == 0 ? 1 : 2); // הכפלה לסירוגין ב-1 או ב-2
+            int digit = id[i] - '0'; // Convert the character to a digit
+            int value = digit * (i % 2 == 0 ? 1 : 2); // Alternately multiply by 1 or 2
             if (value > 9)
             {
-                value -= 9; // אם הערך גדול מ-9, מפחיתים 9 (חיבור ספרות המספר)
+                value -= 9;// If the value is greater than 9, subtract 9 (add the digits of the number)
             }
             sum += value;
         }
@@ -242,7 +229,6 @@ internal static class VolunteerManager
 
 
         }
-        //return VolunteerManager.ToBOVolunteer(volunteer);
         return new BO.Volunteer
         {
             Id = volunteer.Id,
@@ -265,33 +251,6 @@ internal static class VolunteerManager
 
     }
 
-    //internal static BO.Volunteer ToDOVolunteer(DO.Volunteer? volunteer)
-    //{
-    //    return new BO.Volunteer
-    //    {
-    //        Id = volunteer.Id,
-    //        Name = volunteer.Name,
-    //        Phone = volunteer.Phone,
-    //        Mail = volunteer.Mail,
-    //        Password = volunteer.Password,
-    //        Address = volunteer.Address,
-    //        Latitude = volunteer.Latitude,
-    //        Longitude = volunteer.Longitude,
-    //        Role = (BO.Roles)volunteer.Role,
-    //        Active = volunteer.Active,
-    //        MaximumDistance = volunteer.MaximumDistance,
-    //        Type = (BO.DistanceType)volunteer.Type,
-    //        TotalCallsHandled = 0,
-    //        TotalCallsCanceled = 0,
-    //        TotalCallsChosenHandleExpired = 0,
-    //        Progress = new BO.CallInProgress(),
-    //    };
-
-    //}
-
-
-    // כל המתודות במחלקה יהיו internal static
-
     /// <summary>
     /// Returns the details of a volunteer by their ID.
     /// </summary>
@@ -311,7 +270,13 @@ internal static class VolunteerManager
         return BoVolunteer;
 
     }
-    
+    /// <summary>
+    /// Simulates the process of volunteer call registration and assignment.
+    /// Volunteers who are not currently assigned to a call may randomly select an open call.
+    /// If a volunteer is already assigned to a call, their treatment progress is checked,
+    /// and the call may be completed or canceled based on probability.
+    /// </summary>
+    /// <exception cref="BO.BLTemporaryNotAvailableException">Thrown when the system is unavailable to process a call selection.</exception>
     internal static void SimulateCallRegistration() //stage 7
     {
         List<DO.Volunteer> doVolunteerList;
@@ -337,8 +302,6 @@ internal static class VolunteerManager
                     }
                     catch (BO.BLTemporaryNotAvailableException ex)
                     {
-                        // Handle the exception, e.g., log it or notify the user
-                        //Console.WriteLine(ex.Message);
                         throw new BO.BLTemporaryNotAvailableException(ex.Message);
                     }
                 }

@@ -32,7 +32,6 @@ internal class volunteerImplementation : IVolunteer
         {
             throw new BO.BlNullPropertyException("There is no volunteer with that name or password.");
         }
-        //BO.Volunteer boVolunteer = VolunteerManager.ToBOVolunteer(volunteer);
         var boVolunteer = new BO.Volunteer
         {
             Id = volunteer.Id,
@@ -365,15 +364,16 @@ internal class volunteerImplementation : IVolunteer
 
 
     /// <summary>
-    /// Computes missing fields asynchronously and updates the volunteer in the DAL.
+    /// Computes the latitude and longitude of the volunteer's address asynchronously  
+    /// and updates the volunteer in the DAL.
     /// </summary>
-    /// <param name="volunteerId">The ID of the volunteer to update.</param>
-    /// <param name="address">The address to compute coordinates for.</param>
+    /// <param name="volunteer">The volunteer whose address needs to be updated.</param>
+    /// <returns>A task representing the asynchronous operation.</returns>
     private async Task UpdateVolunteerFieldsAsync(DO.Volunteer volunteer)
     {
         try
         {
-            var coordinate = await Helpers.Tools.GetAddressCoordinates(volunteer.Address); // קריאה אסינכרונית
+            var coordinate = await Helpers.Tools.GetAddressCoordinates(volunteer.Address); 
             volunteer = volunteer with { Latitude = coordinate.Latitude, Longitude = coordinate.Longitude };
             lock (AdminManager.BlMutex)
                 _dal.Volunteer.Update(volunteer);

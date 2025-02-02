@@ -23,5 +23,4 @@ internal static class AssignmentManager
         }
         return assignment;
     }
-    // כל המתודות במחלקה יהיו internal static
 }

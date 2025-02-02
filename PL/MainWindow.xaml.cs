@@ -29,13 +29,11 @@ namespace PL
             StartStopButtonText = "Start Simulator";
             StatusObserver();
         }
-        //public int CloseStatus { get; set; }
-        //public int OpenStatus { get; set; }
-        //public int ExpiredStatus { get; set; }
-        //public int OpenAtRiskStatus { get; set; }
-        //public int TreatmentStatus { get; set; }
-        //public int TreatmentOfRiskStatus { get; set; }
 
+
+        /// <summary>
+        /// A dependency property that stores the number of calls with a "Closed" status.
+        /// </summary>
         public int CloseStatus
         {
             get { return (int)GetValue(CloseStatusProperty); }
@@ -46,8 +44,9 @@ namespace PL
         public static readonly DependencyProperty CloseStatusProperty =
             DependencyProperty.Register("CloseStatus", typeof(int), typeof(MainWindow), new PropertyMetadata(0));
 
-
-
+        /// <summary>
+        /// A dependency property that stores the number of calls with an "Open" status.
+        /// </summary>
         public int OpenStatus
         {
             get { return (int)GetValue(OpenStatusProperty); }
@@ -58,8 +57,9 @@ namespace PL
         public static readonly DependencyProperty OpenStatusProperty =
             DependencyProperty.Register("OpenStatus", typeof(int), typeof(MainWindow), new PropertyMetadata(0));
 
-
-
+        /// <summary>
+        /// A dependency property that stores the number of calls with an "Expired" status.
+        /// </summary>
         public int ExpiredStatus
         {
             get { return (int)GetValue(ExpiredStatusProperty); }
@@ -70,6 +70,9 @@ namespace PL
         public static readonly DependencyProperty ExpiredStatusProperty =
             DependencyProperty.Register("ExpiredStatus", typeof(int), typeof(MainWindow), new PropertyMetadata(0));
 
+        /// <summary>
+        /// A dependency property that stores the number of calls with an "OpenAtRisk" status.
+        /// </summary>
         public int OpenAtRiskStatus
         {
             get { return (int)GetValue(OpenAtRiskStatusProperty); }
@@ -80,6 +83,9 @@ namespace PL
         public static readonly DependencyProperty OpenAtRiskStatusProperty =
             DependencyProperty.Register("OpenAtRiskStatus", typeof(int), typeof(MainWindow), new PropertyMetadata(0));
 
+        /// <summary>
+        /// A dependency property that stores the number of calls with an "Treatment" status.
+        /// </summary>
         public int TreatmentStatus
         {
             get { return (int)GetValue(TreatmentStatusProperty); }
@@ -90,6 +96,9 @@ namespace PL
         public static readonly DependencyProperty TreatmentStatusProperty =
             DependencyProperty.Register("TreatmentStatus", typeof(int), typeof(MainWindow), new PropertyMetadata(0));
 
+        /// <summary>
+        /// A dependency property that stores the number of calls with an "TreatmentOfRisk" status.
+        /// </summary>
         public int TreatmentOfRiskStatus
         {
             get { return (int)GetValue(TreatmentOfRiskStatusProperty); }
@@ -128,7 +137,9 @@ namespace PL
         }
 
 
-        // Interval property with dependency property support for binding
+        /// <summary>
+        /// Interval property with dependency property support for binding
+        /// </summary>
         public int Interval
         {
             get { return (int)GetValue(IntervalProperty); }
@@ -195,7 +206,9 @@ namespace PL
             }
         }
 
-        // CurrentTime property with dependency property support for binding
+        /// <summary>
+        /// CurrentTime property with dependency property support for binding
+        /// </summary>
         public DateTime CurrentTime
         {
             get { return (DateTime)GetValue(CurrentTimeProperty); }
@@ -206,7 +219,9 @@ namespace PL
         public static readonly DependencyProperty CurrentTimeProperty =
             DependencyProperty.Register("CurrentTime", typeof(DateTime), typeof(MainWindow)/*, new PropertyMetadata(DateTime.Now)*/);
 
-        // MaxRiskRange property with dependency property support for binding
+        /// <summary>
+        /// MaxRiskRange property with dependency property support for binding
+        /// </summary>
         public TimeSpan MaxRiskRange
         {
             get { return (TimeSpan)GetValue(MaxRiskRangeProperty); }
@@ -217,7 +232,9 @@ namespace PL
         public static readonly DependencyProperty MaxRiskRangeProperty =
             DependencyProperty.Register("MaxRiskRange", typeof(TimeSpan), typeof(MainWindow), new PropertyMetadata(TimeSpan.Zero));
 
-        // Method called when the window is loaded to initialize values
+        /// <summary>
+        /// Method called when the window is loaded to initialize values
+        /// </summary>
         private void InitializeMainWindow(object sender, RoutedEventArgs e)
         {
             CurrentTime = s_bl.Admin.GetClock();
@@ -228,7 +245,9 @@ namespace PL
 
         }
 
-        // Button click handlers to advance the system time by different units
+        /// <summary>
+        /// Button click handlers to advance the system time by different units
+        /// </summary>
         private void btnAddOneMinute_Click(object sender, RoutedEventArgs e)
         {
             try
@@ -289,7 +308,9 @@ namespace PL
             }
         }
 
-        // Button click handler to update the MaxRiskRange in the system
+        /// <summary>
+        /// Button click handler to update the MaxRiskRange in the system
+        /// </summary>
         private void btUpdateRiskRange_Click(object sender, RoutedEventArgs e)
         {
             try
@@ -305,7 +326,9 @@ namespace PL
 
         private volatile DispatcherOperation? _observerOperationClock = null; //stage 7
 
-        // Observer method to update the CurrentTime whenever the clock changes
+        /// <summary>
+        /// Observer method to update the CurrentTime whenever the clock changes
+        /// </summary>
         private void clockObserver()
         {
             if (_observerOperationClock is null || _observerOperationClock.Status == DispatcherOperationStatus.Completed)
@@ -317,7 +340,9 @@ namespace PL
 
         private volatile DispatcherOperation? _observerOperationConfig = null; //stage 7
 
-        // Observer method to update the MaxRiskRange whenever the configuration changes
+        /// <summary>
+        /// Observer method to update the MaxRiskRange whenever the configuration changes
+        /// </summary>
         private void configObserver() 
         {
             if (_observerOperationConfig is null || _observerOperationConfig.Status == DispatcherOperationStatus.Completed)
@@ -327,7 +352,9 @@ namespace PL
                 });
         }
 
-        // Cleanup method to remove observers when the window is closed
+        /// <summary>
+        /// Cleanup method to remove observers when the window is closed
+        /// </summary>
         private void CleanupOnWindowClose(object sender, EventArgs e)
         {
             s_bl.Admin.RemoveClockObserver(clockObserver);
@@ -336,13 +363,19 @@ namespace PL
 
         }
 
-        // Button click handler to open the Volunteer List Window
+        /// <summary>
+        /// Button click handler to open the Volunteer List Window
+        /// </summary>
         private void btnVolunteers_Click(object sender, RoutedEventArgs e) => new VolunteerListWindow().Show();
 
-        // Button click handler to open the Call List Window
+        /// <summary>
+        /// Button click handler to open the Call List Window
+        /// </summary>
         private void btnCalls_Click(object sender, RoutedEventArgs e) => new CallListWindow().Show();
 
-        // Button click handler to initialize the database
+        /// <summary>
+        /// Button click handler to initialize the database
+        /// </summary>
         private void DatabaseInitialization_Click(object sender, RoutedEventArgs e)
         {
             var result = MessageBox.Show("Are you sure you want to initialize the database?", "Database initialization", MessageBoxButton.YesNo, MessageBoxImage.Question);
@@ -366,7 +399,9 @@ namespace PL
           
         }
 
-        // Button click handler to reset the database
+        /// <summary>
+        /// Button click handler to reset the database
+        /// </summary>
         private void DatabaseReset_Click(object sender, RoutedEventArgs e)
         {
             var result = MessageBox.Show("Are you sure you want to reset the data?", "Database reset", MessageBoxButton.YesNo, MessageBoxImage.Question);
@@ -390,7 +425,9 @@ namespace PL
 
         }
 
-        // Method to close all windows except for the main window
+        /// <summary>
+        /// Method to close all windows except for the main window
+        /// </summary>
         private void CloseAllWindowsExceptThis()
         {
             // Get the main window
@@ -405,6 +442,9 @@ namespace PL
                 }
             }
         }
+        /// <summary>
+        /// Updates dependency properties with the number of calls per status. 
+        /// </summary>
         private void StatusObserver()
         {
             IEnumerable<int> calls = s_bl.call.CallQuantities();
@@ -421,21 +461,39 @@ namespace PL
             });
         }
 
+        /// <summary>
+        /// Opens the window displaying calls with just the "Open" status.
+        /// </summary>
         private void OpenStatusCalls_Click(object sender, RoutedEventArgs e)
             =>new CallListWindow(BO.CallStatus.Open).Show();
 
+        /// <summary>
+        /// Opens the window displaying calls with just the "Treatment" status.
+        /// </summary>
         private void TreatmentStatusCalls_Click(object sender, RoutedEventArgs e)
            => new CallListWindow(BO.CallStatus.Treatment).Show();
 
+        /// <summary>
+        /// Opens the window displaying calls with just the "OpenAtRisk" status.
+        /// </summary>
         private void OpenAtRiskStatusCalls_Click(object sender, RoutedEventArgs e)
            => new CallListWindow(BO.CallStatus.OpenAtRisk).Show();
 
+        /// <summary>
+        /// Opens the window displaying calls with just the " TreatmentOfRisk" status.
+        /// </summary>
         private void TreatmentOfRiskStatusCalls_Click(object sender, RoutedEventArgs e)
            => new CallListWindow(BO.CallStatus.TreatmentOfRisk).Show();
 
+        /// <summary>
+        /// Opens the window displaying calls with just the "Expired" status.
+        /// </summary>
         private void ExpiredStatusCalls_Click(object sender, RoutedEventArgs e)
            => new CallListWindow(BO.CallStatus.Expired).Show();
 
+        /// <summary>
+        /// Opens the window displaying calls with just the "Close" status.
+        /// </summary>
         private void CloseStatusCalls_Click(object sender, RoutedEventArgs e)
         => new CallListWindow(BO.CallStatus.Close).Show();
     }

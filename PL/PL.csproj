@@ -14,7 +14,6 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <None Remove="Images\Blue Star of David.jpg" />
     <None Remove="Images\Red Star of David.jpg" />
     <None Remove="Images\starofDavid.jpg" />
   </ItemGroup>
@@ -24,7 +23,6 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Resource Include="Images\Blue Star of David.jpg" />
     <Resource Include="Images\Red Star of David.jpg" />
     <Resource Include="Images\starofDavid.jpg" />
   </ItemGroup>

@@ -53,6 +53,7 @@ internal class AdminImplementation : IAdmin
     {
         AdminManager.ThrowOnSimulatorIsRunning();  //stage 7
         AdminManager.RiskRange = range;
+        CallManager.Observers.NotifyListUpdated();
     } 
 
     /// <summary>

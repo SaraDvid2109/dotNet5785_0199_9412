@@ -77,8 +77,7 @@ namespace PL.Call
         /// </summary>
         private void Window_Closed(object sender, EventArgs e)
         {
-            s_bl.call.AddObserver(VolunteerCallsListObserver);
-
+            s_bl.call.RemoveObserver(VolunteerCallsListObserver);
         }
 
         /// <summary>
@@ -86,8 +85,8 @@ namespace PL.Call
         /// </summary>
         private void Window_Loaded(object sender, RoutedEventArgs e)
         {
-            s_bl.call.RemoveObserver(VolunteerCallsListObserver);
-
+            s_bl.call.AddObserver(VolunteerCallsListObserver);
+            
         }
       
         /// <summary>
